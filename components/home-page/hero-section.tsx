@@ -15,7 +15,7 @@ export default function HeroSection() {
 					delay: 0.3,
 					duration: 0.8,
 					ease: 'easeInOut',
-				}}w
+				}}
 				className='relative flex flex-col gap-4 items-center justify-center px-4'
 			>
 				<h1>Haulage Revenue Collection System</h1>
