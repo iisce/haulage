@@ -3,7 +3,7 @@ import React from "react";
 
 export default function DashboardPage() {
   return (
-    <div className="h-full bg-red-100">
+    <div className="h-full ">
       <SuperAdminDashboard />
     </div>
   );

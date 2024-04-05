@@ -1,6 +1,8 @@
 import React from "react";
 import DashboardTotalCard from "./dashboard-total-card";
 import DashoardTotalRevenue from "./dashoard-total-revenue";
+import ActivitiesCard from "./activities-card";
+import { Button } from "../ui/button";
 
 export default function SuperAdminDashboard() {
   return (
@@ -46,7 +48,14 @@ export default function SuperAdminDashboard() {
           />
         </div>
       </div>
-      <div className=" hidden w-full md:grid bg-blue-100 md:w-1/4  "></div>
+      <div className=" hidden w-full md:flex flex-col bg-secondary md:w-1/4 gap-3 p-3 ">
+        <h2 className="">Recent Activities</h2>
+        <ActivitiesCard />
+        <ActivitiesCard />
+        <ActivitiesCard />
+        <ActivitiesCard />
+        <Button>View All</Button>
+      </div>
     </div>
   );
 }
