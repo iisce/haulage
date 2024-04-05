@@ -1,32 +1,28 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
-export default function DashoardTotalRevenue() {
+export default function DashoardTotalRevenue({
+  title,
+  description,
+  amount,
+}: {
+  title: string;
+  description: string;
+  amount: string;
+}) {
   return (
     <Card className="w-1/4">
       <CardHeader>
-        <CardTitle>Create project</CardTitle>
-        <CardDescription>Deploy your new project in one-click.</CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid w-full items-center gap-4">500</div>
+        <h2 className="grid w-full items-center gap-4">{amount}</h2>
       </CardContent>
     </Card>
   );
