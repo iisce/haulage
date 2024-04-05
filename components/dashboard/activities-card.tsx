@@ -7,15 +7,23 @@ import {
   CardTitle,
 } from "../ui/card";
 
-export default function ActivitiesCard() {
+export default function ActivitiesCard({
+  title,
+  description,
+  Date,
+}: {
+  title: string;
+  description: string;
+  Date: string;
+}) {
   return (
     <Card className="w-full ">
       <CardHeader>
-        <CardTitle></CardTitle>
-        <CardDescription></CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <h1 className="grid w-full items-center gap-4"></h1>
+        <h5 className="grid w-full items-center gap-4">{Date}</h5>
       </CardContent>
     </Card>
   );

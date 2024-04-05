@@ -50,10 +50,31 @@ export default function SuperAdminDashboard() {
       </div>
       <div className=" hidden w-full md:flex flex-col bg-secondary md:w-1/4 gap-3 p-3 ">
         <h2 className="">Recent Activities</h2>
-        <ActivitiesCard />
-        <ActivitiesCard />
-        <ActivitiesCard />
-        <ActivitiesCard />
+        <ActivitiesCard
+          title={"Vehicle Registration"}
+          description={"New Vehicle registered"}
+          Date={"12/04/2023 | 12:23PM"}
+        />
+        <ActivitiesCard
+          title={"Charge"}
+          description={"Levy issued to Vehicle202"}
+          Date={"12/04/2023 | 12:23PM"}
+        />
+        <ActivitiesCard
+          title={"Scan"}
+          description={"New vehicle scanned"}
+          Date={"12/04/2023 | 12:23PM"}
+        />
+        <ActivitiesCard
+          title={"Agent Registration"}
+          description={"New agent registered"}
+          Date={"12/04/2023 | 12:23PM"}
+        />
+        <ActivitiesCard
+          title={"Admin Registration"}
+          description={"New admin registered"}
+          Date={"12/04/2023 | 12:23PM"}
+        />
         <Button>View All</Button>
       </div>
     </div>
