@@ -1,5 +1,11 @@
-import React from 'react';
+import ActivitiesList from "@/components/activity-page/activities-list";
 
-export default function ActivitiesPage() {
-	return <div>ActivitiesPage</div>;
-}
+export default function ActivityPage() {
+    return (
+        <>
+               < ActivitiesList/>
+        </>
+   
+    )
+  }
+  
