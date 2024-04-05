@@ -16,7 +16,7 @@ export default function DashboardTotalCard({
   amount: number;
 }) {
   return (
-    <Card className="w-1/3">
+    <Card className="w-full md:w-1/3">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
