@@ -15,7 +15,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import {
@@ -26,7 +25,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "../ui/pagination";
+} from "@/components/ui/pagination";
 
 const ADMINLIST = [
   {
@@ -44,7 +43,7 @@ const ADMINLIST = [
   {
     fullname: "John Doe",
     lga: "Particular LGA",
-    status: "blacklisted",
+    status: "active",
     phoneno: "000000000",
   },
   {
@@ -93,9 +92,7 @@ export function AdminTable() {
           <TableRow>
             <TableHead className="text-white ">Full Name</TableHead>
             <TableHead className="text-white">L.G.A.</TableHead>
-            <TableHead className="text-white">
-              Phone Number
-            </TableHead>
+            <TableHead className="text-white">Phone Number</TableHead>
             <TableHead className="text-white text-center ">Status</TableHead>
           </TableRow>
         </TableHeader>
@@ -107,7 +104,7 @@ export function AdminTable() {
               </TableCell>
               <TableCell className=" text-left">{value.lga}</TableCell>
               <TableCell className=" text-left">{value.phoneno}</TableCell>
-              <TableCell className=" flex justify-between items-left text-left">
+              <TableCell className=" flex justify-between items-center text-left">
                 <Badge className=" mx-auto rounded-full">{value.status}</Badge>{" "}
                 <DropdownMenu>
                   <DropdownMenuTrigger className=" cursor-pointer" asChild>
@@ -135,16 +132,24 @@ export function AdminTable() {
       <div className="">
         <Pagination>
           <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
+            <PaginationItem className=" list-none">
+              <PaginationPrevious href="/" />
             </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
+            <PaginationItem className=" list-none">
+              <PaginationLink href="#" isActive>
+                1
+              </PaginationLink>
             </PaginationItem>
-            <PaginationItem>
+            <PaginationItem className=" list-none">
+              <PaginationLink href="#">2</PaginationLink>
+            </PaginationItem>
+            <PaginationItem className=" list-none">
+              <PaginationLink href="#">3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem className=" list-none">
               <PaginationEllipsis />
             </PaginationItem>
-            <PaginationItem>
+            <PaginationItem className=" list-none">
               <PaginationNext href="#" />
             </PaginationItem>
           </PaginationContent>
