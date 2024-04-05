@@ -5,7 +5,7 @@ import DashoardTotalRevenue from "./dashoard-total-revenue";
 export default function SuperAdminDashboard() {
   return (
     <div className="flex flex-col md:flex-row h-full p-5 gap-5">
-      <div className=" flex flex-col w-3/4 gap-5">
+      <div className=" flex flex-col w-full md:w-3/4 gap-5">
         <div className="flex flex-col md:flex-row gap-5">
           <DashboardTotalCard
             title={"Admin"}
@@ -46,7 +46,7 @@ export default function SuperAdminDashboard() {
           />
         </div>
       </div>
-      <div className=" hidden md:grid bg-blue-100 w-1/4  "></div>
+      <div className=" hidden w-full md:grid bg-blue-100 md:w-1/4  "></div>
     </div>
   );
 }

@@ -16,7 +16,7 @@ export default function DashoardTotalRevenue({
   amount: string;
 }) {
   return (
-    <Card className="w-1/4">
+    <Card className="w-full md:w-1/4">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
