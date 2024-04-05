@@ -30,7 +30,7 @@ export default function ActivityList() {
                </div>
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="item-1">
+          <AccordionItem value="item-2">
             <AccordionTrigger>April 4 2024</AccordionTrigger>
             <AccordionContent className='px-3'>
                <div>Search Vehicle</div>
@@ -47,7 +47,7 @@ export default function ActivityList() {
                </div>
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="item-1">
+          <AccordionItem value="item-3">
             <AccordionTrigger>April 5 2024</AccordionTrigger>
             <AccordionContent className='px-3'>
                <div>Search Vehicle</div>
@@ -64,7 +64,7 @@ export default function ActivityList() {
                </div>
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="item-1">
+          <AccordionItem value="item-4">
             <AccordionTrigger>April 6 2024</AccordionTrigger>
             <AccordionContent className='px-3'>
                <div>Search Vehicle</div>
