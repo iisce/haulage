@@ -1,88 +1,103 @@
 import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table"
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table"
+import { PaginationDemo } from "./pagination"
   
-  const invoices = [
+export const DRIVERS_DETAILS = [
     {
-      invoice: "INV001",
-      paymentStatus: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
+      name: "Ikechukwu John",
+      phoneNumber: "+234908976683",
+      email: "emeka@example.com",
+      state: "Enugu",
+      lga: "Ezzagu",
+      nin: "6474837383829",
     },
     {
-      invoice: "INV002",
-      paymentStatus: "Pending",
-      totalAmount: "$150.00",
-      paymentMethod: "PayPal",
+      name: "INV002",
+      phoneNumber: "Pending",
+      email: "$150.00",
+      state: "PayPal",
+     lga: "Ezzagu",
+      nin: "6474837383829",
     },
     {
-      invoice: "INV003",
-      paymentStatus: "Unpaid",
-      totalAmount: "$350.00",
-      paymentMethod: "Bank Transfer",
+      name: "INV003",
+      phoneNumber: "Unpaid",
+      email: "$350.00",
+      state: "Bank Transfer",
+     lga: "Ezzagu",
+      nin: "6474837383829",
     },
     {
-      invoice: "INV004",
-      paymentStatus: "Paid",
-      totalAmount: "$450.00",
-      paymentMethod: "Credit Card",
+      name: "INV004",
+      phoneNumber: "Paid",
+      email: "$450.00",
+      state: "Credit Card",
+     lga: "Ezzagu",
+      nin: "6474837383829",
     },
     {
-      invoice: "INV005",
-      paymentStatus: "Paid",
-      totalAmount: "$550.00",
-      paymentMethod: "PayPal",
+      name: "INV005",
+      phoneNumber: "Paid",
+      email: "$550.00",
+      state: "PayPal",
+     lga: "Ezzagu",
+      nin: "6474837383829",
     },
     {
-      invoice: "INV006",
-      paymentStatus: "Pending",
-      totalAmount: "$200.00",
-      paymentMethod: "Bank Transfer",
+      name: "INV006",
+      phoneNumber: "Pending",
+      email: "$200.00",
+      state: "Bank Transfer",
+     lga: "Ezzagu",
+      nin: "6474837383829",
     },
     {
-      invoice: "INV007",
-      paymentStatus: "Unpaid",
-      totalAmount: "$300.00",
-      paymentMethod: "Credit Card",
+      name: "INV007",
+      phoneNumber: "Unpaid",
+      email: "$300.00",
+      state: "Credit Card",
+     lga: "Ezzagu",
+      nin: "6474837383829",
     },
   ]
   
-  export default function TableDemo() {
+  export default function DiversTable() {
     return (
-      <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
+        <div>
+             <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Invoice</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Method</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
+            <TableHead className="w-[100px]">Name</TableHead>
+            <TableHead>Phone Number</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead className="text-right">Street</TableHead>
+            <TableHead className="text-right">L.G.A</TableHead>
+            <TableHead className="text-right">NIN</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-medium">{invoice.invoice}</TableCell>
-              <TableCell>{invoice.paymentStatus}</TableCell>
-              <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+          {DRIVERS_DETAILS.map((driverDetial, i) => (
+            <TableRow key={i}>
+              <TableCell className="font-medium">{driverDetial.name}</TableCell>
+              <TableCell>{driverDetial.phoneNumber}</TableCell>
+              <TableCell>{driverDetial.email}</TableCell>
+              <TableCell>{driverDetial.state}</TableCell>
+              <TableCell>{driverDetial.lga}</TableCell>
+              <TableCell>{driverDetial.nin}</TableCell>
             </TableRow>
           ))}
         </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">$2,500.00</TableCell>
-          </TableRow>
-        </TableFooter>
       </Table>
+        <PaginationDemo/>
+        </div>
+     
     )
   }
   
