@@ -153,7 +153,7 @@ export default function CreateVehicleForm() {
 				onSubmit={form.handleSubmit(onSubmit)}
 				className='flex flex-col gap-4 '
 			>
-				<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 					<FormField
 						control={form.control}
 						name='category'
@@ -168,7 +168,7 @@ export default function CreateVehicleForm() {
 									defaultValue={field.value}
 								>
 									<FormControl>
-										<SelectTrigger className='relative text-body flex  items-center h-14 rounded-2xl'>
+										<SelectTrigger className='relative text-body flex  items-center h-14 rounded-lg'>
 											<SelectValue placeholder='Select a vehicle category' />
 										</SelectTrigger>
 									</FormControl>
@@ -201,7 +201,7 @@ export default function CreateVehicleForm() {
 									defaultValue={field.value}
 								>
 									<FormControl>
-										<SelectTrigger className='relative text-body flex  items-center h-14 rounded-2xl'>
+										<SelectTrigger className='relative text-body flex  items-center h-14 rounded-lg'>
 											<SelectValue placeholder='Select number of tyre' />
 										</SelectTrigger>
 									</FormControl>
@@ -242,8 +242,8 @@ export default function CreateVehicleForm() {
 									defaultValue={field.value}
 								>
 									<FormControl>
-										<SelectTrigger className='relative text-body flex  items-center h-14 rounded-2xl'>
-											<SelectValue placeholder='Select number of tyre' />
+										<SelectTrigger className='relative text-body flex  items-center h-14 rounded-lg'>
+											<SelectValue placeholder='Select amount for tyre' />
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
@@ -281,7 +281,7 @@ export default function CreateVehicleForm() {
 
 								<FormControl>
 									<Input
-										className='relative text-body flex  items-center h-14 rounded-2xl'
+										className='relative text-body flex  items-center h-14 rounded-lg'
 										{...field}
 										type='text'
 										placeholder='Plate Number'
@@ -303,7 +303,7 @@ export default function CreateVehicleForm() {
 
 								<FormControl>
 									<Input
-										className='relative text-body flex  items-center h-14 rounded-2xl'
+										className='relative text-body flex  items-center h-14 rounded-lg'
 										{...field}
 										type='text'
 										placeholder='Enter NIN'
@@ -325,7 +325,7 @@ export default function CreateVehicleForm() {
 
 								<FormControl>
 									<Input
-										className='relative text-body flex  items-center h-14 rounded-2xl'
+										className='relative text-body flex  items-center h-14 rounded-lg'
 										{...field}
 										type='text'
 										placeholder={`Enter owner's name`}
@@ -347,7 +347,7 @@ export default function CreateVehicleForm() {
 
 								<FormControl>
 									<Input
-										className='relative text-body flex  items-center h-14 rounded-2xl'
+										className='relative text-body flex  items-center h-14 rounded-lg'
 										{...field}
 										type='text'
 										placeholder={`+23481209847859`}
@@ -368,7 +368,7 @@ export default function CreateVehicleForm() {
 						asChild
 						className='p-4 py-2 rounded-normal w-28 '
 					>
-						<Link href={'/vehicles?page=1&limit=15'}>
+						<Link href={'/vehicles'}>
 							Back
 						</Link>
 					</Button>
