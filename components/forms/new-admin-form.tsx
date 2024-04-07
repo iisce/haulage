@@ -233,7 +233,7 @@ export default function CreateAdminForm() {
             asChild
             className="p-4 py-2 rounded-normal w-28 "
           >
-            <Link href={"/vehicles?page=1&limit=15"}>Back</Link>
+            <Link href={"/admins?page=1&limit=15"}>Back</Link>
           </Button>
           <Button
             variant="default"
