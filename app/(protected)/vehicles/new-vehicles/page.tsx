@@ -1,7 +1,4 @@
 import CreateVehicleForm from '@/components/forms/newVehicleForm'
-import Search from '@/components/shared/search-component'
-import { Button } from '@/components/ui/button'
-import { PlusIcon } from 'lucide-react'
 
 export default function NewVehiclesPage() {
 	return (

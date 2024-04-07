@@ -117,7 +117,7 @@ export function AdminTable() {
                   <DropdownMenuContent>
                     <DropdownMenuGroup>
                       <DropdownMenuItem>
-                        <Link href="" className="text-center">
+                        <Link href="">
                           View Profile
                         </Link>
                       </DropdownMenuItem>
