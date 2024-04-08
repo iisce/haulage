@@ -12,17 +12,14 @@ import {
   UserRound,
   Users,
 } from "lucide-react";
+import DashboardTotalDaily from "./dashbord-total-daily";
 
 export default function SuperAdminDashboard() {
   return (
     <div className="flex flex-col md:flex-row h-full p-5 gap-5">
       <div className=" flex flex-col w-full md:w-3/4 gap-5">
+        <h2>Admin Dashboard</h2>
         <div className="flex flex-col md:flex-row gap-5">
-          <DashboardTotalCard
-            title={"Admin"}
-            description={"Total number of admins"}
-            amount={10}
-          />
           <DashboardTotalCard
             title={"Agent"}
             description={"Total number of Agent"}
@@ -34,25 +31,30 @@ export default function SuperAdminDashboard() {
             amount={10000}
           />
         </div>
-        <div className="flex flex-col md:flex-row gap-5">
-          <DashoardTotalRevenue
-            title={"Yearly"}
-            description={"Total amount of yearly Revenue"}
-            amount={"#19,333"}
+        <div className="flex flex-col md:flex-row flex-wrap gap-5">
+          <DashboardTotalDaily
+            title={"6 Tyres"}
+            description={"Total amount of Tyres daily"}
+            amount={"#475"}
           />
-          <DashoardTotalRevenue
-            title={"Monthly"}
-            description={"Total amount of monthly Revenue"}
-            amount={"#99,848"}
+          <DashboardTotalDaily
+            title={"8 Tyres"}
+            description={"Total amount of Tyres daily"}
+            amount={"#475"}
           />
-          <DashoardTotalRevenue
-            title={"Weekly"}
-            description={"Total amount of weekly Revenue"}
-            amount={"#88,490"}
+          <DashboardTotalDaily
+            title={"10 Tyres"}
+            description={"Total amount of Tyres daily"}
+            amount={"#475"}
           />
-          <DashoardTotalRevenue
-            title={"Daily"}
-            description={"Total amount of daily Revenue"}
+          <DashboardTotalDaily
+            title={"12 Tyres"}
+            description={"Total amount of Tyres daily"}
+            amount={"#475"}
+          />
+          <DashboardTotalDaily
+            title={"16 Tyres"}
+            description={"Total amount of Tyres daily"}
             amount={"#475"}
           />
         </div>
@@ -83,12 +85,7 @@ export default function SuperAdminDashboard() {
           Date={"12/04/2023 | 12:23PM"}
           icons={<UserPlusIcon />}
         />
-        <ActivitiesCard
-          title={"Admin Registration"}
-          description={"New admin registered"}
-          Date={"12/04/2023 | 12:23PM"}
-          icons={<ContactRound />}
-        />
+
         <Button>View All</Button>
       </div>
     </div>

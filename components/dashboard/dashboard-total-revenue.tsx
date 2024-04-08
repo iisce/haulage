@@ -6,23 +6,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function DashboardTotalCard({
+export default function DashboardTotalRevenue({
   title,
   description,
   amount,
 }: {
   title: string;
   description: string;
-  amount: number;
+  amount: string;
 }) {
   return (
-    <Card className="w-full md:w-1/2">
+    <Card className="w-full md:w-1/4">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <h1 className="grid w-full items-center gap-4">{amount}</h1>
+        <h2 className="grid w-full items-center gap-4">{amount}</h2>
       </CardContent>
     </Card>
   );
