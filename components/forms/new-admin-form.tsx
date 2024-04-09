@@ -2,9 +2,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { NextResponse } from "next/server";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { boolean, z } from "zod";
 import { Button } from "../../components/ui/button";
 import { Dialog, DialogContent } from "../../components/ui/dialog";
 import {
@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { useToast } from "../../components/ui/use-toast";
+import { Eye, EyeOff } from "lucide-react";
 
 const vehicleFormSchema = z.object({
   admin_phone_number: z
@@ -38,7 +39,7 @@ const vehicleFormSchema = z.object({
     .min(5, {
       message: "Enter full name",
     }),
-  admin_email_address: z.string().email(),
+  admin_email_address: z.string().email({ message: "Invalid email address" }),
   nin: z
     .string({
       required_error: "Enter your NIN.",
@@ -49,7 +50,9 @@ const vehicleFormSchema = z.object({
       required_error: "Enter admins residential address",
     })
     .min(5, "Invalid address"),
-});
+  password: z.string().min(4, "Password is not secure enough"),
+  cpassword: z.string(),
+}).refine((data)=> { return data.password === data.cpassword}, {message: "Passwords don't match", path: ["cpassword"],});
 
 type vehicleFormValues = z.infer<typeof vehicleFormSchema>;
 
@@ -59,9 +62,13 @@ const defaultValues: Partial<vehicleFormValues> = {
   admin_email_address: "",
   admin_name: "",
   residential_address: "",
+  password: "",
+  cpassword: "",
 };
 
 export default function CreateAdminForm() {
+  const [hidePassword, setHidePassword] = useState(false);
+  const [chidePassword, setcHidePassword] = useState(false);
   const [newVehicleId, setNewVehicleId] = React.useState<string>("");
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -83,6 +90,8 @@ export default function CreateAdminForm() {
           admin_email_address: data.admin_email_address,
           admin_name: data.admin_name,
           residential_address: data.residential_address,
+          password: data.password,
+          cpassword: data.cpassword,
         }),
       });
       const result = await createVehicleResponse.json();
@@ -220,6 +229,65 @@ export default function CreateAdminForm() {
                     placeholder="Enter NIN"
                   />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="password"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-title1Bold pl-4">Password</FormLabel>
+                <div className="relative h-14 ">
+                  <FormControl>
+                    <Input
+                      className="relative text-body flex pr-[50px] items-center h-14 rounded-2xl"
+                      {...field}
+                      type={hidePassword ? "password" : "text"}
+                      placeholder="Enter password"
+                    />
+                  </FormControl>
+                  <div onClick={() => setHidePassword(!hidePassword)}>
+                    {hidePassword ? (
+                      <EyeOff className=" cursor-pointer absolute top-0 translate-y-[60%] right-[20px]" />
+                    ) : (
+                      <Eye className=" cursor-pointer absolute top-0 translate-y-[60%] right-[20px]" />
+                    )}
+                  </div>
+                </div>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="cpassword"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-title1Bold pl-4">
+                  Confirm Password
+                </FormLabel>
+                <div className="relative h-14 ">
+                  <FormControl>
+                    <Input
+                      className="relative text-body flex pr-[50px] items-center h-14 rounded-2xl"
+                      {...field}
+                      type={chidePassword ? "password" : "text"}
+                      placeholder="Comfirm password"
+                    />
+                  </FormControl>
+                  <div onClick={() => setcHidePassword(!chidePassword)}>
+                    {chidePassword ? (
+                      <EyeOff className=" cursor-pointer absolute top-0 translate-y-[60%] right-[20px]" />
+                    ) : (
+                      <Eye className=" cursor-pointer absolute top-0 translate-y-[60%] right-[20px]" />
+                    )}
+                  </div>
+                </div>
+
                 <FormMessage />
               </FormItem>
             )}
