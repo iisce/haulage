@@ -25,6 +25,7 @@ import {
 } from '../../components/ui/select';
 import { useToast } from '../../components/ui/use-toast';
 import { IVEHICLEDETAILS } from '../vehicles/vehicleTable';
+import { PencilLine, Save } from 'lucide-react';
 
 const vehicleFormSchema = z.object({
 	category: z
@@ -375,22 +376,23 @@ export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS |
 					
 				</div>
 				<div className='flex justify-center items-center gap-6 text-title1Bold'>
+				<Button
+                variant="default"
+                size="lg"
+                onClick={() => setIsDisabled(!isDisabled)}
+                type="button"
+                className="p-4 py-2 rounded-normal w-28"
+              >
+                {"Edit"} <PencilLine className="w-5 h-5 ml-3" />
+              </Button>
+					
 					<Button
-                        onClick={()=> setIsDisabled(!isDisabled)}
-						variant='default'
-						size='lg'
-						type='button'
-						className='p-4 py-2 rounded-normal w-28 '
-					>
-                        {`Edit`}
-					</Button>
-					<Button
-						variant='default'
+						 variant={"outline"}
 						size='lg'
 						type='submit'
 						className='p-4 py-2 rounded-normal w-28'
 					>
-						{ 'Save'}
+						{ 'Save'} <Save className="w-5 h-5 ml-3" />
 					</Button>
 				</div>
 			</form>
