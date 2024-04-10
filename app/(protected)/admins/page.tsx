@@ -1,5 +1,16 @@
-import React from 'react';
+import { AdminTable } from "@/components/admin-page/admin-table";
+import Search from "@/components/shared/search-component";
+import { Button } from "@/components/ui/button";
+import React from "react";
 
 export default function AdminPage() {
-	return <div>AdminPage</div>;
+  return (
+    <div className="px-[20px]">
+      <div className="flex gap-12 pt-[20px] w-full">
+        <Search />
+        <Button value={`Add Admin`}>Add Admin</Button>
+      </div>
+      <AdminTable />
+    </div> 
+  );
 }
