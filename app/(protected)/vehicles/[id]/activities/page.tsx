@@ -1,7 +1,9 @@
+import VehiclesActivities from '@/components/vehicles/vehiclesActivities'
 import React from 'react'
 
-export default function VehicleActivity() {
+export default function VehicleActivityPage({ params }: {params : {id: string};
+}) {
   return (
-    <div>VehicleActivity</div>
+    <div><VehiclesActivities id={params.id}   /></div>
   )
 }
