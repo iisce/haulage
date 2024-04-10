@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
 
-export default function AdminPage() {
+export default function AdminPage({params}:{params: {id:string};}) {
   return (
     <div className="px-[20px]">
       <div className="flex gap-12 pt-[20px] w-full">
@@ -13,7 +13,7 @@ export default function AdminPage() {
           <Button value={`Add Admin`}>Add Admin</Button>
         </Link>
       </div>
-      <AdminTable />
+      <AdminTable id={params.id} />
     </div>
   );
 }

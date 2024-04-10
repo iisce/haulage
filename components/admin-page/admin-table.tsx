@@ -27,71 +27,118 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-const ADMINLIST = [
+export type ADMINTYPE = {
+  id: string;
+  lga: string;
+  status: string;
+  nin?: string;
+  admin_phone_number: string;
+  admin_email_address: string;
+  residential_address?: string;
+  admin_name: string;
+};
+
+export const ADMINLIST = [
   {
-    fullname: "John Doe",
+    id: "0",
+    admin_name: "John Doe",
     lga: "Particular LGA",
     status: "active",
-    phoneno: "000000000",
+    admin_phone_number: "+2348064150715",
+    admin_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "1",
+    admin_name: "Divine Leo",
     lga: "Particular LGA",
     status: "inactive",
-    phoneno: "000000000",
+    admin_phone_number: "+2348067150715",
+    admin_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "2",
+    admin_name: "John Doe",
     lga: "Particular LGA",
     status: "active",
-    phoneno: "000000000",
+    admin_phone_number: "000000000",
+    admin_email_address: "divineleo@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "3",
+    admin_name: "John Doe",
     lga: "Particular LGA",
     status: "active",
-    phoneno: "000000000",
+    admin_phone_number: "000000000",
+    admin_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "4",
+    admin_name: "John Doe",
     lga: "Particular LGA",
     status: "inactive",
-    phoneno: "000000000",
+    admin_phone_number: "000000000",
+    admin_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "5",
+    admin_name: "John Doe",
     lga: "Particular LGA",
     status: "inactive",
-    phoneno: "000000000",
+    admin_phone_number: "000000000",
+    admin_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "6",
+    admin_name: "John Doe",
     lga: "Particular LGA",
     status: "inactive",
-    phoneno: "000000000",
+    admin_phone_number: "000000000",
+    admin_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "7",
+    admin_name: "John Doe",
     lga: "Particular LGA",
     status: "inactive",
-    phoneno: "000000000",
+    admin_phone_number: "000000000",
+    admin_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "8",
+    admin_name: "John Doe",
     lga: "Particular LGA",
     status: "inactive",
-    phoneno: "000000000",
+    admin_phone_number: "000000000",
+    admin_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
 ];
 
-export function AdminTable() {
+export function AdminTable({ id }: { id: string }) {
   return (
     <>
       <Table className="mt-[20px] w-full">
         <TableHeader className="bg-black text-center text-white">
           <TableRow>
             <TableHead className="text-white ">Full Name</TableHead>
-            <TableHead className="text-white">L.G.A.</TableHead>
+            <TableHead className="text-white">Residential Address</TableHead>
             <TableHead className="text-white">Phone Number</TableHead>
             <TableHead className="text-white text-center ">Status</TableHead>
           </TableRow>
@@ -100,10 +147,12 @@ export function AdminTable() {
           {ADMINLIST.map((value, k) => (
             <TableRow key={k}>
               <TableCell className=" text-left font-medium">
-                {value.fullname}
+                {value.admin_name}
               </TableCell>
               <TableCell className=" text-left">{value.lga}</TableCell>
-              <TableCell className=" text-left">{value.phoneno}</TableCell>
+              <TableCell className=" text-left">
+                {value.admin_phone_number}
+              </TableCell>
               <TableCell className=" flex justify-between items-center text-left">
                 <Badge className=" mx-auto rounded-full">{value.status}</Badge>{" "}
                 <DropdownMenu>
@@ -117,9 +166,7 @@ export function AdminTable() {
                   <DropdownMenuContent>
                     <DropdownMenuGroup>
                       <DropdownMenuItem>
-                        <Link href="">
-                          View Profile
-                        </Link>
+                        <Link href={`/admins/${value.id}`}>View Profile</Link>
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
                   </DropdownMenuContent>

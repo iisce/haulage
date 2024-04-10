@@ -4,7 +4,7 @@ import Link from "next/link";
 import { NextResponse } from "next/server";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { boolean, z } from "zod";
+import { z } from "zod";
 import { Button } from "../../components/ui/button";
 import { Dialog, DialogContent } from "../../components/ui/dialog";
 import {
@@ -16,43 +16,43 @@ import {
   FormMessage,
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../components/ui/select";
 import { useToast } from "../../components/ui/use-toast";
 import { Eye, EyeOff } from "lucide-react";
 
-const vehicleFormSchema = z.object({
-  admin_phone_number: z
-    .string({
-      required_error: "Enter admin phone number.",
-    })
-    .regex(/^\+234[789][01]\d{8}$/, "Phone format (+2348012345678)"),
-  admin_name: z
-    .string({
-      required_error: "Enter admin full name.",
-    })
-    .min(5, {
-      message: "Enter full name",
-    }),
-  admin_email_address: z.string().email({ message: "Invalid email address" }),
-  nin: z
-    .string({
-      required_error: "Enter your NIN.",
-    })
-    .length(11, "Invalid NIN number"),
-  residential_address: z
-    .string({
-      required_error: "Enter admins residential address",
-    })
-    .min(5, "Invalid address"),
-  password: z.string().min(4, "Password is not secure enough"),
-  cpassword: z.string(),
-}).refine((data)=> { return data.password === data.cpassword}, {message: "Passwords don't match", path: ["cpassword"],});
+const vehicleFormSchema = z
+  .object({
+    admin_phone_number: z
+      .string({
+        required_error: "Enter admin phone number.",
+      })
+      .regex(/^\+234[789][01]\d{8}$/, "Phone format (+2348012345678)"),
+    admin_name: z
+      .string({
+        required_error: "Enter admin full name.",
+      })
+      .min(5, {
+        message: "Enter full name",
+      }),
+    admin_email_address: z.string().email({ message: "Invalid email address" }),
+    nin: z
+      .string({
+        required_error: "Enter your NIN.",
+      })
+      .length(11, "Invalid NIN number"),
+    residential_address: z
+      .string({
+        required_error: "Enter admins residential address",
+      })
+      .min(5, "Invalid address"),
+    password: z.string().min(4, "Password is not secure enough"),
+    cpassword: z.string(),
+  })
+  .refine(
+    (data) => {
+      return data.password === data.cpassword;
+    },
+    { message: "Passwords don't match", path: ["cpassword"] }
+  );
 
 type vehicleFormValues = z.infer<typeof vehicleFormSchema>;
 
@@ -66,7 +66,11 @@ const defaultValues: Partial<vehicleFormValues> = {
   cpassword: "",
 };
 
-export default function CreateAdminForm() {
+export default function CreateAdminForm({
+  params,
+}: {
+  params: { id: string };
+}) {
   const [hidePassword, setHidePassword] = useState(false);
   const [chidePassword, setcHidePassword] = useState(false);
   const [newVehicleId, setNewVehicleId] = React.useState<string>("");
@@ -132,7 +136,7 @@ export default function CreateAdminForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-title1Bold pl-4">
-                  {`Admin Full Name`}
+                  {`Admin's Full Name`}
                 </FormLabel>
 
                 <FormControl>
@@ -313,26 +317,6 @@ export default function CreateAdminForm() {
           </Button>
         </div>
       </form>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="bg-secondary">
-          <div className="mx-auto flex-col">
-            <div className="flex flex-col items-center gap-5 mb-5">
-              <div className="h-20 w-20 text-awesome-foreground">
-                {/* {successIcon} */}
-              </div>
-              <div className="text-xl">Admin created successfully.</div>
-              <div className="text-sm">Proceed to add a driver.</div>
-            </div>
-            <div className="flex flex-col gap-3">
-              <Button asChild className="rounded-xl">
-                <Link href={`/vehicles/${newVehicleId}/new-driver`}>
-                  Add Driver
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </Form>
   );
 }
