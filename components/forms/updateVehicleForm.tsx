@@ -389,6 +389,7 @@ export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS |
 					<Button
 						 variant={"outline"}
 						size='lg'
+						disabled={!isDisabled}
 						type='submit'
 						className='p-4 py-2 rounded-normal w-28'
 					>
