@@ -19,10 +19,10 @@ export default function DashoardTotalRevenue({
     <Card className="w-full md:w-1/4">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardDescription className=" line-clamp-2 ">{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <h2 className="grid w-full items-center gap-4">{amount}</h2>
+        <h4 className="grid w-full items-start justify-start mx-auto gap-4">{amount}</h4>
       </CardContent>
     </Card>
   );

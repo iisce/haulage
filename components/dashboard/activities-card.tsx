@@ -18,8 +18,8 @@ export default function ActivitiesCard({
 }) {
   return (
     <Card className="w-full ">
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
+      <CardHeader className="px-6 space-y-1">
+        <CardTitle className="text-xl">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
@@ -28,3 +28,4 @@ export default function ActivitiesCard({
     </Card>
   );
 }
+

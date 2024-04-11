@@ -22,7 +22,7 @@ export default function DashboardTotalCard({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <h1 className="grid w-full items-center gap-4">{amount}</h1>
+        <h3 className="grid w-full items-center gap-4">{amount}</h3>
       </CardContent>
     </Card>
   );
