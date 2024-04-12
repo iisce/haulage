@@ -14,48 +14,37 @@ import {
 } from "lucide-react";
 import DashboardTotalDaily from "./dashbord-total-daily";
 
-export default function AdminDashboard() {
+export default function AgentDashboard() {
   return (
     <div className="flex flex-col md:flex-row h-full p-5 gap-5">
       <div className=" flex flex-col w-full md:w-3/4 gap-5">
-        <h2>Admin Dashboard</h2>
-        <div className="flex flex-col md:flex-row gap-5">
-          <DashboardTotalCard
-            title={"Agent"}
-            description={"Total number of Agent"}
-            amount={500}
-          />
-          <DashboardTotalCard
-            title={"Vehicles"}
-            description={"Total number of Vehicles"}
-            amount={10000}
-          />
-        </div>
+        <h2>Agent Dashboard</h2>
+
         <div className="flex flex-col md:flex-row flex-wrap gap-5">
           <DashboardTotalDaily
             title={"6 Tyres"}
             description={"Total amount of Tyres daily"}
-            amount={"#475"}
+            amount={"#1,800"}
           />
           <DashboardTotalDaily
             title={"8 Tyres"}
             description={"Total amount of Tyres daily"}
-            amount={"#475"}
+            amount={"#1,800"}
           />
           <DashboardTotalDaily
             title={"10 Tyres"}
             description={"Total amount of Tyres daily"}
-            amount={"#475"}
+            amount={"#1,800"}
           />
           <DashboardTotalDaily
             title={"12 Tyres"}
             description={"Total amount of Tyres daily"}
-            amount={"#475"}
+            amount={"#1,800"}
           />
           <DashboardTotalDaily
             title={"16 Tyres"}
             description={"Total amount of Tyres daily"}
-            amount={"#475"}
+            amount={"#1,800"}
           />
         </div>
       </div>
