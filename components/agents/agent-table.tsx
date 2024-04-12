@@ -27,64 +27,110 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-const AGENTLIST = [
+export type AGENTTYPE = {
+  id: string;
+  lga: string;
+  status: string;
+  nin?: string;
+  agent_phone_number: string;
+  agent_email_address: string;
+  residential_address?: string;
+  agent_name: string;
+};
+
+export const AGENTLIST = [
   {
-    fullname: "John Doe",
+    id: "0",
+    agent_name: "John Doe",
     lga: "Particular LGA",
     status: "active",
-    phoneno: "000000000",
+    agent_phone_number: "+2348064150715",
+    agent_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "1",
+    agent_name: "Divine Leo",
     lga: "Particular LGA",
     status: "inactive",
-    phoneno: "000000000",
+    agent_phone_number: "+2348067150715",
+    agent_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "2",
+    agent_name: "John Doe",
     lga: "Particular LGA",
     status: "active",
-    phoneno: "000000000",
+    agent_phone_number: "000000000",
+    agent_email_address: "divineleo@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "3",
+    agent_name: "John Doe",
     lga: "Particular LGA",
     status: "active",
-    phoneno: "000000000",
+    agent_phone_number: "000000000",
+    agent_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "4",
+    agent_name: "John Doe",
     lga: "Particular LGA",
     status: "inactive",
-    phoneno: "000000000",
+    agent_phone_number: "000000000",
+    agent_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "5",
+    agent_name: "John Doe",
     lga: "Particular LGA",
     status: "inactive",
-    phoneno: "000000000",
+    agent_phone_number: "000000000",
+    agent_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "6",
+    agent_name: "John Doe",
     lga: "Particular LGA",
     status: "inactive",
-    phoneno: "000000000",
+    agent_phone_number: "000000000",
+    agent_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "7",
+    agent_name: "John Doe",
     lga: "Particular LGA",
     status: "inactive",
-    phoneno: "000000000",
+    agent_phone_number: "000000000",
+    agent_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
   {
-    fullname: "John Doe",
+    id: "8",
+    agent_name: "John Doe",
     lga: "Particular LGA",
     status: "inactive",
-    phoneno: "000000000",
+    agent_phone_number: "000000000",
+    agent_email_address: "jondoe@gmail.com",
+    residential_address: "A place, LGA",
+    nin: "12123643245",
   },
 ];
-
-export function AgentTable() {
+export function AgentTable({ id }: { id: string}) {
   return (
     <>
       <Table className="mt-[20px] w-full">
@@ -100,10 +146,10 @@ export function AgentTable() {
           {AGENTLIST.map((value, k) => (
             <TableRow key={k}>
               <TableCell className=" text-left font-medium">
-                {value.fullname}
+                {value.agent_name}
               </TableCell>
               <TableCell className=" text-left">{value.lga}</TableCell>
-              <TableCell className=" text-left">{value.phoneno}</TableCell>
+              <TableCell className=" text-left">{value.agent_phone_number}</TableCell>
               <TableCell className=" flex justify-between items-center text-left">
                 <Badge className=" mx-auto rounded-full">{value.status}</Badge>{" "}
                 <DropdownMenu>
@@ -117,7 +163,7 @@ export function AgentTable() {
                   <DropdownMenuContent>
                     <DropdownMenuGroup>
                       <DropdownMenuItem>
-                        <Link href="" className="text-center">
+                        <Link href={`/agents/${value.id}`} className="text-center">
                           View Profile
                         </Link>
                       </DropdownMenuItem>

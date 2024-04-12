@@ -6,7 +6,9 @@ export default function NewAdmin() {
     <div className="flex flex-col  pt-[20px] w-full">
       <div className="pl-5 py-3 text-lg">ADMIN INFORMATION</div>
       <div className=" my-4 mx-4">
-        <CreateAdminForm />
+        <CreateAdminForm params={{
+          id: ""
+        }} />
       </div>
     </div>
   );
