@@ -1,397 +1,400 @@
-// 'use client';
-// import { zodResolver } from '@hookform/resolvers/zod';
-// import { useForm } from 'react-hook-form';
-// import * as z from 'zod';
-// import { useToast } from '../ui/use-toast';
-// import {
-// 	Form,
-// 	FormControl,
-// 	FormField,
-// 	FormItem,
-// 	FormLabel,
-// 	FormMessage,
-// } from '../ui/form';
-// import { Input } from '../ui/input';
-// import {
-// 	Select,
-// 	SelectContent,
-// 	SelectItem,
-// 	SelectTrigger,
-// 	SelectValue,
-// } from '../ui/select';
-// import { Button } from '../ui/button';
-// import React from 'react';
-// import { NextResponse } from 'next/server';
+'use client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
+import { NextResponse } from 'next/server';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Button } from '../../components/ui/button';
+import { Dialog, DialogContent } from '../../components/ui/dialog';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '../../components/ui/form';
+import { Input } from '../../components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '../../components/ui/select';
+import { useToast } from '../../components/ui/use-toast';
+import { IVEHICLEDETAILS } from '../vehicles/vehicleTable';
 
-// const vehicleFormSchema = z.object({
-// 	category: z
-// 		.string({
-// 			required_error: 'Please enter a valid Category.',
-// 		})
-// 		.refine(
-// 			(value) =>
-// 				['keke', 'small_shuttle', 'big_shuttle'].includes(value),
-// 			{
-// 				message: 'Invalid means of identification.',
-// 			}
-// 		),
-// 	vehicle_type: z.string({
-// 		required_error: 'Please enter a valid vehicle type.',
-// 	}),
-// 	color: z.string(),
-// 	image: z
-// 		.string({
-// 			required_error: 'Please add image.',
-// 		})
-// 		.min(5, { message: 'Must be a valid Image link' }),
-// 	plate_number: z
-// 		.string({
-// 			required_error: 'Enter your plate number.',
-// 		})
-// 		.min(5, {
-// 			message: 'Plate numbers have at least five(5) characters.',
-// 		}),
-// 	owners_phone_number: z
-// 		.string({
-// 			required_error: 'Enter owner phone number.',
-// 		})
-// 		.regex(/^\+234[789][01]\d{8}$/, 'Phone format (+2348012345678)'),
-// 	owners_name: z
-// 		.string({
-// 			required_error: 'Enter owner phone number.',
-// 		})
-// 		.min(5, {
-// 			message: 'Plate numbers have at least five(5) characters.',
-// 		}),
-// 	vin: z.string(),
-// 	status: z.string({
-// 		required_error: 'Choose Status',
-// 	}),
-// 	barcode_string: z.string(),
-// 	tracker_id: z.string(),
-// 	with_wallet: z.boolean(),
-// });
+const vehicleFormSchema = z.object({
+	category: z
+		.string({
+			required_error: 'Please enter a valid Category.',
+		})
+		.refine(
+			(value) =>
+				['detchable', 'non-detchable',].includes(value),
+			{
+				message: 'Invalid means of identification.',
+			}
+		),
+	vehicle_type: z.string({
+		required_error: 'Please enter a valid vehicle type.',
+	})
+	.refine((value) => ['8', '12', '14', '16', '18', '24',].includes(value),
+	{
+		message: 'Invalid means of identification.',
+	}
+	),
+	price_by_tyre: z.string({
+		required_error: 'Please enter a valid vehicle type.',
+	})
+	.refine((value) => ['8000', '12,000', '14,000', '16,000', '18,000', '24,000',].includes(value),
+	{
+		message: 'Invalid means of identification.',
+	}
+	),
+	
+	image: z
+		.string({
+			required_error: 'Please add image.',
+		})
+		.min(5, { message: 'Must be a valid Image link' }),
+	plate_number: z
+		.string({
+			required_error: 'Enter your plate number.',
+		})
+		.min(5, {
+			message: 'Plate numbers have at least five(5) characters.',
+		}),
+	owners_phone_number: z
+		.string({
+			required_error: 'Enter owner phone number.',
+		})
+		.regex(/^\+234[789][01]\d{8}$/, 'Phone format (+2348012345678)'),
+	owners_name: z
+		.string({
+			required_error: 'Enter owner phone number.',
+		})
+		.min(5, {
+			message: 'Enter full name',
+		}),
+	nin: z.string(),
+});
 
-// type VehicleFormValues = z.infer<typeof vehicleFormSchema>;
+type vehicleFormValues = z.infer<typeof vehicleFormSchema>;
 
-// export function UpdateVehicleForm({ vehicle }: { vehicle: '' }) {
-// 	const [disabled, setDisabled] = React.useState<boolean>(true);
-// 	// const defaultValues: Partial<VehicleFormValues> = {
-// 	// 	category: vehicle.category,
-// 	// 	color: vehicle.color,
-// 	// 	image: vehicle.image,
-// 	// 	plate_number: vehicle.plate_number,
-// 	// 	status: vehicle.status,
-// 	// 	vehicle_type: vehicle.vehicle_type,
-// 	// 	vin: vehicle.vin,
-// 	// 	barcode_string: vehicle.barcode_string,
-// 	// 	tracker_id: vehicle.tracker_id ? vehicle.tracker_id : '',
-// 	// 	owners_phone_number: vehicle.owners_phone_number,
-// 	// 	owners_name: vehicle.owners_name,
-// 	// 	with_wallet: true,
-// 	// };
-// 	const [isLoading, setIsLoading] = React.useState<boolean>(false);
-// 	const { toast } = useToast();
-// 	const form = useForm<VehicleFormValues>({
-// 		resolver: zodResolver(vehicleFormSchema),
-// 		// defaultValues,
-// 		mode: 'onChange',
-// 	});
 
-// 	async function onSubmit(data: VehicleFormValues) {
-// 		setIsLoading(true);
-// 		try {
-// 			const createVehicleResponse = await fetch(
-// 				'/api/create-vehicle',
-// 				{
-// 					method: 'PUT',
-// 					body: JSON.stringify({
-// 						category: data.category,
-// 						color: data.color,
-// 						image: data.image,
-// 						plate_number: data.plate_number,
-// 						status: data.status,
-// 						vehicle_type: data.vehicle_type,
-// 						vin: data.vin,
-// 						barcode_string: data.barcode_string,
-// 						tracker_id: data.tracker_id,
-// 						owners_phone_number: data.owners_phone_number,
-// 						owners_name: data.owners_name,
-// 						with_wallet: data.with_wallet,
-// 						// vehicle_id: vehicle.vehicle_id,
-// 					}),
-// 				}
-// 			);
-// 			const result = await createVehicleResponse.json();
-// 			if (createVehicleResponse.ok) {
-// 				toast({
-// 					title: 'Vehicle Updated Successfully',
-// 				});
-// 				setIsLoading(false);
-// 				setDisabled(true);
-// 				return NextResponse.json(result);
-// 			} else {
-// 				setIsLoading(false);
-// 				toast({
-// 					title: 'Vehicle NOT Created',
-// 				});
-// 				return null;
-// 			}
-// 		} catch (error) {
-// 			setIsLoading(false);
-// 		}
-// 	}
 
-// 	return (
-// 		<div className='mb-20'>
-// 			<Form {...form}>
-// 				<form
-// 					onSubmit={form.handleSubmit(onSubmit)}
-// 					className='flex flex-col gap-5 w-full'
-// 				>
-// 					<div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
-// 						<FormField
-// 							name='category'
-// 							control={form.control}
-// 							render={({ field }) => (
-// 								<FormItem>
-// 									<FormLabel className='text-title1Bold pl-4'>
-// 										Vehicle Category
-// 									</FormLabel>
+export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS | undefined}) {
+    const defaultValues: Partial<vehicleFormValues> = {
+        plate_number:  vehicle?.plate_number,
+        category: vehicle?.detachable,
+        nin: vehicle?.drivers_license,
+        owners_phone_number: '',
+        owners_name: '',
+    };
 
-// 									<Select
-// 										disabled={disabled}
-// 										onValueChange={field.onChange}
-// 										defaultValue={field.value}
-// 									>
-// 										<FormControl>
-// 											<SelectTrigger className='relative text-body flex  items-center h-14 rounded-2xl'>
-// 												<SelectValue placeholder='Select a vehicle category' />
-// 											</SelectTrigger>
-// 										</FormControl>
-// 										<SelectContent>
-// 											<SelectItem value='keke'>
-// 												Keke
-// 											</SelectItem>
-// 											<SelectItem value='small_shuttle'>
-// 												Small Shuttle
-// 											</SelectItem>
-// 											<SelectItem value='big_shuttle'>
-// 												Big Shuttle
-// 											</SelectItem>
-// 										</SelectContent>
-// 									</Select>
-// 									<FormMessage />
-// 								</FormItem>
-// 							)}
-// 						/>
 
-// 						<FormField
-// 							name='color'
-// 							control={form.control}
-// 							render={({ field }) => (
-// 								<FormItem>
-// 									<FormLabel className='text-title1Bold pl-4'>
-// 										Color
-// 									</FormLabel>
+	const [newVehicleId, setNewVehicleId] = React.useState<string>('');
+    const [isDisabled, setIsDisabled ] = React.useState<boolean>(true);
+	const { toast } = useToast();
+	const [isLoading, setIsLoading] = React.useState<boolean>(false);
+	const [open, setOpen] = React.useState(false);
+	const form = useForm<vehicleFormValues>({
+		resolver: zodResolver(vehicleFormSchema),
+		defaultValues,
+		mode: 'onChange',
+	});
 
-// 									<FormControl>
-// 										<Input
-// 											disabled={disabled}
-// 											className='relative text-body flex  items-center h-14 rounded-2xl'
-// 											{...field}
-// 											type='text'
-// 											placeholder='Enter vehicle color'
-// 										/>
-// 									</FormControl>
-// 									<FormMessage />
-// 								</FormItem>
-// 							)}
-// 						/>
+	const onSubmit = async (data: vehicleFormValues) => {
+		setIsLoading(true);
+		try {
+			const createVehicleResponse = await fetch(
+				'/api/create-vehicle',
+				{
+					method: 'POST',
+					body: JSON.stringify({
+						category: data.category,
+						price_per_tyre: data.price_by_tyre,
+						plate_number: data.plate_number,
+						vehicle_type: data.vehicle_type,
+						nin: data.nin,
+						owners_phone_number: data.owners_phone_number,
+						owners_name: data.owners_name,
+						
+					}),
+				}
+			);
+			const result = await createVehicleResponse.json();
+			if (
+				createVehicleResponse.status > 199 &&
+				createVehicleResponse.status < 299
+			) {
+				toast({
+					title: 'Vehicle Created Successfully',
+				});
+				setIsLoading(false);
+				setOpen(true);
+				form.reset();
+				setNewVehicleId(result.data.vehicle_id);
+				return NextResponse.json(result);
+			} else {
+				setIsLoading(false);
+				toast({
+					title: 'Vehicle NOT Created',
+				});
+				return NextResponse.json(result);
+			}
+		} catch (error) {
+			setIsLoading(false);
+		}
+	};
 
-// 						<FormField
-// 							name='vehicle_type'
-// 							control={form.control}
-// 							render={({ field }) => (
-// 								<FormItem>
-// 									<FormLabel className='text-title1Bold pl-4'>
-// 										Vehicle Type
-// 									</FormLabel>
+    
+    
+	return (
+		<Form {...form}>
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className='flex flex-col gap-4 mt-7 p-4 '
+			>
+				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+					<FormField
+						control={form.control}
+						name='category'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className='text-title1Bold pl-4'>
+									Vehicle Category
+								</FormLabel>
 
-// 									<FormControl>
-// 										<Input
-// 											disabled={disabled}
-// 											className='relative text-body flex  items-center h-14 rounded-2xl'
-// 											{...field}
-// 											type='text'
-// 											placeholder='Enter vehicle type'
-// 										/>
-// 									</FormControl>
-// 									<FormMessage />
-// 								</FormItem>
-// 							)}
-// 						/>
+								<Select
+									onValueChange={field.onChange}
+									defaultValue={field.value}
+                                    disabled={isDisabled}
+								>
+									<FormControl>
+										<SelectTrigger className='relative text-body flex  items-center h-14 rounded-lg'>
+											<SelectValue placeholder='Select a vehicle category' />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										<SelectItem value='Detachable'>
+											Detachable
+										</SelectItem>
+										<SelectItem value='Non-Detachable'>
+											Non-Detachable
+										</SelectItem>
+										
+									</SelectContent>
+								</Select>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-// 						<FormField
-// 							name='plate_number'
-// 							control={form.control}
-// 							render={({ field }) => (
-// 								<FormItem>
-// 									<FormLabel className='text-title1Bold pl-4'>
-// 										Plate Number
-// 									</FormLabel>
+					<FormField
+						name='vehicle_type'
+						control={form.control}
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className='text-title1Bold pl-4'>
+								Tyre Type
+								</FormLabel>
 
-// 									<FormControl>
-// 										<Input
-// 											disabled={disabled}
-// 											className='relative text-body flex  items-center h-14 rounded-2xl'
-// 											{...field}
-// 											type='text'
-// 											placeholder='Plate Number'
-// 										/>
-// 									</FormControl>
-// 									<FormMessage />
-// 								</FormItem>
-// 							)}
-// 						/>
+								<Select
+									onValueChange={field.onChange}
+									defaultValue={field.value}
+                                    disabled={isDisabled}
+								>
+									<FormControl>
+										<SelectTrigger className='relative text-body flex  items-center h-14 rounded-lg'>
+											<SelectValue placeholder='Select number of tyre' />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										<SelectItem value='8'>
+											8
+										</SelectItem>
+										<SelectItem value='12'>
+											12
+										</SelectItem>
+										<SelectItem value='14'>
+											14
+										</SelectItem>
+										<SelectItem value='18'>
+											18
+										</SelectItem>
+										<SelectItem value='24'>
+											24
+										</SelectItem>	
+									</SelectContent>
+								</Select>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-// 						<FormField
-// 							name='vin'
-// 							control={form.control}
-// 							render={({ field }) => (
-// 								<FormItem>
-// 									<FormLabel className='text-title1Bold pl-4'>
-// 										VIN
-// 									</FormLabel>
+{/* <FormField
+						name='price_by_tyre'
+                       
+						control={form.control}
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className='text-title1Bold pl-4'>
+								Price
+								</FormLabel>
 
-// 									<FormControl>
-// 										<Input
-// 											disabled={disabled}
-// 											className='relative text-body flex  items-center h-14 rounded-2xl'
-// 											{...field}
-// 											type='text'
-// 											placeholder='Enter VIN'
-// 										/>
-// 									</FormControl>
-// 									<FormMessage />
-// 								</FormItem>
-// 							)}
-// 						/>
+								<Select
+									onValueChange={field.onChange}
+									defaultValue={field.value}
+                                    disabled={isDisabled}
+								>
+									<FormControl>
+										<SelectTrigger className='relative text-body flex  items-center h-14 rounded-lg'>
+											<SelectValue placeholder='Select amount for tyre' />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+									<SelectItem value='8000'>
+											8000
+										</SelectItem>
+										<SelectItem value='12,000'>
+											12,000
+										</SelectItem>
+										<SelectItem value='14,000'>
+											14,000
+										</SelectItem>
+										<SelectItem value='18,000'>
+											18,000
+										</SelectItem>
+										<SelectItem value='24,000'>
+											24,000
+										</SelectItem>	
+									</SelectContent>
+								</Select>
+								<FormMessage />
+							</FormItem>
+						)}
+					/> */}
+					
 
-// 						<FormField
-// 							name='owners_name'
-// 							control={form.control}
-// 							render={({ field }) => (
-// 								<FormItem>
-// 									<FormLabel className='text-title1Bold pl-4'>
-// 										{`Owner's Name`}
-// 									</FormLabel>
+					<FormField
+						name='plate_number'
+						control={form.control}
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className='text-title1Bold pl-4'>
+									Plate Number
+								</FormLabel>
 
-// 									<FormControl>
-// 										<Input
-// 											disabled={disabled}
-// 											className='relative text-body flex  items-center h-14 rounded-2xl'
-// 											{...field}
-// 											type='text'
-// 											placeholder={`Enter owner's name`}
-// 										/>
-// 									</FormControl>
-// 									<FormMessage />
-// 								</FormItem>
-// 							)}
-// 						/>
+								<FormControl>
+									<Input
+										className='relative text-body flex  items-center h-14 rounded-lg'
+										{...field}
+                                        disabled
+										type='text'
+										placeholder='Plate Number'
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-// 						<FormField
-// 							name='owners_phone_number'
-// 							control={form.control}
-// 							render={({ field }) => (
-// 								<FormItem>
-// 									<FormLabel className='text-title1Bold pl-4'>
-// 										{`Owner's Phone Number`}
-// 									</FormLabel>
+					<FormField
+						name='nin'
+						control={form.control}
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className='text-title1Bold pl-4'>
+									NIN
+								</FormLabel>
 
-// 									<FormControl>
-// 										<Input
-// 											disabled={disabled}
-// 											className='relative text-body flex  items-center h-14 rounded-2xl'
-// 											{...field}
-// 											type='text'
-// 											placeholder={`Enter owner's phone number`}
-// 										/>
-// 									</FormControl>
-// 									<FormMessage />
-// 								</FormItem>
-// 							)}
-// 						/>
-// 						<FormField
-// 							name='barcode_string'
-// 							control={form.control}
-// 							render={({ field }) => (
-// 								<FormItem>
-// 									<FormLabel className='text-title1Bold pl-4'>
-// 										Sticker Number
-// 									</FormLabel>
+								<FormControl>
+									<Input
+										className='relative text-body flex  items-center h-14 rounded-lg'
+										{...field}
+                                        disabled
+										type='text'
+										placeholder='Enter NIN'
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-// 									<FormControl>
-// 										<Input
-// 											disabled={disabled}
-// 											className='relative text-body flex  items-center h-14 rounded-2xl'
-// 											{...field}
-// 											type='text'
-// 											placeholder='T-01'
-// 										/>
-// 									</FormControl>
-// 									<FormMessage />
-// 								</FormItem>
-// 							)}
-// 						/>
-// 						<FormField
-// 							name='tracker_id'
-// 							control={form.control}
-// 							render={({ field }) => (
-// 								<FormItem>
-// 									<FormLabel className='text-title1Bold pl-4'>
-// 										Tracker ID
-// 									</FormLabel>
+					<FormField
+						name='owners_name'
+						control={form.control}
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className='text-title1Bold pl-4'>
+									{`Owner's Name`}
+								</FormLabel>
 
-// 									<FormControl>
-// 										<Input
-// 											disabled={disabled}
-// 											className='relative text-body flex  items-center h-14 rounded-2xl'
-// 											{...field}
-// 											type='text'
-// 											placeholder='Enter tracker ID'
-// 										/>
-// 									</FormControl>
-// 									<FormMessage />
-// 								</FormItem>
-// 							)}
-// 						/>
-// 					</div>
-// 					<div className=''>
-// 						{!disabled && (
-// 							<Button
-// 								className='w-32'
-// 								type='submit'
-// 							>
-// 								{
-// 									'Save Changes'}
-// 							</Button>
-// 						)}
-// 					</div>
-// 				</form>
-// 			</Form>
-// 			{disabled && (
-// 				<div className='flex items-center justify-between gap-5'>
-// 					<Button
-// 						className='w-32'
-// 						onClick={() => setDisabled(false)}
-// 						type='button'
-// 					>
-// 						Edit
-// 					</Button>
-// 				</div>
-// 			)}
-// 		</div>
-// 	);
-// }
+								<FormControl>
+									<Input
+										className='relative text-body flex  items-center h-14 rounded-lg'
+										{...field}
+										type='text'
+										placeholder={`Enter owner's name`}
+                                        disabled={isDisabled}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<FormField
+						name='owners_phone_number'
+						control={form.control}
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className='text-title1Bold pl-4'>
+									{`Owner's Phone Number`}
+								</FormLabel>
+
+								<FormControl>
+									<Input
+										className='relative text-body flex  items-center h-14 rounded-lg'
+										{...field}
+										type='text'
+										placeholder={`+23481209847859`}
+                                        disabled={isDisabled}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					
+				</div>
+				<div className='flex justify-center items-center gap-6 text-title1Bold'>
+					<Button
+                        onClick={()=> setIsDisabled(!isDisabled)}
+						variant='default'
+						size='lg'
+						type='button'
+						className='p-4 py-2 rounded-normal w-28 '
+					>
+                        {`Edit`}
+					</Button>
+					<Button
+						variant='default'
+						size='lg'
+						type='submit'
+						className='p-4 py-2 rounded-normal w-28'
+					>
+						{ 'Save'}
+					</Button>
+				</div>
+			</form>
+
+		</Form>
+	);
+}
