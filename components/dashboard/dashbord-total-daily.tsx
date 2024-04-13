@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function DashoardTotalRevenue({
+export default function DashboardTotalDaily({
   title,
   description,
   amount,
@@ -16,13 +16,13 @@ export default function DashoardTotalRevenue({
   amount: string;
 }) {
   return (
-    <Card className="w-full md:w-1/4">
+    <Card className="w-full md:w-[30%]">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription className=" line-clamp-2 ">{description}</CardDescription>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <h4 className="grid w-full items-start justify-start mx-auto gap-4">{amount}</h4>
+        <h2 className="grid w-full items-center gap-4">{amount}</h2>
       </CardContent>
     </Card>
   );
