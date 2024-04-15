@@ -4,6 +4,7 @@ import {
 	Currency,
 	Home,
 	ScanBarcode,
+	ScanFace,
 	Settings,
 	Truck,
 	User,
@@ -32,9 +33,14 @@ export const DASHBOARD_NAV_ITEMS = [
 		icon: <BarChart className='h-4 w-4' />,
 	},
 	{
-		title: 'Scan',
+		title: 'QR Scan',
 		href: '/scan',
 		icon: <ScanBarcode className='h-4 w-4' />,
+	},
+	{
+		title: 'Plate Scanner',
+		href: '/plate-scanner',
+		icon: <ScanFace className='h-4 w-4' />,
 	},
 	{
 		title: 'Settings',

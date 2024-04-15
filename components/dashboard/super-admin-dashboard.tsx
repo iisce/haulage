@@ -57,7 +57,7 @@ export default function SuperAdminDashboard() {
 					/>
 				</div>
 			</div>
-			<div className=' hidden w-full h-[500px] overflow-y-scroll  md:flex flex-col  bg-secondary md:w-1/3  gap-3 p-3 '>
+			<div className=' hidden w-full h-[90svh] overflow-y-scroll  md:flex flex-col  bg-secondary md:w-1/3  gap-3 p-3 '>
 				<h3 className=''>Recent Activities</h3>
 				<ActivitiesCard
 					title={'Vehicle Registration'}
