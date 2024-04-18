@@ -66,11 +66,7 @@ const defaultValues: Partial<vehicleFormValues> = {
   cpassword: "",
 };
 
-export default function CreateAdminForm({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default function CreateAdminForm({id}: { id: string }) {
   const [hidePassword, setHidePassword] = useState(false);
   const [chidePassword, setcHidePassword] = useState(false);
   const [newVehicleId, setNewVehicleId] = React.useState<string>("");
