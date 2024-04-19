@@ -6,7 +6,6 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../../components/ui/button";
-import { Dialog, DialogContent } from "../../components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -16,17 +15,9 @@ import {
   FormMessage,
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../components/ui/select";
-import { useToast } from "../../components/ui/use-toast";
-import { Eye, EyeOff, PencilLine, Save } from "lucide-react";
 import { AGENTTYPE } from "../agents/agent-table";
-
+import { useToast } from "../ui/use-toast";
+import { PencilLine, Save } from "lucide-react";
 const vehicleFormSchema = z.object({
   agent_phone_number: z
     .string({

@@ -27,27 +27,13 @@ export default function Settings() {
                 </Button>
                 </DialogTrigger>
                 <DialogContent>
-                    <SettingsForm params={{
-                              id: ''
-                          }}/>
+                    <SettingsForm />
                 </DialogContent>
                </Dialog>
             </div>
-            <div className="flex justify-between w-1/3">
-            <div className=" mr-5">
-                <Button>
-                    Enable All Jobs
-                </Button>
-            </div>
-            <div className="">
-                <Button>
-                    Enable Main Jobs
-                </Button>
-            </div>
-            </div>
         </div>
        <div className="flex justify-between w-full pt-9">
-       <div className=" w-10/12">
+       <div className="lg:w-full md:w-full xl:w-full w-1/2 sm:w-full">
             <Search />
         </div>
         <div className="flex justify-end w-1/6" 
@@ -57,7 +43,7 @@ export default function Settings() {
             </Button>
             {isDropdownOpen && (
                <div className="absolute p-10 ">
-                 <div className=" bg-slate-600 right-0 mt-2 w-40 rounded-lg shadow-lg py-2 flex flex-col absolute pt-4">
+                 <div className="right-0 z-10 bg-slate-100 mt-2 w-40 rounded-lg shadow-lg py-2 flex flex-col absolute pt-4">
                     <a href="#">Option 1</a>
                     <a href="#">Option 2</a>
                     <a href="#">Option 3</a>

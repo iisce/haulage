@@ -46,11 +46,7 @@ const defaultValues: Partial<vehicleFormValues> = {
   description: "",
 };
 
-export default function SettingsForm({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default function SettingsForm() {
   const [hidePassword, setHidePassword] = useState(false);
   const [chidePassword, setcHidePassword] = useState(false);
   const [newVehicleId, setNewVehicleId] = React.useState<string>("");
@@ -80,7 +76,7 @@ export default function SettingsForm({
         createVehicleResponse.status < 299
       ) {
         toast({
-          title: "Admin Created Successfully",
+          title: "Settings Created Successfully",
         });
         setIsLoading(false);
         setOpen(true);
@@ -90,7 +86,7 @@ export default function SettingsForm({
       } else {
         setIsLoading(false);
         toast({
-          title: "Admin NOT Created",
+          title: "Settings NOT Created",
         });
         return NextResponse.json(result);
       }
@@ -157,7 +153,7 @@ export default function SettingsForm({
               <FormLabel className="text-title1Bold pl-4">Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Tell us a little bit about yourself"
+                  placeholder=""
                   className="resize-none"
                   {...field}
                 />

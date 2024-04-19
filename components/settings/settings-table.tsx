@@ -22,7 +22,7 @@ export default function SettingsTable() {
         <Dialog>
           <DialogTrigger>
             <Button>
-              <EyeOpenIcon />
+              <EyeOpenIcon className=" mr-4" />
               View
             </Button>
           </DialogTrigger>
