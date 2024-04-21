@@ -20,15 +20,15 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang='en'>
-			<body
-				className={cn(
-					'h-screen overflow-clip bg-background font-sans antialiased',
-					ubuntu.variable
-				)}
-			>
-				{children}
-			</body>
-		</html>
-	);
+    <html lang="en">
+      <body
+        className={cn(
+          "h-screen  bg-background font-sans antialiased",
+          ubuntu.variable
+        )}
+      >
+        {children}
+      </body>
+    </html>
+  );
 }
