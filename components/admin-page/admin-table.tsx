@@ -134,7 +134,7 @@ export const ADMINLIST = [
 export function AdminTable({ id }: { id: string }) {
   return (
     <>
-      <Table className="mt-[20px] w-full">
+      <Table className="mt-[20px] md:w-full w-[900px] overflow-x-scroll ">
         <TableHeader className="bg-black text-center text-white">
           <TableRow>
             <TableHead className="text-white ">Full Name</TableHead>

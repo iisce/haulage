@@ -20,13 +20,13 @@ export default function ActivitiesCard({
 	icons: React.ReactNode;
 }) {
 	return (
-		<Card className='w-full '>
+		<Card className='w-full'>
 			<CardHeader className='px-6 space-y-1'>
-				<CardTitle className='text-xl'>{title}</CardTitle>
-				<CardDescription>{description}</CardDescription>
+				<CardTitle className='text-[20px] font-bold '>{title}</CardTitle>
+				<CardDescription className='text-[14px]' >{description}</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<h5 className='grid w-full items-center gap-4'>{Date}</h5>
+				<h5 className='grid text-[14px]  w-full items-center gap-4'>{Date}</h5>
 			</CardContent>
 		</Card>
 	);

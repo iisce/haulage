@@ -16,10 +16,10 @@ export default function DashboardTotalCard({
   amount: number;
 }) {
   return (
-    <Card className="w-full md:w-1/2">
+    <Card className=" w-full ">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardTitle className="text-[20px]" >{title}</CardTitle>
+        <CardDescription className="text-[14px]" >{description}</CardDescription>
       </CardHeader>
       <CardContent>
         <h3 className="grid w-full items-center gap-4">{amount}</h3>

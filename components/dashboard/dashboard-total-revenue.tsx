@@ -16,7 +16,7 @@ export default function DashboardTotalRevenue({
   amount: string;
 }) {
   return (
-    <Card className="w-full md:w-1/4">
+    <Card className="md:w-[48.5%]">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription className=" line-clamp-2 ">{description}</CardDescription>

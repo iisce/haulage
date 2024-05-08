@@ -114,14 +114,18 @@ export const VEHICLE_DETAILS = [
 export function VehicleTable({id}: {id:string}) {
   return (
     <>
-      <Table className="mt-[20px] w-full">
+      <Table className="mt-[20px] md:w-full w-[900px] overflow-x-scroll ">
         <TableHeader className="bg-black text-center text-white">
           <TableRow>
             <TableHead className="text-white ">Plate Number</TableHead>
             <TableHead className="text-white">Drivers Licence</TableHead>
             <TableHead className="text-white">No. Of Tyre</TableHead>
-            <TableHead className="text-white text-center ">Registration Park</TableHead>
-            <TableHead className="text-white text-center ">Detachable/Non-Detachable</TableHead>
+            <TableHead className="text-white text-center ">
+              Registration Park
+            </TableHead>
+            <TableHead className="text-white text-center ">
+              Detachable/Non-Detachable
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -130,11 +134,19 @@ export function VehicleTable({id}: {id:string}) {
               <TableCell className=" text-left font-medium">
                 {singleVehicle.plate_number}
               </TableCell>
-              <TableCell className=" text-left">{singleVehicle.drivers_license}</TableCell>
-              <TableCell className=" text-left">{singleVehicle.no_of_tyres}</TableCell>
-              <TableCell className=" text-left">{singleVehicle.registration_park}</TableCell>
+              <TableCell className=" text-left">
+                {singleVehicle.drivers_license}
+              </TableCell>
+              <TableCell className=" text-left">
+                {singleVehicle.no_of_tyres}
+              </TableCell>
+              <TableCell className=" text-left">
+                {singleVehicle.registration_park}
+              </TableCell>
               <TableCell className=" flex justify-between items-center text-left">
-                <Badge className=" mx-auto rounded-full">{singleVehicle.detachable}</Badge>{" "}
+                <Badge className=" mx-auto rounded-full">
+                  {singleVehicle.detachable}
+                </Badge>{" "}
                 <DropdownMenu>
                   <DropdownMenuTrigger className=" cursor-pointer" asChild>
                     <div className="flex gap-0.5 flex-col">
@@ -146,10 +158,16 @@ export function VehicleTable({id}: {id:string}) {
                   <DropdownMenuContent>
                     <DropdownMenuGroup>
                       <DropdownMenuItem className="flex flex-col gap-2 justify-center items-center w-full">
-                        <Link href={`/vehicles/${singleVehicle.id}`} className="text-center">
+                        <Link
+                          href={`/vehicles/${singleVehicle.id}`}
+                          className="text-center"
+                        >
                           View Profile
                         </Link>
-                        <Link href={`/vehicles/${singleVehicle.id}/activities`} className="text-center">
+                        <Link
+                          href={`/vehicles/${singleVehicle.id}/activities`}
+                          className="text-center"
+                        >
                           View Activity
                         </Link>
                       </DropdownMenuItem>

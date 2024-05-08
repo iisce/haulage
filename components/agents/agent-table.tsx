@@ -132,98 +132,80 @@ export const AGENTLIST = [
 ];
 export function AgentTable() {
 	return (
-		<>
-			<Table className='mt-[20px] w-full'>
-				<TableHeader className='bg-black text-center text-white'>
-					<TableRow>
-						<TableHead className='text-white '>
-							Full Name
-						</TableHead>
-						<TableHead className='text-white'>
-							L.G.A.
-						</TableHead>
-						<TableHead className='text-white'>
-							Phone Number
-						</TableHead>
-						<TableHead className='text-white text-center '>
-							Status
-						</TableHead>
-					</TableRow>
-				</TableHeader>
-				<TableBody>
-					{AGENTLIST.map((value, k) => (
-						<TableRow key={k}>
-							<TableCell className=' text-left font-medium'>
-								{value.agent_name}
-							</TableCell>
-							<TableCell className=' text-left'>
-								{value.lga}
-							</TableCell>
-							<TableCell className=' text-left'>
-								{value.agent_phone_number}
-							</TableCell>
-							<TableCell className=' flex justify-between items-center text-left'>
-								<Badge className=' mx-auto rounded-full'>
-									{value.status}
-								</Badge>{' '}
-								<DropdownMenu>
-									<DropdownMenuTrigger
-										className=' cursor-pointer'
-										asChild
-									>
-										<div className='flex gap-0.5 flex-col'>
-											<div className=' rounded-full bg-black w-[3px] h-[3px]'></div>
-											<div className=' rounded-full bg-black w-[3px] h-[3px]'></div>
-											<div className='rounded-full bg-black w-[3px] h-[3px]'></div>
-										</div>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent>
-										<DropdownMenuGroup>
-											<DropdownMenuItem>
-												<Link
-													href={`/agents/${value.id}`}
-													className='text-center'
-												>
-													View Profile
-												</Link>
-											</DropdownMenuItem>
-										</DropdownMenuGroup>
-									</DropdownMenuContent>
-								</DropdownMenu>
-							</TableCell>
-						</TableRow>
-					))}
-				</TableBody>
-			</Table>
-			<div className=''>
-				<Pagination>
-					<PaginationContent>
-						<PaginationItem className=' list-none'>
-							<PaginationPrevious href='/' />
-						</PaginationItem>
-						<PaginationItem className=' list-none'>
-							<PaginationLink
-								href='#'
-								isActive
-							>
-								1
-							</PaginationLink>
-						</PaginationItem>
-						<PaginationItem className=' list-none'>
-							<PaginationLink href='#'>2</PaginationLink>
-						</PaginationItem>
-						<PaginationItem className=' list-none'>
-							<PaginationLink href='#'>3</PaginationLink>
-						</PaginationItem>
-						<PaginationItem className=' list-none'>
-							<PaginationEllipsis />
-						</PaginationItem>
-						<PaginationItem className=' list-none'>
-							<PaginationNext href='#' />
-						</PaginationItem>
-					</PaginationContent>
-				</Pagination>
-			</div>
-		</>
-	);
+    <>
+      <Table className="mt-[20px] md:w-full w-[900px] overflow-x-scroll ">
+        <TableHeader className="bg-black text-center text-white">
+          <TableRow>
+            <TableHead className="text-white ">Full Name</TableHead>
+            <TableHead className="text-white">L.G.A.</TableHead>
+            <TableHead className="text-white">Phone Number</TableHead>
+            <TableHead className="text-white text-center ">Status</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {AGENTLIST.map((value, k) => (
+            <TableRow key={k}>
+              <TableCell className=" text-left font-medium">
+                {value.agent_name}
+              </TableCell>
+              <TableCell className=" text-left">{value.lga}</TableCell>
+              <TableCell className=" text-left">
+                {value.agent_phone_number}
+              </TableCell>
+              <TableCell className=" flex justify-between items-center text-left">
+                <Badge className=" mx-auto rounded-full">{value.status}</Badge>{" "}
+                <DropdownMenu>
+                  <DropdownMenuTrigger className=" cursor-pointer" asChild>
+                    <div className="flex gap-0.5 flex-col">
+                      <div className=" rounded-full bg-black w-[3px] h-[3px]"></div>
+                      <div className=" rounded-full bg-black w-[3px] h-[3px]"></div>
+                      <div className="rounded-full bg-black w-[3px] h-[3px]"></div>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem>
+                        <Link
+                          href={`/agents/${value.id}`}
+                          className="text-center"
+                        >
+                          View Profile
+                        </Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <div className="">
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem className=" list-none">
+              <PaginationPrevious href="/" />
+            </PaginationItem>
+            <PaginationItem className=" list-none">
+              <PaginationLink href="#" isActive>
+                1
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem className=" list-none">
+              <PaginationLink href="#">2</PaginationLink>
+            </PaginationItem>
+            <PaginationItem className=" list-none">
+              <PaginationLink href="#">3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem className=" list-none">
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem className=" list-none">
+              <PaginationNext href="#" />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
+    </>
+  );
 }
