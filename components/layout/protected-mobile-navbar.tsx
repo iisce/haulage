@@ -10,7 +10,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '../ui/card';
-import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from '../ui/sheet';
 import ProtectedNavLink from './nav-link-protected';
 import UserMenu from './user-menu';
 import DashboardBreadcrumb from './dashboard-breadcrumb';
@@ -53,36 +53,18 @@ export default function ProtectedMobileNavBar() {
 						</Link>
 						{DASHBOARD_NAV_ITEMS.map(
 							({ href, title, icon }, key) => (
-								<ProtectedNavLink
-									key={key}
-									href={href}
-									title={title}
-									icon={icon}
-									className='transition-colors'
-								/>
+								<SheetClose key={key}>
+									<ProtectedNavLink
+										href={href}
+										title={title}
+										icon={icon}
+										className='transition-colors'
+									/>
+								</SheetClose>
 							)
 						)}
 					</nav>
-					<div className='mt-auto'>
-						<Card>
-							<CardHeader>
-								<CardTitle>Upgrade to Pro</CardTitle>
-								<CardDescription>
-									Unlock all features and get
-									unlimited access to our support
-									team.
-								</CardDescription>
-							</CardHeader>
-							<CardContent>
-								<Button
-									size='sm'
-									className='w-full'
-								>
-									Upgrade
-								</Button>
-							</CardContent>
-						</Card>
-					</div>
+					<div className='mt-auto'></div>
 				</SheetContent>
 			</Sheet>
 			<div className='w-full flex-1'>

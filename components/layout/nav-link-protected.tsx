@@ -1,9 +1,10 @@
 'use client';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
 
 export default function ProtectedNavLink({
 	href,
@@ -20,15 +21,17 @@ export default function ProtectedNavLink({
 }) {
 	const pathName = usePathname();
 	const active = pathName.startsWith(href);
+	const router = useRouter();
 	return (
-		<Link
-			href={href}
+		<Button
+			variant='link'
 			className={cn(
 				`${
 					active ? 'bg-muted' : 'text-muted-foreground'
-				} flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary`,
+				} flex w-full items-center justify-start gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary`,
 				className
 			)}
+			onClick={() => router.push(href)}
 		>
 			{icon}
 			{title}
@@ -37,6 +40,6 @@ export default function ProtectedNavLink({
 					{badge}
 				</Badge>
 			)}
-		</Link>
+		</Button>
 	);
 }
