@@ -26,6 +26,7 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '@/components/ui/pagination';
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 export type AGENTTYPE = {
 	id: string;
@@ -133,6 +134,58 @@ export const AGENTLIST = [
 export function AgentTable() {
 	return (
     <>
+      <ScrollArea className="w-screen md:w-full ">
+        <Table className="mt-[20px] md:w-full w-[900px] overflow-x-scroll ">
+          <TableHeader className="bg-black text-center text-white">
+            <TableRow>
+              <TableHead className="text-white ">Full Name</TableHead>
+              <TableHead className="text-white">L.G.A.</TableHead>
+              <TableHead className="text-white">Phone Number</TableHead>
+              <TableHead className="text-white text-center ">Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {AGENTLIST.map((value, k) => (
+              <TableRow key={k}>
+                <TableCell className=" text-left font-medium">
+                  {value.agent_name}
+                </TableCell>
+                <TableCell className=" text-left">{value.lga}</TableCell>
+                <TableCell className=" text-left">
+                  {value.agent_phone_number}
+                </TableCell>
+                <TableCell className=" flex justify-between items-center text-left">
+                  <Badge className=" mx-auto rounded-full">
+                    {value.status}
+                  </Badge>{" "}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className=" cursor-pointer" asChild>
+                      <div className="flex gap-0.5 flex-col">
+                        <div className=" rounded-full bg-black w-[3px] h-[3px]"></div>
+                        <div className=" rounded-full bg-black w-[3px] h-[3px]"></div>
+                        <div className="rounded-full bg-black w-[3px] h-[3px]"></div>
+                      </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem>
+                          <Link
+                            href={`/agents/${value.id}`}
+                            className="text-center"
+                          >
+                            View Profile
+                          </Link>
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
       <Table className="mt-[20px] md:w-full w-[900px] overflow-x-scroll ">
         <TableHeader className="bg-black text-center text-white">
           <TableRow>

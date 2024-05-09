@@ -135,7 +135,7 @@ export const ADMINLIST = [
 export function AdminTable({ id }: { id: string }) {
 	return (
 		<>
-			<ScrollArea className='w-screen'>
+			<ScrollArea className='w-screen md:w-full '>
 				<Table className='mt-[20px] min-w-[600px]'>
 					<TableHeader className='bg-black text-center text-white'>
 						<TableRow>
