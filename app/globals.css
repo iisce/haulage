@@ -91,10 +91,6 @@
     @apply scroll-m-20 text-xl font-semibold tracking-tight
   }
 
-  p {
-    @apply leading-7 [&:not(:first-child)]:mt-6
-  }
-
   blockquote {
     @apply mt-6 border-l-2 pl-6 italic
   }
@@ -137,5 +133,24 @@
 
   .muted {
     @apply text-sm text-muted-foreground
+  }
+}
+
+@layer utilities {
+
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 }

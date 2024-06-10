@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import { logout } from '@/actions/logout';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -7,8 +9,8 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '../ui/button';
 import { CircleUser } from 'lucide-react';
+import { Button } from '../ui/button';
 
 export default function UserMenu() {
 	return (
@@ -29,7 +31,9 @@ export default function UserMenu() {
 				<DropdownMenuItem>Settings</DropdownMenuItem>
 				<DropdownMenuItem>Support</DropdownMenuItem>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem>Logout</DropdownMenuItem>
+				<DropdownMenuItem onClick={async () => await logout()}>
+					Logout
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

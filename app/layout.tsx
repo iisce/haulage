@@ -1,7 +1,8 @@
+import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Ubuntu } from 'next/font/google';
+import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
-import { cn } from '@/lib/utils';
 
 const ubuntu = Ubuntu({
 	subsets: ['latin'],
@@ -23,10 +24,11 @@ export default function RootLayout({
 		<html lang='en'>
 			<body
 				className={cn(
-					'h-screen overflow-clip bg-background font-sans antialiased',
+					'h-screen bg-background font-sans antialiased overflow-clip',
 					ubuntu.variable
 				)}
 			>
+				<NextTopLoader color='#000000' />
 				{children}
 			</body>
 		</html>

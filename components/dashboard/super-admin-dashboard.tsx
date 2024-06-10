@@ -1,96 +1,184 @@
-import React from 'react';
-import DashboardTotalCard from './dashboard-total-card';
-import DashoardTotalRevenue from './dashboard-total-revenue';
-import ActivitiesCard from './activities-card';
-import { Button } from '../ui/button';
+import { getAgents } from "@/data/agent";
 import {
-	ContactRound,
-	Landmark,
-	ScanBarcode,
-	User,
-	UserPlusIcon,
-	UserRound,
-	Users,
-} from 'lucide-react';
+     ContactRound,
+     Landmark,
+     ScanBarcode,
+     User,
+     UserPlusIcon,
+} from "lucide-react";
+import { Suspense } from "react";
+import { Button } from "../ui/button";
+import ActivitiesCard from "./activities-card";
+import DashboardTotalCard, {
+     DashboardTotalCardSkeleton,
+} from "./dashboard-total-card";
+import DashboardTotalRevenue, {
+     DashboardTotalRevenueSkeleton,
+} from "./dashboard-total-revenue";
 
-export default function SuperAdminDashboard() {
-	return (
-		<div className='flex flex-col md:flex-row h-full p-5 gap-5'>
-			<div className=' flex flex-col w-full md:w-3/4 gap-5'>
-				<div className='flex flex-col md:flex-row gap-5'>
-					<DashboardTotalCard
-						title={'Admin'}
-						description={'Total number of admins'}
-						amount={10}
-					/>
-					<DashboardTotalCard
-						title={'Agent'}
-						description={'Total number of Agent'}
-						amount={500}
-					/>
-					<DashboardTotalCard
-						title={'Vehicles'}
-						description={'Total number of Vehicles'}
-						amount={10000}
-					/>
-				</div>
-				<div className='flex flex-col md:flex-row gap-5'>
-					<DashoardTotalRevenue
-						title={'Yearly'}
-						description={'Total amount of yearly Revenue'}
-						amount={'#19,333'}
-					/>
-					<DashoardTotalRevenue
-						title={'Monthly'}
-						description={'Total amount of monthly Revenue'}
-						amount={'#99,848'}
-					/>
-					<DashoardTotalRevenue
-						title={'Weekly'}
-						description={'Total amount of weekly Revenue'}
-						amount={'#88,490'}
-					/>
-					<DashoardTotalRevenue
-						title={'Daily'}
-						description={'Total amount of daily Revenue'}
-						amount={'#475'}
-					/>
-				</div>
-			</div>
-			<div className=' hidden w-full h-[90svh] overflow-y-scroll  md:flex flex-col  bg-secondary md:w-1/3  gap-3 p-3 '>
-				<h3 className=''>Recent Activities</h3>
-				<ActivitiesCard
-					title={'Vehicle Registration'}
-					description={'New Vehicle registered'}
-					Date={'12/04/2023 | 12:23PM'}
-					icons={<User />}
-				/>
-				<ActivitiesCard
-					title={'Charge'}
-					description={'Levy issued to Vehicle202'}
-					Date={'12/04/2023 | 12:23PM'}
-					icons={<Landmark />}
-				/>
-				<ActivitiesCard
-					title={'Scan'}
-					description={'New vehicle scanned'}
-					Date={'12/04/2023 | 12:23PM'}
-					icons={<ScanBarcode />}
-				/>
-				<ActivitiesCard
-					title={'Agent Registration'}
-					description={'New agent registered'}
-					Date={'12/04/2023 | 12:23PM'}
-					icons={<UserPlusIcon />}
-				/>
-				<ActivitiesCard
-					title={'Admin Registration'}
-					description={'New admin registered'}
-					Date={'12/04/2023 | 12:23PM'}
-					icons={<ContactRound />}
-				/>
-				<Button>View All</Button>
-			</div>
-		</div>
-	);
+export default async function SuperAdminDashboard() {
+     const agents = await getAgents();
+     return (
+          <div className="grid h-full w-full grid-cols-4 gap-4 p-5">
+               <div className="col-span-4 flex w-full flex-col gap-5 pb-5 lg:col-span-3">
+                    <div className="flex flex-col gap-5 md:flex-row">
+                         <Suspense fallback={<DashboardTotalCardSkeleton />}>
+                              <DashboardTotalCard
+                                   title={"Admin"}
+                                   description={"Total number of admins"}
+                                   amount={0}
+                              />
+                         </Suspense>
+                         <Suspense fallback={<DashboardTotalCardSkeleton />}>
+                              <DashboardTotalCard
+                                   title={"Agent"}
+                                   description={"Total number of Agent"}
+                                   amount={agents.length}
+                              />
+                         </Suspense>
+                         <Suspense fallback={<DashboardTotalCardSkeleton />}>
+                              <DashboardTotalCard
+                                   title={"Vehicles"}
+                                   description={"Total number of Vehicles"}
+                                   amount={10000}
+                              />
+                         </Suspense>
+                    </div>
+                    <div className="grid gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-4">
+                         <Suspense fallback={<DashboardTotalRevenueSkeleton />}>
+                              <DashboardTotalRevenue
+                                   title={"Yearly"}
+                                   description={
+                                        "Total amount of yearly Revenue"
+                                   }
+                                   amount={19333}
+                              />
+                         </Suspense>
+                         <Suspense fallback={<DashboardTotalRevenueSkeleton />}>
+                              <DashboardTotalRevenue
+                                   title={"Monthly"}
+                                   description={
+                                        "Total amount of monthly Revenue"
+                                   }
+                                   amount={99848}
+                              />
+                         </Suspense>
+                         <Suspense fallback={<DashboardTotalRevenueSkeleton />}>
+                              <DashboardTotalRevenue
+                                   title={"Weekly"}
+                                   description={
+                                        "Total amount of weekly Revenue"
+                                   }
+                                   amount={88490}
+                              />
+                         </Suspense>
+                         <Suspense fallback={<DashboardTotalRevenueSkeleton />}>
+                              <DashboardTotalRevenue
+                                   title={"Daily"}
+                                   description={"Total amount of daily Revenue"}
+                                   amount={475}
+                              />
+                         </Suspense>
+                    </div>
+               </div>
+               <div className="col-span-4 hidden h-[calc(100svh-100px)] w-full md:flex lg:col-span-1">
+                    <div className="flex w-full flex-col justify-between gap-3 rounded-lg bg-secondary p-3">
+                         <p className="text-xl">Recent Activities</p>
+                         <div className="no-scrollbar grid gap-3 overflow-y-scroll">
+                              <ActivitiesCard
+                                   title={"Vehicle Registration"}
+                                   description={"New Vehicle registered"}
+                                   date={"12/04/2023 | 12:23PM"}
+                                   icons={<User />}
+                              />
+                              <ActivitiesCard
+                                   title={"Charge"}
+                                   description={"Levy issued to Vehicle202"}
+                                   date={"12/04/2023 | 12:23PM"}
+                                   icons={<Landmark />}
+                              />
+                              <ActivitiesCard
+                                   title={"Scan"}
+                                   description={"New vehicle scanned"}
+                                   date={"12/04/2023 | 12:23PM"}
+                                   icons={<ScanBarcode />}
+                              />
+                              <ActivitiesCard
+                                   title={"Agent Registration"}
+                                   description={"New agent registered"}
+                                   date={"12/04/2023 | 12:23PM"}
+                                   icons={<UserPlusIcon />}
+                              />
+                              <ActivitiesCard
+                                   title={"Admin Registration"}
+                                   description={"New admin registered"}
+                                   date={"12/04/2023 | 12:23PM"}
+                                   icons={<ContactRound />}
+                              />
+                              <ActivitiesCard
+                                   title={"Vehicle Registration"}
+                                   description={"New Vehicle registered"}
+                                   date={"12/04/2023 | 12:23PM"}
+                                   icons={<User />}
+                              />
+                              <ActivitiesCard
+                                   title={"Charge"}
+                                   description={"Levy issued to Vehicle202"}
+                                   date={"12/04/2023 | 12:23PM"}
+                                   icons={<Landmark />}
+                              />
+                              <ActivitiesCard
+                                   title={"Scan"}
+                                   description={"New vehicle scanned"}
+                                   date={"12/04/2023 | 12:23PM"}
+                                   icons={<ScanBarcode />}
+                              />
+                              <ActivitiesCard
+                                   title={"Agent Registration"}
+                                   description={"New agent registered"}
+                                   date={"12/04/2023 | 12:23PM"}
+                                   icons={<UserPlusIcon />}
+                              />
+                              <ActivitiesCard
+                                   title={"Admin Registration"}
+                                   description={"New admin registered"}
+                                   date={"12/04/2023 | 12:23PM"}
+                                   icons={<ContactRound />}
+                              />
+                              <ActivitiesCard
+                                   title={"Vehicle Registration"}
+                                   description={"New Vehicle registered"}
+                                   date={"12/04/2023 | 12:23PM"}
+                                   icons={<User />}
+                              />
+                              <ActivitiesCard
+                                   title={"Charge"}
+                                   description={"Levy issued to Vehicle202"}
+                                   date={"12/04/2023 | 12:23PM"}
+                                   icons={<Landmark />}
+                              />
+                              <ActivitiesCard
+                                   title={"Scan"}
+                                   description={"New vehicle scanned"}
+                                   date={"12/04/2023 | 12:23PM"}
+                                   icons={<ScanBarcode />}
+                              />
+                              <ActivitiesCard
+                                   title={"Agent Registration"}
+                                   description={"New agent registered"}
+                                   date={"12/04/2023 | 12:23PM"}
+                                   icons={<UserPlusIcon />}
+                              />
+                              <ActivitiesCard
+                                   title={"Admin Registration"}
+                                   description={"New admin registered"}
+                                   date={"12/04/2023 | 12:23PM"}
+                                   icons={<ContactRound />}
+                              />
+                         </div>
+                         <Button>View All</Button>
+                    </div>
+               </div>
+          </div>
+     );
 }

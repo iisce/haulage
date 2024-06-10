@@ -8,20 +8,20 @@ import { z } from 'zod';
 import { Button } from '../../components/ui/button';
 import { Dialog, DialogContent } from '../../components/ui/dialog';
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
 } from '../../components/ui/form';
 import { Input } from '../../components/ui/input';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
 } from '../../components/ui/select';
 import { useToast } from '../../components/ui/use-toast';
 import { IVEHICLEDETAILS } from '../vehicles/vehicleTable';
@@ -32,30 +32,38 @@ const vehicleFormSchema = z.object({
 		.string({
 			required_error: 'Please enter a valid Category.',
 		})
+		.refine((value) => ['detchable', 'non-detchable'].includes(value), {
+			message: 'Invalid means of identification.',
+		}),
+	vehicle_type: z
+		.string({
+			required_error: 'Please enter a valid vehicle type.',
+		})
 		.refine(
-			(value) =>
-				['detchable', 'non-detchable',].includes(value),
+			(value) => ['8', '12', '14', '16', '18', '24'].includes(value),
 			{
 				message: 'Invalid means of identification.',
 			}
 		),
-	vehicle_type: z.string({
-		required_error: 'Please enter a valid vehicle type.',
-	})
-	.refine((value) => ['8', '12', '14', '16', '18', '24',].includes(value),
-	{
-		message: 'Invalid means of identification.',
-	}
-	),
-	price_by_tyre: z.string({
-		required_error: 'Please enter a valid vehicle type.',
-	})
-	.refine((value) => ['8000', '12,000', '14,000', '16,000', '18,000', '24,000',].includes(value),
-	{
-		message: 'Invalid means of identification.',
-	}
-	),
-	
+	price_by_tyre: z
+		.string({
+			required_error: 'Please enter a valid vehicle type.',
+		})
+		.refine(
+			(value) =>
+				[
+					'8000',
+					'12,000',
+					'14,000',
+					'16,000',
+					'18,000',
+					'24,000',
+				].includes(value),
+			{
+				message: 'Invalid means of identification.',
+			}
+		),
+
 	image: z
 		.string({
 			required_error: 'Please add image.',
@@ -85,20 +93,21 @@ const vehicleFormSchema = z.object({
 
 type vehicleFormValues = z.infer<typeof vehicleFormSchema>;
 
-
-
-export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS | undefined}) {
-    const defaultValues: Partial<vehicleFormValues> = {
-        plate_number:  vehicle?.plate_number,
-        category: vehicle?.detachable,
-        nin: vehicle?.drivers_license,
-        owners_phone_number: '',
-        owners_name: '',
-    };
-
+export default function UpdateVehicleForm({
+	vehicle,
+}: {
+	vehicle: IVEHICLEDETAILS | undefined;
+}) {
+	const defaultValues: Partial<vehicleFormValues> = {
+		plate_number: vehicle?.plate_number,
+		category: vehicle?.detachable,
+		nin: vehicle?.drivers_license,
+		owners_phone_number: '',
+		owners_name: '',
+	};
 
 	const [newVehicleId, setNewVehicleId] = React.useState<string>('');
-    const [isDisabled, setIsDisabled ] = React.useState<boolean>(true);
+	const [isDisabled, setIsDisabled] = React.useState<boolean>(true);
 	const { toast } = useToast();
 	const [isLoading, setIsLoading] = React.useState<boolean>(false);
 	const [open, setOpen] = React.useState(false);
@@ -123,7 +132,6 @@ export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS |
 						nin: data.nin,
 						owners_phone_number: data.owners_phone_number,
 						owners_name: data.owners_name,
-						
 					}),
 				}
 			);
@@ -152,8 +160,6 @@ export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS |
 		}
 	};
 
-    
-    
 	return (
 		<Form {...form}>
 			<form
@@ -173,7 +179,7 @@ export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS |
 								<Select
 									onValueChange={field.onChange}
 									defaultValue={field.value}
-                                    disabled={isDisabled}
+									disabled={isDisabled}
 								>
 									<FormControl>
 										<SelectTrigger className='relative text-body flex  items-center h-14 rounded-lg'>
@@ -187,7 +193,6 @@ export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS |
 										<SelectItem value='Non-Detachable'>
 											Non-Detachable
 										</SelectItem>
-										
 									</SelectContent>
 								</Select>
 								<FormMessage />
@@ -201,13 +206,13 @@ export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS |
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel className='text-title1Bold pl-4'>
-								Tyre Type
+									Tyre Type
 								</FormLabel>
 
 								<Select
 									onValueChange={field.onChange}
 									defaultValue={field.value}
-                                    disabled={isDisabled}
+									disabled={isDisabled}
 								>
 									<FormControl>
 										<SelectTrigger className='relative text-body flex  items-center h-14 rounded-lg'>
@@ -229,7 +234,7 @@ export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS |
 										</SelectItem>
 										<SelectItem value='24'>
 											24
-										</SelectItem>	
+										</SelectItem>
 									</SelectContent>
 								</Select>
 								<FormMessage />
@@ -237,7 +242,7 @@ export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS |
 						)}
 					/>
 
-{/* <FormField
+					{/* <FormField
 						name='price_by_tyre'
                        
 						control={form.control}
@@ -279,7 +284,6 @@ export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS |
 							</FormItem>
 						)}
 					/> */}
-					
 
 					<FormField
 						name='plate_number'
@@ -294,7 +298,7 @@ export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS |
 									<Input
 										className='relative text-body flex  items-center h-14 rounded-lg'
 										{...field}
-                                        disabled
+										disabled
 										type='text'
 										placeholder='Plate Number'
 									/>
@@ -317,7 +321,7 @@ export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS |
 									<Input
 										className='relative text-body flex  items-center h-14 rounded-lg'
 										{...field}
-                                        disabled
+										disabled
 										type='text'
 										placeholder='Enter NIN'
 									/>
@@ -342,7 +346,7 @@ export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS |
 										{...field}
 										type='text'
 										placeholder={`Enter owner's name`}
-                                        disabled={isDisabled}
+										disabled={isDisabled}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -365,39 +369,36 @@ export default function UpdateVehicleForm({vehicle}: {vehicle: IVEHICLEDETAILS |
 										{...field}
 										type='text'
 										placeholder={`+23481209847859`}
-                                        disabled={isDisabled}
+										disabled={isDisabled}
 									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
-
-					
 				</div>
 				<div className='flex justify-center items-center gap-6 text-title1Bold'>
-				<Button
-                variant="default"
-                size="lg"
-                onClick={() => setIsDisabled(!isDisabled)}
-                type="button"
-                className="p-4 py-2 rounded-normal w-28"
-              >
-                {"Edit"} <PencilLine className="w-5 h-5 ml-3" />
-              </Button>
-					
 					<Button
-						 variant={"outline"}
+						variant='default'
+						size='lg'
+						onClick={() => setIsDisabled(!isDisabled)}
+						type='button'
+						className='p-4 py-2 rounded-normal w-28'
+					>
+						{'Edit'} <PencilLine className='w-5 h-5 ml-3' />
+					</Button>
+
+					<Button
+						variant={'outline'}
 						size='lg'
 						disabled={!isDisabled}
 						type='submit'
 						className='p-4 py-2 rounded-normal w-28'
 					>
-						{ 'Save'} <Save className="w-5 h-5 ml-3" />
+						{'Save'} <Save className='w-5 h-5 ml-3' />
 					</Button>
 				</div>
 			</form>
-
 		</Form>
 	);
 }

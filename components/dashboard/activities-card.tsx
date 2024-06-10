@@ -1,33 +1,26 @@
-import React from 'react';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '../ui/card';
-import { User } from 'lucide-react';
+import React from "react";
+import { Card, CardDescription, CardTitle } from "../ui/card";
 
 export default function ActivitiesCard({
-	title,
-	description,
-	Date,
-	icons,
+     title,
+     description,
+     date,
+     icons,
 }: {
-	title: string;
-	description: string;
-	Date: string;
-	icons: React.ReactNode;
+     title: string;
+     description: string;
+     date: string;
+     icons: React.ReactNode;
 }) {
-	return (
-		<Card className='w-full '>
-			<CardHeader className='px-6 space-y-1'>
-				<CardTitle className='text-xl'>{title}</CardTitle>
-				<CardDescription>{description}</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<h5 className='grid w-full items-center gap-4'>{Date}</h5>
-			</CardContent>
-		</Card>
-	);
+     return (
+          <Card className="w-full p-2">
+               <CardTitle className="font-semibold md:text-lg">
+                    {title}
+               </CardTitle>
+               <CardDescription className="text-sm">
+                    {description}
+               </CardDescription>
+               <p className="grid w-full items-center gap-4 text-xs">{date}</p>
+          </Card>
+     );
 }

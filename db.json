@@ -1,0 +1,47 @@
+{
+	"superadmin": [
+		{
+			"id": "000001",
+			"name": "Super Admin",
+			"email": "sample@superadmin.com",
+			"phone": "+2348061729634",
+			"image": "",
+			"password": "password",
+			"address": "",
+			"nin": "",
+			"status": "",
+			"role": "SUPERADMIN"
+		}
+	],
+	"admins": [
+		{
+			"id": "000001",
+			"name": "Sample Admin",
+			"email": "sample@admin.com",
+			"phone": "+2348061729634",
+			"image": "",
+			"password": "",
+			"address": "27, Test Address",
+			"nin": "16726736737",
+			"status": "ACTIVE",
+			"role": "ADMIN"
+		}
+	],
+	"agents": [
+		{
+			"id": "000001",
+			"name": "Sample Agent",
+			"email": "sample@agent.com",
+			"phone": "+2348061729634",
+			"image": "",
+			"password": "",
+			"address": "",
+			"nin": "",
+			"zone": "",
+			"lga": "",
+			"status": "",
+			"role": "AGENT"
+		}
+	],
+	"vehicles": []
+}
