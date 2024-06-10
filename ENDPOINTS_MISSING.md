@@ -12,3 +12,4 @@
 ## Auth
 
 - get all validation code
+- get validation code by email

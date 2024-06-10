@@ -34,6 +34,7 @@ export default function AdminRegistrationForm() {
      const [isPending, startTransition] = useTransition();
      const form = useForm<z.infer<typeof AdminRegisterSchema>>({
           resolver: zodResolver(AdminRegisterSchema),
+          mode: "onChange",
           defaultValues: {
                email: "",
                password: "",

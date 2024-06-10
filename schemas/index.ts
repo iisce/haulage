@@ -93,7 +93,7 @@ export const AdminRegisterSchema = z.object({
                required_error: "Enter admin phone number.",
           })
           .regex(
-               /^\[+234][0]\[789][01]\d{8}$/,
+               /^(0|\+?234)?[789][01]\d{8}$/,
                "Phone format (+2348012345678/08012345678)",
           ),
      password: z.string().min(6, {
