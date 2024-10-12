@@ -31,15 +31,14 @@ export default function ProtectedMobileNavBar() {
                                    className="flex shrink-0 items-center gap-2 px-5 font-bold"
                               >
                                    <Image
-                                        src={
-                                             "https://transpay.vercel.app/anambara.png"
-                                        }
+                                        src="https://transpay.vercel.app/anambara.png"
                                         height={40}
                                         width={40}
                                         className="h-10 w-10 shrink-0"
-                                        alt="Transpay Logo"
+                                        alt="HauleFee Logo"
+                                        priority
                                    />
-                                   <span className="sr-only">Haulage</span>
+                                   <span className="sr-only">HauleFee</span>
                               </Link>
                               {DASHBOARD_NAV_ITEMS.map(
                                    ({ href, title, icon }, key) => (

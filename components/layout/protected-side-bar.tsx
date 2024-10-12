@@ -15,15 +15,14 @@ export default function ProtectedSideBar() {
                               className="flex shrink-0 items-center gap-2 px-5 font-bold"
                          >
                               <Image
-                                   src={
-                                        "https://transpay.vercel.app/anambara.png?w=48&q=75"
-                                   }
+                                   src="https://transpay.vercel.app/anambara.png?w=48&q=75"
                                    height={40}
                                    width={40}
                                    className="h-10 w-10 shrink-0"
-                                   alt="Transpay Logo"
+                                   alt="HauleFee Logo"
+                                   priority
                               />
-                              <span className="">Haulage</span>
+                              <span className="">HauleFee</span>
                          </Link>
                          <Button
                               variant="outline"

@@ -15,6 +15,7 @@ import { ANAMBRA_LGA_LIST } from "@/constants";
 import { AdminRegisterSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -29,6 +30,7 @@ import {
 } from "../ui/select";
 
 export default function AdminRegistrationForm() {
+     const router = useRouter();
      const [error, setError] = useState<string | undefined>("");
      const [success, setSuccess] = useState<string | undefined>("");
      const [isPending, startTransition] = useTransition();
@@ -38,6 +40,12 @@ export default function AdminRegistrationForm() {
           defaultValues: {
                email: "",
                password: "",
+               code: "",
+               confirmpassword: "",
+               fullname: "",
+               lga: "",
+               nin: "",
+               phonenumber: "",
           },
      });
 
@@ -52,6 +60,7 @@ export default function AdminRegistrationForm() {
                     if (data?.success) {
                          setSuccess(data.success);
                          form.reset();
+                         router.push("/sign-in");
                     }
                });
           });

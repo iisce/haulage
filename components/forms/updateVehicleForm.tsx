@@ -1,404 +1,266 @@
-'use client';
-import { zodResolver } from '@hookform/resolvers/zod';
-import Link from 'next/link';
-import { NextResponse } from 'next/server';
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { Button } from '../../components/ui/button';
-import { Dialog, DialogContent } from '../../components/ui/dialog';
+"use client";
+
+import { TYRE_TYPE } from "@/constants";
+import { createVehicleFormSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "../../components/ui/button";
 import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from '../../components/ui/form';
-import { Input } from '../../components/ui/input';
+     Form,
+     FormControl,
+     FormField,
+     FormItem,
+     FormLabel,
+     FormMessage,
+} from "../../components/ui/form";
+import { Input } from "../../components/ui/input";
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '../../components/ui/select';
-import { useToast } from '../../components/ui/use-toast';
-import { IVEHICLEDETAILS } from '../vehicles/vehicleTable';
-import { PencilLine, Save } from 'lucide-react';
+     Select,
+     SelectContent,
+     SelectItem,
+     SelectTrigger,
+     SelectValue,
+} from "../../components/ui/select";
+import FormError from "../shared/FormError";
+import FormSuccess from "../shared/FormSuccess";
 
-const vehicleFormSchema = z.object({
-	category: z
-		.string({
-			required_error: 'Please enter a valid Category.',
-		})
-		.refine((value) => ['detchable', 'non-detchable'].includes(value), {
-			message: 'Invalid means of identification.',
-		}),
-	vehicle_type: z
-		.string({
-			required_error: 'Please enter a valid vehicle type.',
-		})
-		.refine(
-			(value) => ['8', '12', '14', '16', '18', '24'].includes(value),
-			{
-				message: 'Invalid means of identification.',
-			}
-		),
-	price_by_tyre: z
-		.string({
-			required_error: 'Please enter a valid vehicle type.',
-		})
-		.refine(
-			(value) =>
-				[
-					'8000',
-					'12,000',
-					'14,000',
-					'16,000',
-					'18,000',
-					'24,000',
-				].includes(value),
-			{
-				message: 'Invalid means of identification.',
-			}
-		),
+export default function UpdateVehicleForm({ vehicle }: { vehicle: IVehicle }) {
+     const {
+          _id,
+          blacklist,
+          detachable,
+          category,
+          driversname,
+          qrcode,
+          name,
+          nin,
+          phonenumber,
+          fee,
+          platenumber,
+     } = vehicle;
+     const router = useRouter();
+     const [error, setError] = useState<string | undefined>("");
+     const [success, setSuccess] = useState<string | undefined>("");
+     const [isPending, startTransition] = useTransition();
+     const form = useForm<z.infer<typeof createVehicleFormSchema>>({
+          resolver: zodResolver(createVehicleFormSchema),
+          mode: "onChange",
+          defaultValues: {
+               category,
+               detachable,
+               driversname,
+               fee: String(fee),
+               name,
+               nin,
+               phonenumber: String(phonenumber),
+               platenumber,
+          },
+     });
 
-	image: z
-		.string({
-			required_error: 'Please add image.',
-		})
-		.min(5, { message: 'Must be a valid Image link' }),
-	plate_number: z
-		.string({
-			required_error: 'Enter your plate number.',
-		})
-		.min(5, {
-			message: 'Plate numbers have at least five(5) characters.',
-		}),
-	owners_phone_number: z
-		.string({
-			required_error: 'Enter owner phone number.',
-		})
-		.regex(/^\+234[789][01]\d{8}$/, 'Phone format (+2348012345678)'),
-	owners_name: z
-		.string({
-			required_error: 'Enter owner phone number.',
-		})
-		.min(5, {
-			message: 'Enter full name',
-		}),
-	nin: z.string(),
-});
+     const onSubmit = (values: z.infer<typeof createVehicleFormSchema>) => {
+          setError(undefined);
+          setSuccess(undefined);
+          startTransition(() => {
+               console.log({ values });
+               // createVehicle(values).then((data) => {
+               //      if (data?.error) {
+               //           setError(data.error);
+               //      }
+               //      if (data?.success) {
+               //           setSuccess(data.success);
+               //           form.reset();
+               //           router.push(`/vehicles/${_id}`);
+               //      }
+               // });
+          });
+     };
 
-type vehicleFormValues = z.infer<typeof vehicleFormSchema>;
-
-export default function UpdateVehicleForm({
-	vehicle,
-}: {
-	vehicle: IVEHICLEDETAILS | undefined;
-}) {
-	const defaultValues: Partial<vehicleFormValues> = {
-		plate_number: vehicle?.plate_number,
-		category: vehicle?.detachable,
-		nin: vehicle?.drivers_license,
-		owners_phone_number: '',
-		owners_name: '',
-	};
-
-	const [newVehicleId, setNewVehicleId] = React.useState<string>('');
-	const [isDisabled, setIsDisabled] = React.useState<boolean>(true);
-	const { toast } = useToast();
-	const [isLoading, setIsLoading] = React.useState<boolean>(false);
-	const [open, setOpen] = React.useState(false);
-	const form = useForm<vehicleFormValues>({
-		resolver: zodResolver(vehicleFormSchema),
-		defaultValues,
-		mode: 'onChange',
-	});
-
-	const onSubmit = async (data: vehicleFormValues) => {
-		setIsLoading(true);
-		try {
-			const createVehicleResponse = await fetch(
-				'/api/create-vehicle',
-				{
-					method: 'POST',
-					body: JSON.stringify({
-						category: data.category,
-						price_per_tyre: data.price_by_tyre,
-						plate_number: data.plate_number,
-						vehicle_type: data.vehicle_type,
-						nin: data.nin,
-						owners_phone_number: data.owners_phone_number,
-						owners_name: data.owners_name,
-					}),
-				}
-			);
-			const result = await createVehicleResponse.json();
-			if (
-				createVehicleResponse.status > 199 &&
-				createVehicleResponse.status < 299
-			) {
-				toast({
-					title: 'Vehicle Created Successfully',
-				});
-				setIsLoading(false);
-				setOpen(true);
-				form.reset();
-				setNewVehicleId(result.data.vehicle_id);
-				return NextResponse.json(result);
-			} else {
-				setIsLoading(false);
-				toast({
-					title: 'Vehicle NOT Created',
-				});
-				return NextResponse.json(result);
-			}
-		} catch (error) {
-			setIsLoading(false);
-		}
-	};
-
-	return (
-		<Form {...form}>
-			<form
-				onSubmit={form.handleSubmit(onSubmit)}
-				className='flex flex-col gap-4 mt-7 p-4 '
-			>
-				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-					<FormField
-						control={form.control}
-						name='category'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className='text-title1Bold pl-4'>
-									Vehicle Category
-								</FormLabel>
-
-								<Select
-									onValueChange={field.onChange}
-									defaultValue={field.value}
-									disabled={isDisabled}
-								>
-									<FormControl>
-										<SelectTrigger className='relative text-body flex  items-center h-14 rounded-lg'>
-											<SelectValue placeholder='Select a vehicle category' />
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-										<SelectItem value='Detachable'>
-											Detachable
-										</SelectItem>
-										<SelectItem value='Non-Detachable'>
-											Non-Detachable
-										</SelectItem>
-									</SelectContent>
-								</Select>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<FormField
-						name='vehicle_type'
-						control={form.control}
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className='text-title1Bold pl-4'>
-									Tyre Type
-								</FormLabel>
-
-								<Select
-									onValueChange={field.onChange}
-									defaultValue={field.value}
-									disabled={isDisabled}
-								>
-									<FormControl>
-										<SelectTrigger className='relative text-body flex  items-center h-14 rounded-lg'>
-											<SelectValue placeholder='Select number of tyre' />
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-										<SelectItem value='8'>
-											8
-										</SelectItem>
-										<SelectItem value='12'>
-											12
-										</SelectItem>
-										<SelectItem value='14'>
-											14
-										</SelectItem>
-										<SelectItem value='18'>
-											18
-										</SelectItem>
-										<SelectItem value='24'>
-											24
-										</SelectItem>
-									</SelectContent>
-								</Select>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					{/* <FormField
-						name='price_by_tyre'
-                       
-						control={form.control}
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className='text-title1Bold pl-4'>
-								Price
-								</FormLabel>
-
-								<Select
-									onValueChange={field.onChange}
-									defaultValue={field.value}
-                                    disabled={isDisabled}
-								>
-									<FormControl>
-										<SelectTrigger className='relative text-body flex  items-center h-14 rounded-lg'>
-											<SelectValue placeholder='Select amount for tyre' />
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-									<SelectItem value='8000'>
-											8000
-										</SelectItem>
-										<SelectItem value='12,000'>
-											12,000
-										</SelectItem>
-										<SelectItem value='14,000'>
-											14,000
-										</SelectItem>
-										<SelectItem value='18,000'>
-											18,000
-										</SelectItem>
-										<SelectItem value='24,000'>
-											24,000
-										</SelectItem>	
-									</SelectContent>
-								</Select>
-								<FormMessage />
-							</FormItem>
-						)}
-					/> */}
-
-					<FormField
-						name='plate_number'
-						control={form.control}
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className='text-title1Bold pl-4'>
-									Plate Number
-								</FormLabel>
-
-								<FormControl>
-									<Input
-										className='relative text-body flex  items-center h-14 rounded-lg'
-										{...field}
-										disabled
-										type='text'
-										placeholder='Plate Number'
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<FormField
-						name='nin'
-						control={form.control}
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className='text-title1Bold pl-4'>
-									NIN
-								</FormLabel>
-
-								<FormControl>
-									<Input
-										className='relative text-body flex  items-center h-14 rounded-lg'
-										{...field}
-										disabled
-										type='text'
-										placeholder='Enter NIN'
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<FormField
-						name='owners_name'
-						control={form.control}
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className='text-title1Bold pl-4'>
-									{`Owner's Name`}
-								</FormLabel>
-
-								<FormControl>
-									<Input
-										className='relative text-body flex  items-center h-14 rounded-lg'
-										{...field}
-										type='text'
-										placeholder={`Enter owner's name`}
-										disabled={isDisabled}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<FormField
-						name='owners_phone_number'
-						control={form.control}
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className='text-title1Bold pl-4'>
-									{`Owner's Phone Number`}
-								</FormLabel>
-
-								<FormControl>
-									<Input
-										className='relative text-body flex  items-center h-14 rounded-lg'
-										{...field}
-										type='text'
-										placeholder={`+23481209847859`}
-										disabled={isDisabled}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-				</div>
-				<div className='flex justify-center items-center gap-6 text-title1Bold'>
-					<Button
-						variant='default'
-						size='lg'
-						onClick={() => setIsDisabled(!isDisabled)}
-						type='button'
-						className='p-4 py-2 rounded-normal w-28'
-					>
-						{'Edit'} <PencilLine className='w-5 h-5 ml-3' />
-					</Button>
-
-					<Button
-						variant={'outline'}
-						size='lg'
-						disabled={!isDisabled}
-						type='submit'
-						className='p-4 py-2 rounded-normal w-28'
-					>
-						{'Save'} <Save className='w-5 h-5 ml-3' />
-					</Button>
-				</div>
-			</form>
-		</Form>
-	);
+     return (
+          <Form {...form}>
+               <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="flex flex-col gap-4 p-5"
+               >
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                         <FormField
+                              control={form.control}
+                              name="name"
+                              render={({ field }) => (
+                                   <FormItem>
+                                        <FormLabel>Vehicle Name</FormLabel>
+                                        <FormControl>
+                                             <Input
+                                                  disabled={isPending}
+                                                  {...field}
+                                                  placeholder="Camry"
+                                             />
+                                        </FormControl>
+                                        <FormMessage />
+                                   </FormItem>
+                              )}
+                         />
+                         <FormField
+                              control={form.control}
+                              name="platenumber"
+                              render={({ field }) => (
+                                   <FormItem>
+                                        <FormLabel>Plate Number</FormLabel>
+                                        <FormControl>
+                                             <Input
+                                                  disabled={isPending}
+                                                  {...field}
+                                                  placeholder="123-ABC-4D"
+                                             />
+                                        </FormControl>
+                                        <FormMessage />
+                                   </FormItem>
+                              )}
+                         />
+                         <FormField
+                              control={form.control}
+                              name="fee"
+                              render={({ field }) => (
+                                   <FormItem>
+                                        <FormLabel>Tyre Type</FormLabel>
+                                        <Select
+                                             onValueChange={field.onChange}
+                                             defaultValue={field.value}
+                                        >
+                                             <FormControl>
+                                                  <SelectTrigger>
+                                                       <SelectValue placeholder="Choose a tyre type" />
+                                                  </SelectTrigger>
+                                             </FormControl>
+                                             <SelectContent>
+                                                  {TYRE_TYPE.map((type, k) => (
+                                                       <SelectItem
+                                                            key={k}
+                                                            value={type.fee}
+                                                       >
+                                                            {type.name}
+                                                       </SelectItem>
+                                                  ))}
+                                             </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                   </FormItem>
+                              )}
+                         />
+                         <FormField
+                              control={form.control}
+                              name="nin"
+                              render={({ field }) => (
+                                   <FormItem>
+                                        <FormLabel>NIN</FormLabel>
+                                        <FormControl>
+                                             <Input
+                                                  disabled={isPending}
+                                                  {...field}
+                                                  placeholder="00123456789"
+                                             />
+                                        </FormControl>
+                                        <FormMessage />
+                                   </FormItem>
+                              )}
+                         />
+                         <FormField
+                              control={form.control}
+                              name="driversname"
+                              render={({ field }) => (
+                                   <FormItem>
+                                        <FormLabel>
+                                             Driver&apos;s Name
+                                        </FormLabel>
+                                        <FormControl>
+                                             <Input
+                                                  disabled={isPending}
+                                                  {...field}
+                                                  placeholder="Enter name of driver"
+                                             />
+                                        </FormControl>
+                                        <FormMessage />
+                                   </FormItem>
+                              )}
+                         />
+                         <FormField
+                              control={form.control}
+                              name="phonenumber"
+                              render={({ field }) => (
+                                   <FormItem>
+                                        <FormLabel>
+                                             Driver&apos;s Phone Number
+                                        </FormLabel>
+                                        <FormControl>
+                                             <Input
+                                                  disabled={isPending}
+                                                  {...field}
+                                                  placeholder="08012345678"
+                                             />
+                                        </FormControl>
+                                        <FormMessage />
+                                   </FormItem>
+                              )}
+                         />
+                         {/* <FormField
+                              control={form.control}
+                              name="category"
+                              render={({ field }) => (
+                                   <FormItem>
+                                        <FormLabel>
+                                             Category
+                                        </FormLabel>
+                                        <FormControl>
+                                             <Input
+                                                  disabled={isPending}
+                                                  {...field}
+                                                  placeholder=""
+                                             />
+                                        </FormControl>
+                                        <FormMessage />
+                                   </FormItem>
+                              )}
+                         /> */}
+                    </div>
+                    {error && (
+                         <FormError
+                              className="w-full lg:col-span-2"
+                              message={error}
+                         />
+                    )}
+                    {success && (
+                         <FormSuccess
+                              className="w-full lg:col-span-2"
+                              message={success}
+                         />
+                    )}
+                    <div className="text-title1Bold flex items-center justify-center gap-6">
+                         <Button
+                              variant={"outline"}
+                              size="lg"
+                              type="button"
+                              asChild
+                              className="w-28 p-4 py-2"
+                         >
+                              <Link href={"/vehicles"}>Back</Link>
+                         </Button>
+                         <Button
+                              type="submit"
+                              className="w-28"
+                              disabled={isPending}
+                         >
+                              {isPending ? (
+                                   <Loader className="h-4 w-4 animate-spin" />
+                              ) : (
+                                   "Update vehicle"
+                              )}
+                         </Button>
+                    </div>
+               </form>
+          </Form>
+     );
 }

@@ -1,4 +1,6 @@
+import { getAdmins } from "@/data/admin";
 import { getAgents } from "@/data/agent";
+import { getVehicles } from "@/data/vehicles";
 import {
      ContactRound,
      Landmark,
@@ -18,6 +20,8 @@ import DashboardTotalRevenue, {
 
 export default async function SuperAdminDashboard() {
      const agents = await getAgents();
+     const admins = await getAdmins();
+     const vehicles = await getVehicles();
      return (
           <div className="grid h-full w-full grid-cols-4 gap-4 p-5">
                <div className="col-span-4 flex w-full flex-col gap-5 pb-5 lg:col-span-3">
@@ -26,7 +30,7 @@ export default async function SuperAdminDashboard() {
                               <DashboardTotalCard
                                    title={"Admin"}
                                    description={"Total number of admins"}
-                                   amount={0}
+                                   amount={admins.length}
                               />
                          </Suspense>
                          <Suspense fallback={<DashboardTotalCardSkeleton />}>
@@ -40,11 +44,11 @@ export default async function SuperAdminDashboard() {
                               <DashboardTotalCard
                                    title={"Vehicles"}
                                    description={"Total number of Vehicles"}
-                                   amount={10000}
+                                   amount={vehicles.length}
                               />
                          </Suspense>
                     </div>
-                    <div className="grid gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-4">
+                    <div className="grid gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-4">
                          <Suspense fallback={<DashboardTotalRevenueSkeleton />}>
                               <DashboardTotalRevenue
                                    title={"Yearly"}

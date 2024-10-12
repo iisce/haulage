@@ -9,7 +9,7 @@ export const getAgents = async () => {
      const session = await auth();
      try {
           const agentsRequest = await axios.get(
-               `${BASE_URL}${URLS.user.agents}`,
+               `${BASE_URL}${URLS.user.agents.all}`,
                {
                     headers: {
                          Authorization: `Bearer ${session?.user.access_token}`,
@@ -28,14 +28,22 @@ export const getAgents = async () => {
 };
 
 export const getAgentById = async (options: { id: string }) => {
+     const session = await auth();
      const { id } = options;
      try {
-          const agentRequest = await axiosWithAuth.get(`/agents/${id}`);
+          const agentRequest = await axios.get(
+               `${BASE_URL}${URLS.user.agents.all}/${id}`,
+               {
+                    headers: {
+                         Authorization: `Bearer ${session?.user.access_token}`,
+                    },
+               },
+          );
 
           if (agentRequest.data) {
-               const agents: IAgent = agentRequest.data;
+               const agent: IAgent = agentRequest.data;
 
-               return agents;
+               return agent;
           }
 
           return null;

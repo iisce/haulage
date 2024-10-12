@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { BASE_URL, URLS } from "@/constants";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 export const revalidate = 0;
 
 export const getAllUsers = async () => {
@@ -61,6 +61,7 @@ export const getUserById = async (options: { id: string }) => {
 
 export const getCurrentUser = async () => {
      const session = await auth();
+     console.log({ session });
      try {
           const currentUserRequest = await axios.get(
                `${BASE_URL}${URLS.user.self}`,
@@ -73,7 +74,10 @@ export const getCurrentUser = async () => {
           const user: IUser = currentUserRequest.data.data;
           return user;
      } catch (error: any) {
-          console.log({ error });
+          if (error instanceof AxiosError) {
+               console.log({ error: error.message });
+               return null;
+          }
           return null;
      }
 };

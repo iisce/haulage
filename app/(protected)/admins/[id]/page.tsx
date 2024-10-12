@@ -16,27 +16,15 @@ import {
      TableBody,
      TableCell,
 } from "@/components/ui/table";
+import { SAMPLE_ADMIN_DATA } from "@/constants";
 
 export default async function SingleVehiclePage({
      params,
 }: {
      params: { id: string };
 }) {
-     // const admin = await getAdminById({ id: params.id });
-     const admin: IAdmin = {
-          _id: "234DFGHBV",
-          blacklist: false,
-          nin: "12345676543",
-          lga: "Awka",
-          email: "example@email.com",
-          fullname: "Oyeniran Ayobami Paul",
-          phonenumber: "08061719533",
-          role: "admin",
-          password: "",
-          token: "",
-          createdAt: "1995-05-15",
-          updatedAt: "1995-07-15",
-     };
+     const admin = await getAdminById({ id: params.id });
+     // const admin = SAMPLE_ADMIN_DATA.find((admin) => admin._id === params.id);
      if (!admin) return notFound();
      return (
           <div className="flex-1 p-8">
@@ -53,12 +41,12 @@ export default async function SingleVehiclePage({
                          </Button>
                     </div>
                </header>
-               <Card className="grid grid-cols-2 gap-8 rounded-lg bg-white p-4 dark:bg-gray-800">
-                    <div>
+               <Card className="grid gap-8 rounded-lg bg-white p-4 dark:bg-gray-800 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="md:col-span-2">
                          <p className="mb-4 text-xl font-bold">
                               Personal Information
                          </p>
-                         <div className="grid grid-cols-2 gap-4">
+                         <div className="grid gap-4 md:grid-cols-2">
                               <div>
                                    <p className="mb-1 text-gray-500 dark:text-gray-400">
                                         ID
@@ -129,75 +117,71 @@ export default async function SingleVehiclePage({
                     </div>
                     <div>
                          <p className="mb-4 text-xl font-bold">Activity</p>
-                         <div className="grid grid-cols-1 gap-4">
-                              <div className="flex items-center justify-between">
-                                   <div>
-                                        <p className="mb-1 text-gray-500 dark:text-gray-400">
-                                             Created At
-                                        </p>
-                                        <p className="font-medium">
-                                             {format(
-                                                  parseISO(admin.createdAt),
-                                                  "MMMM d, yyyy",
-                                             )}
-                                        </p>
-                                   </div>
-                                   <div>
-                                        <p className="mb-1 text-gray-500 dark:text-gray-400">
-                                             Updated At
-                                        </p>
-                                        <p className="font-medium">
-                                             {format(
-                                                  parseISO(admin.updatedAt),
-                                                  "MMMM d, yyyy",
-                                             )}
-                                        </p>
-                                   </div>
+                         <div className="grid gap-4 md:grid-cols-1">
+                              <div>
+                                   <p className="mb-1 text-gray-500 dark:text-gray-400">
+                                        Created At
+                                   </p>
+                                   <p className="font-medium">
+                                        {format(
+                                             parseISO(admin.createdAt),
+                                             "MMMM d, yyyy",
+                                        )}
+                                   </p>
+                              </div>
+                              <div>
+                                   <p className="mb-1 text-gray-500 dark:text-gray-400">
+                                        Updated At
+                                   </p>
+                                   <p className="font-medium">
+                                        {format(
+                                             parseISO(admin.updatedAt),
+                                             "MMMM d, yyyy",
+                                        )}
+                                   </p>
                               </div>
                          </div>
                     </div>
-                    <div className="col-span-2">
-                         <p className="mb-4 text-xl font-bold">
-                              Recent Activity
-                         </p>
-                         <Table>
-                              <TableHeader>
-                                   <TableRow>
-                                        <TableHead>Action</TableHead>
-                                        <TableHead>Date</TableHead>
-                                        <TableHead>IP Address</TableHead>
-                                   </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                   <TableRow>
-                                        <TableCell>Logged in</TableCell>
-                                        <TableCell>May 15, 2023</TableCell>
-                                        <TableCell>192.168.1.100</TableCell>
-                                   </TableRow>
-                                   <TableRow>
-                                        <TableCell>Updated profile</TableCell>
-                                        <TableCell>April 10, 2023</TableCell>
-                                        <TableCell>192.168.1.100</TableCell>
-                                   </TableRow>
-                                   <TableRow>
-                                        <TableCell>Logged in</TableCell>
-                                        <TableCell>April 5, 2023</TableCell>
-                                        <TableCell>192.168.1.100</TableCell>
-                                   </TableRow>
-                                   <TableRow>
-                                        <TableCell>Created new admin</TableCell>
-                                        <TableCell>March 25, 2023</TableCell>
-                                        <TableCell>192.168.1.100</TableCell>
-                                   </TableRow>
-                                   <TableRow>
-                                        <TableCell>Logged in</TableCell>
-                                        <TableCell>March 1, 2023</TableCell>
-                                        <TableCell>192.168.1.100</TableCell>
-                                   </TableRow>
-                              </TableBody>
-                         </Table>
-                    </div>
                </Card>
+               <div className="col-span-2">
+                    <p className="mb-4 text-xl font-bold">Recent Activity</p>
+                    <Table>
+                         <TableHeader>
+                              <TableRow>
+                                   <TableHead>Action</TableHead>
+                                   <TableHead>Date</TableHead>
+                                   <TableHead>IP Address</TableHead>
+                              </TableRow>
+                         </TableHeader>
+                         <TableBody>
+                              <TableRow>
+                                   <TableCell>Logged in</TableCell>
+                                   <TableCell>May 15, 2023</TableCell>
+                                   <TableCell>192.168.1.100</TableCell>
+                              </TableRow>
+                              <TableRow>
+                                   <TableCell>Updated profile</TableCell>
+                                   <TableCell>April 10, 2023</TableCell>
+                                   <TableCell>192.168.1.100</TableCell>
+                              </TableRow>
+                              <TableRow>
+                                   <TableCell>Logged in</TableCell>
+                                   <TableCell>April 5, 2023</TableCell>
+                                   <TableCell>192.168.1.100</TableCell>
+                              </TableRow>
+                              <TableRow>
+                                   <TableCell>Created new admin</TableCell>
+                                   <TableCell>March 25, 2023</TableCell>
+                                   <TableCell>192.168.1.100</TableCell>
+                              </TableRow>
+                              <TableRow>
+                                   <TableCell>Logged in</TableCell>
+                                   <TableCell>March 1, 2023</TableCell>
+                                   <TableCell>192.168.1.100</TableCell>
+                              </TableRow>
+                         </TableBody>
+                    </Table>
+               </div>
           </div>
      );
 }

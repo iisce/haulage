@@ -1,13 +1,25 @@
 "use client";
-import { AGENTLIST } from "@/components/agents/agent-table";
+
+import { AGENTTYPE } from "@/components/agents/agent-table";
 import UpdateAgentForm from "@/components/forms/update-agent-form";
-import React from "react";
 
 export default function SingleVehiclePage({
-  params,
+     params,
 }: {
-  params: { id: string };
+     params: { id: string };
 }) {
-  const agent = AGENTLIST.find(({ id }) => id === params.id);
-  return <div>{<UpdateAgentForm agent={agent} />}</div>;
+     const AGENTLIST: AGENTTYPE[] = [
+          {
+               agent_email_address: "",
+               agent_name: "",
+               agent_phone_number: "",
+               id: "",
+               lga: "",
+               status: "",
+               nin: "",
+               residential_address: "",
+          },
+     ];
+     const agent = AGENTLIST.find(({ id }) => id === params.id);
+     return <div>{<UpdateAgentForm agent={agent} />}</div>;
 }

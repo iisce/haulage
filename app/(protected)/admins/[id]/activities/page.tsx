@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export default function VehicleActivity() {
-  return (
-    <div>VehicleActivity</div>
-  )
+     return <div>VehicleActivity</div>;
 }

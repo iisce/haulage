@@ -28,7 +28,7 @@ export default function DashboardTotalRevenue({
                     </CardDescription>
                </CardHeader>
                <div className="px-2 pb-2 lg:px-4 lg:pb-4">
-                    <p className="grid w-full items-center gap-4 text-2xl lg:text-4xl">
+                    <p className="grid w-full items-center gap-4 text-2xl lg:text-[28px]">
                          {formatToNaira(amount)}
                     </p>
                </div>

@@ -18,6 +18,7 @@ import {
      TableRow,
 } from "@/components/ui/table";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { format } from "date-fns";
 
 export function AdminCodeTable({ codes }: { codes: ICode[] }) {
      return (
@@ -47,9 +48,10 @@ export function AdminCodeTable({ codes }: { codes: ICode[] }) {
                                              {code.email}
                                         </TableCell>
                                         <TableCell className="text-left">
-                                             {new Date(
-                                                  code.createdAt,
-                                             ).toLocaleDateString()}
+                                             {format(
+                                                  new Date(code.createdAt),
+                                                  "dd/LL/yyyy",
+                                             )}
                                         </TableCell>
                                    </TableRow>
                               ))}

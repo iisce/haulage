@@ -1,15 +1,15 @@
-import NavBar from '@/components/layout/navbar';
-import React from 'react';
+import NavBar from "@/components/layout/navbar";
+import React from "react";
 
 export default function ProtectedLayout({
-	children,
+     children,
 }: {
-	children: React.ReactNode;
+     children: React.ReactNode;
 }) {
-	return (
-		<main>
-			<NavBar />
-			{children}
-		</main>
-	);
+     return (
+          <main>
+               <NavBar />
+               {children}
+          </main>
+     );
 }

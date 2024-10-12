@@ -2,14 +2,15 @@
 
 ## Admins
 
-- get all admins
-- get admins by id
-
 ## Agents
-
-- get agent by id
 
 ## Auth
 
-- get all validation code
-- get validation code by email
+## Vehicle
+
+- Delete a vehicle
+- Add levy to a vehicle
+- Get account details
+- vehicles should have QR Code IDs
+
+## NOTICES
