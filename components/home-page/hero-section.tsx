@@ -1,11 +1,10 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
-import { AuroraBackground } from "../ui/aurora-background";
-import { Button, buttonVariants } from "../ui/button";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { AuroraBackground } from "../ui/aurora-background";
+import { buttonVariants } from "../ui/button";
 
 export default function HeroSection({ user }: { user: IUser | null }) {
      return (
@@ -36,7 +35,7 @@ export default function HeroSection({ user }: { user: IUser | null }) {
                          </Link>
                     ) : (
                          <Link className={cn(buttonVariants())} href="/sign-in">
-                              Are you an admin? Log in
+                              Log in
                          </Link>
                     )}
                </motion.div>
