@@ -1,17 +1,18 @@
+import { getAllTyreSettings } from "@/actions/settings/tyre";
 import UpdateVehicleForm from "@/components/forms/updateVehicleForm";
-import { VEHICLE_DETAILS } from "@/constants";
 import { getVehicleById } from "@/data/vehicles";
 import { notFound } from "next/navigation";
-import React from "react";
 
 export default async function EditSingleVehiclePage({
      params,
 }: {
-     params: { id: string };
+     params: Promise<{ id: string }>;
 }) {
-     const vehicle = await getVehicleById({ id: params.id });
+     const id = (await params).id;
+     const vehicle = await getVehicleById({ id });
+     const tyreSettings = (await getAllTyreSettings()).data ?? [];
 
      if (!vehicle) return notFound();
 
-     return <UpdateVehicleForm vehicle={vehicle} />;
+     return <UpdateVehicleForm vehicle={vehicle} tyreSettings={tyreSettings} />;
 }

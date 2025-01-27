@@ -1,14 +1,289 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Activities {
+  id        String       @id
+  message   String?
+  title     String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime
+  deletedAt DateTime?
+  type      ActivityType
+  vehicleId String
+  userId    String
+  User      User         @relation(fields: [userId], references: [id])
+  Vehicle   Vehicle      @relation(fields: [vehicleId], references: [id])
+
+  @@index([message], map: "message_desc")
+}
+
+model AdminEmailCode {
+  id        String    @id
+  email     String    @unique
+  code      String
+  isUsed    DateTime?
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime
+
+  @@index([email])
+}
+
+model BarCodes {
+  id        String    @id
+  code      String    @unique
+  vehicleId String?   @unique
+  isUsed    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime
+  deletedAt DateTime?
+  Vehicle   Vehicle?  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([code])
+}
+
+model EmailVerify {
+  id         String   @id
+  email      String   @unique
+  verifyCode String
+  isVerified Boolean  @default(false)
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime
+
+  @@index([email])
+}
+
+model PasswordReset {
+  id        String   @id
+  userId    String   @unique
+  resetCode String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PaymentOrder {
+  id                   String    @id
+  transactionReference String    @unique
+  paymentReference     String?
+  accountNumber        String
+  bankName             String
+  amount               Float
+  duration             Int?
+  paymentStatus        String    @default("PENDING")
+  amountPaid           Float?
+  customerName         String?
+  channel              String?
+  currency             String?
+  paymentStartDate     String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime
+  acceptExactPayment   Boolean?  @default(true)
+  accountName          String
+  accountReference     String?
+  bankCode             String
+  createdDate          String
+  period               String?
+  Webhook              Webhook[]
+
+  @@index([createdDate])
+  @@index([transactionReference])
+}
+
+model Settings {
+  id              String    @id
+  name            String    @unique
+  fee             Float
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime
+  deletedAt       DateTime?
+  number_of_tyres Int       @unique
+
+  @@index([name])
+}
+
+model Transaction {
+  id               String            @id
+  amount           Float
+  vehiclename      String?
+  reference        String            @unique
+  vehicleId        String
+  transaction_type TransactionType?
+  status           TransactionStatus @default(PENDING)
+  customer_code    String?
+  qrcode           String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime
+  deletedAt        DateTime?
+  transactionDesc  TransactionDesc?
+  walletOffset     Float?
+  amountLeft       Float?
+  Vehicle          Vehicle           @relation(fields: [vehicleId], references: [id])
+
+  @@index([createdAt(sort: Desc)])
+  @@index([reference])
+  @@index([vehicleId])
+}
+
+model User {
+  id            String         @id
+  email         String         @unique
+  phonenumber   String         @unique
+  role          Role
+  password      String
+  token         String?
+  lga           String?
+  nin           String?
+  location      String?
+  blacklist     Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime
+  deletedAt     DateTime?
+  refreshToken  String?        @unique
+  firstName     String
+  lastName      String
+  Activities    Activities[]
+  PasswordReset PasswordReset?
+  Vehicle       Vehicle?
+
+  @@unique([id, role])
+  @@index([email])
+  @@index([role])
+  @@index([firstName], map: "firstname_desc")
+  @@index([lastName], map: "lastname_desc")
+}
+
+model Vehicle {
+  id              String        @id
+  hauleFeeId      String        @unique
+  vendorId        String?
+  make            String
+  modelName       String
+  plateNumber     String        @unique
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime
+  deletedAt       DateTime?
+  customerMobile  String        @unique
+  customerName    String
+  number_of_tyres Int
+  isDetachable    Boolean
+  customerEmail   String?       @unique
+  userId          String        @unique
+  Activities      Activities[]
+  BarCodes        BarCodes?
+  Transaction     Transaction[]
+  User            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Vendor          Vendor?       @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  Wallet          Wallet?
+
+  @@index([id])
+}
+
+model Vendor {
+  id        String    @id
+  name      String
+  email     String    @unique
+  shortCode String    @unique
+  apiKey    String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime
+  deletedAt DateTime?
+  Vehicle   Vehicle[]
+
+  @@index([email], map: "email_index")
+  @@index([shortCode], map: "shortCode_index")
+}
+
+model VirtualAccounts {
+  id            String    @id
+  accountNumber String    @unique
+  reference     String    @unique
+  accountName   String
+  accountType   String
+  bankName      String
+  bankCode      String
+  email         String    @unique
+  phone         String    @unique
+  active        Boolean
+  creationDate  String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime
+  deletedAt     DateTime?
+}
+
+model Wallet {
+  id        String    @id
+  vehicleId String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime
+  deletedAt DateTime?
+  balance   Float     @default(0.0)
+  Vehicle   Vehicle   @relation(fields: [vehicleId], references: [id])
+
+  @@index([vehicleId])
+}
+
+model Webhook {
+  id                   String        @id
+  event                String
+  metadata             Json
+  processed            Boolean       @default(false)
+  verificationResponse Json?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime
+  deletedAt            DateTime?
+  orderId              String?
+  PaymentOrder         PaymentOrder? @relation(fields: [orderId], references: [id])
+
+  @@index([event, createdAt(sort: Desc)])
+}
+
+model tyreSettings {
+  id              String    @id
+  name            String    @unique
+  number_of_tyres Int       @unique
+  fee             Float
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime
+  deletedAt       DateTime?
+
+  @@index([name])
+  @@index([number_of_tyres])
+}
+
+enum Role {
+  AGENT
+  ADMIN
+  SUPER_ADMIN
+  USER
+}
+
+enum TransactionDesc {
+  VEHICLE_CHARGE
+  STICKER_CHARGE
+  FUND_WALLET
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum TransactionType {
+  Daily
+  WEEKLY
+  YEARLY
+}
+
+enum ActivityType {
+  TRANSACTION_COMPLETED
 }

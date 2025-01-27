@@ -2,10 +2,10 @@
 
 import { auth } from "@/auth";
 import { BASE_URL, URLS } from "@/constants";
-import { getVehicleById } from "@/data/vehicles";
 import { createVehicleFormSchema } from "@/schemas";
+import type { Vehicle } from "@prisma/client";
 import axios, { AxiosError } from "axios";
-import * as z from "zod";
+import type * as z from "zod";
 
 export const createVehicle = async (
      values: z.infer<typeof createVehicleFormSchema>,
@@ -24,31 +24,37 @@ export const createVehicle = async (
      }
 
      const {
-          category,
-          driversname,
-          fee,
-          name,
-          nin,
-          phonenumber,
-          platenumber,
-          detachable,
+          vendorId,
+          make,
+          modelName,
+          isDetachable,
+          firstName,
+          lastName,
+          customerMobile,
+          number_of_tyres,
+          plateNumber,
      } = validatedFields.data;
-     const payload = {
-          category,
-          driversname,
-          fee: Number(fee),
-          name,
-          nin,
-          phonenumber,
-          platenumber,
+
+     const payload: Partial<any> = {
+          vendorId,
+          make,
+          modelName,
+          isDetachable,
+          firstName,
+          lastName,
+          customerMobile,
+          number_of_tyres: Number(number_of_tyres),
+          plateNumber,
      };
+     console.log({ payload, apiUrl, config });
+
      try {
-          console.log({ payload });
           const createVehicleRequest = await axios.post(
                apiUrl,
                payload,
                config,
           );
+          console.log({ createVehicleRequest });
           if (createVehicleRequest.data.success) {
                return {
                     success: createVehicleRequest.statusText,
@@ -59,16 +65,19 @@ export const createVehicle = async (
           }
      } catch (error: any) {
           if (error instanceof AxiosError) {
-               console.log(error.response?.data.error);
+               console.log(error.response?.data.details);
                return {
-                    error: error.response?.data.error ?? "Something went wrong",
+                    error:
+                         error.response?.data.details[0] ??
+                         "Something went wrong",
                };
           }
-          return { error: `Something went wrong` };
+          return { error: "Something went wrong" };
      }
 };
 
 export const updateVehicle = async (
+     id: string,
      values: z.infer<typeof createVehicleFormSchema>,
 ) => {
      const session = await auth();
@@ -77,7 +86,7 @@ export const updateVehicle = async (
                Authorization: `Bearer ${session?.user.access_token}`,
           },
      };
-     const apiUrl = `${BASE_URL}${URLS.vehicles.create}`;
+     const apiUrl = `${BASE_URL}${URLS.vehicles.update}/${id}`;
      const validatedFields = createVehicleFormSchema.safeParse(values);
 
      if (!validatedFields.success) {
@@ -85,38 +94,38 @@ export const updateVehicle = async (
      }
 
      const {
-          category,
-          driversname,
-          fee,
-          name,
-          nin,
-          phonenumber,
-          platenumber,
-          detachable,
+          vendorId,
+          make,
+          modelName,
+          isDetachable,
+          firstName,
+          lastName,
+          customerMobile,
+          number_of_tyres,
+          plateNumber,
      } = validatedFields.data;
-     const payload = {
-          category,
-          driversname,
-          fee: Number(fee),
-          name,
-          nin,
-          phonenumber,
-          platenumber,
+
+     const payload: Partial<Vehicle> = {
+          vendorId,
+          make,
+          modelName,
+          isDetachable,
+          customerName: `${firstName} ${lastName}`,
+          customerMobile,
+          number_of_tyres: Number(number_of_tyres),
+          plateNumber,
      };
+
      try {
           console.log({ payload });
-          const createVehicleRequest = await axios.post(
-               apiUrl,
-               payload,
-               config,
-          );
-          if (createVehicleRequest.data.success) {
+          const updateVehicleRequest = await axios.put(apiUrl, payload, config);
+          if (updateVehicleRequest.data.success) {
                return {
-                    success: createVehicleRequest.statusText,
-                    data: createVehicleRequest.data.data,
+                    success: updateVehicleRequest.statusText,
+                    data: updateVehicleRequest.data.data,
                };
           } else {
-               return { error: createVehicleRequest.statusText };
+               return { error: updateVehicleRequest.statusText };
           }
      } catch (error: any) {
           if (error instanceof AxiosError) {
@@ -125,14 +134,36 @@ export const updateVehicle = async (
                     error: error.response?.data.error ?? "Something went wrong",
                };
           }
-          return { error: `Something went wrong` };
+          return { error: "Something went wrong" };
      }
 };
 
 export const deleteVehicle = async (id: string) => {
-     const vehicle = await getVehicleById({ id });
-     console.log(
-          `Vehicle with of driver ${vehicle?.driversname} has been deleted`,
-     );
-     return true;
+     const session = await auth();
+     const config = {
+          headers: {
+               Authorization: `Bearer ${session?.user.access_token}`,
+          },
+     };
+     const apiUrl = `${BASE_URL}${URLS.vehicles.delete}/${id}`;
+
+     try {
+          const deleteVehicleRequest = await axios.delete(apiUrl, config);
+          if (deleteVehicleRequest.data.success) {
+               return {
+                    success: deleteVehicleRequest.statusText,
+                    data: deleteVehicleRequest.data.data,
+               };
+          } else {
+               return { error: deleteVehicleRequest.statusText };
+          }
+     } catch (error: any) {
+          if (error instanceof AxiosError) {
+               console.log(error.response?.data.error);
+               return {
+                    error: error.response?.data.error ?? "Something went wrong",
+               };
+          }
+          return { error: "Something went wrong" };
+     }
 };

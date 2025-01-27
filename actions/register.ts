@@ -22,12 +22,12 @@ export const register = async (values: z.infer<typeof AdminRegisterSchema>) => {
 
      const payload = validatedFields.data;
      try {
-          console.log({ payload });
           const registerAdminRequest = await axios.post(
                apiUrl,
                payload,
                config,
           );
+          console.log({ registerAdminRequest });
           if (registerAdminRequest.data.success) {
                return {
                     success: registerAdminRequest.statusText,
@@ -38,7 +38,7 @@ export const register = async (values: z.infer<typeof AdminRegisterSchema>) => {
           }
      } catch (error) {
           if (error instanceof AxiosError) {
-               console.log(error.message);
+               console.log({ error });
                return { error: error.message };
           }
           return { error: `Something went wrong` };

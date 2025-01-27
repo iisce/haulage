@@ -1,17 +1,6 @@
-import React from "react";
 import DashboardTotalCard from "./dashboard-total-card";
-import DashoardTotalRevenue from "./dashboard-total-revenue";
 import ActivitiesCard from "./activities-card";
 import { Button } from "../ui/button";
-import {
-     ContactRound,
-     Landmark,
-     ScanBarcode,
-     User,
-     UserPlusIcon,
-     UserRound,
-     Users,
-} from "lucide-react";
 import DashboardTotalDaily from "./dashbord-total-daily";
 
 export default function AdminDashboard() {
@@ -65,25 +54,21 @@ export default function AdminDashboard() {
                          title={"Vehicle Registration"}
                          description={"New Vehicle registered"}
                          date={"12/04/2023 | 12:23PM"}
-                         icons={<User />}
                     />
                     <ActivitiesCard
                          title={"Charge"}
                          description={"Levy issued to Vehicle202"}
                          date={"12/04/2023 | 12:23PM"}
-                         icons={<Landmark />}
                     />
                     <ActivitiesCard
                          title={"Scan"}
                          description={"New vehicle scanned"}
                          date={"12/04/2023 | 12:23PM"}
-                         icons={<ScanBarcode />}
                     />
                     <ActivitiesCard
                          title={"Agent Registration"}
                          description={"New agent registered"}
                          date={"12/04/2023 | 12:23PM"}
-                         icons={<UserPlusIcon />}
                     />
 
                     <Button>View All</Button>

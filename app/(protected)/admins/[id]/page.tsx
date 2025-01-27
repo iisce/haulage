@@ -1,13 +1,11 @@
-import UpdateAdminForm from "@/components/forms/update-admin-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getAdminById } from "@/data/admin";
-import { FilePenIcon, PencilLine, PlusIcon } from "lucide-react";
+import { PencilLine } from "lucide-react";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import { notFound } from "next/navigation";
-import React from "react";
 import {
      Table,
      TableHeader,
@@ -16,25 +14,25 @@ import {
      TableBody,
      TableCell,
 } from "@/components/ui/table";
-import { SAMPLE_ADMIN_DATA } from "@/constants";
 
 export default async function SingleVehiclePage({
      params,
 }: {
-     params: { id: string };
+     params: Promise<{ id: string }>;
 }) {
-     const admin = await getAdminById({ id: params.id });
-     // const admin = SAMPLE_ADMIN_DATA.find((admin) => admin._id === params.id);
+     const id = (await params).id;
+     const admin = await getAdminById({ id });
+     // const admin = SAMPLE_ADMIN_DATA.find((admin) => admin.id === params.id);
      if (!admin) return notFound();
      return (
           <div className="flex-1 p-8">
                <header className="mb-8 flex items-center justify-between">
                     <p className="text-2xl font-bold">
-                         Admin {admin?.fullname}
+                         Admin {admin?.firstName} {admin?.lastName}
                     </p>
                     <div className="flex items-center gap-4">
                          <Button asChild>
-                              <Link href={`/admins/${admin?._id}/edit`}>
+                              <Link href={`/admins/${admin?.id}/edit`}>
                                    <PencilLine className="mr-2 h-5 w-5" />
                                    Edit Admin
                               </Link>
@@ -51,7 +49,7 @@ export default async function SingleVehiclePage({
                                    <p className="mb-1 text-gray-500 dark:text-gray-400">
                                         ID
                                    </p>
-                                   <p className="font-medium">{admin?._id}</p>
+                                   <p className="font-medium">{admin?.id}</p>
                               </div>
                               <div>
                                    <p className="mb-1 text-gray-500 dark:text-gray-400">
@@ -64,7 +62,7 @@ export default async function SingleVehiclePage({
                                         Full Name
                                    </p>
                                    <p className="font-medium">
-                                        {admin?.fullname}
+                                        {admin?.firstName} {admin?.lastName}
                                    </p>
                               </div>
                               <div>
@@ -124,7 +122,9 @@ export default async function SingleVehiclePage({
                                    </p>
                                    <p className="font-medium">
                                         {format(
-                                             parseISO(admin.createdAt),
+                                             parseISO(
+                                                  admin.createdAt.toISOString(),
+                                             ),
                                              "MMMM d, yyyy",
                                         )}
                                    </p>
@@ -135,7 +135,9 @@ export default async function SingleVehiclePage({
                                    </p>
                                    <p className="font-medium">
                                         {format(
-                                             parseISO(admin.updatedAt),
+                                             parseISO(
+                                                  admin.updatedAt.toISOString(),
+                                             ),
                                              "MMMM d, yyyy",
                                         )}
                                    </p>

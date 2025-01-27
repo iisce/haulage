@@ -50,9 +50,6 @@ export default function ProtectedSideBar() {
                               )}
                          </nav>
                     </div>
-                    {/* <div className='mt-auto p-4'>
-					
-				</div> */}
                </div>
           </div>
      );

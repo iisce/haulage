@@ -52,7 +52,7 @@ export async function AgentTable() {
                          {agents.map((value, k) => (
                               <TableRow key={k}>
                                    <TableCell className="text-left font-medium">
-                                        {value.fullname}
+                                        {value.firstName} {value.lastName}
                                    </TableCell>
                                    <TableCell className="text-left">
                                         {value.lga}
@@ -76,7 +76,7 @@ export async function AgentTable() {
                                                   <DropdownMenuGroup>
                                                        <DropdownMenuItem>
                                                             <Link
-                                                                 href={`/agents/${value._id}`}
+                                                                 href={`/agents/${value.id}`}
                                                                  className="text-center"
                                                             >
                                                                  View Profile

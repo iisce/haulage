@@ -1,3 +1,4 @@
 {
-     "cSpell.words": ["Haule"]
+     "cSpell.words": ["Haule"],
+     "conventionalCommits.scopes": ["refactor"]
 }

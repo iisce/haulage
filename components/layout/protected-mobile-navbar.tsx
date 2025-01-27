@@ -7,8 +7,15 @@ import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import DashboardBreadcrumb from "./dashboard-breadcrumb";
 import ProtectedNavLink from "./nav-link-protected";
 import UserMenu from "./user-menu";
+import { getCurrentUser } from "@/data/users";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-export default function ProtectedMobileNavBar() {
+export default async function ProtectedMobileNavBar() {
+     const session = await auth();
+     if (!session) redirect("/sign-in");
+     const user = await getCurrentUser();
+     if (!user) redirect("/sign-in");
      return (
           <header className="flex h-16 shrink-0 items-center gap-4 overflow-clip border-b px-4 lg:h-[60px] lg:px-6">
                <Sheet>
@@ -59,7 +66,7 @@ export default function ProtectedMobileNavBar() {
                <div className="w-full flex-1">
                     <DashboardBreadcrumb />
                </div>
-               <UserMenu />
+               <UserMenu user={user} />
           </header>
      );
 }

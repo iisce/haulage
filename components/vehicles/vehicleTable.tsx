@@ -15,7 +15,6 @@ import {
      TableHeader,
      TableRow,
 } from "@/components/ui/table";
-import { TYRE_TYPE } from "@/constants";
 import { getVehicles } from "@/data/vehicles";
 import { Menu } from "lucide-react";
 import Link from "next/link";
@@ -66,26 +65,28 @@ export default async function VehicleTable() {
                          {vehicles.map((vehicle, i) => (
                               <TableRow key={i}>
                                    <TableCell className="text-left font-medium">
-                                        {vehicle.platenumber}
+                                        {vehicle.plateNumber}
                                    </TableCell>
                                    <TableCell className="text-left">
-                                        {vehicle.driversname}
+                                        {vehicle.customerName}
                                    </TableCell>
                                    <TableCell className="text-left">
-                                        {
+                                        {/* {
                                              TYRE_TYPE.find(
                                                   ({ fee }) =>
                                                        Number(fee) ===
-                                                       vehicle.fee,
+                                                       vehicle.number_of_tyres,
                                              )?.name
-                                        }
+                                        } */}
                                    </TableCell>
                                    <TableCell className="text-left">
-                                        {vehicle.name}
+                                        {vehicle.modelName}
                                    </TableCell>
                                    <TableCell className="text-left">
                                         <Badge className="mx-auto rounded-full uppercase">
-                                             {vehicle.detachable ? "yes" : "No"}
+                                             {vehicle.isDetachable
+                                                  ? "yes"
+                                                  : "No"}
                                         </Badge>
                                    </TableCell>
                                    <TableCell className="">
@@ -97,13 +98,13 @@ export default async function VehicleTable() {
                                                   <DropdownMenuGroup>
                                                        <DropdownMenuItem className="flex w-full flex-col items-center justify-center gap-2">
                                                             <Link
-                                                                 href={`/vehicles/${vehicle._id}`}
+                                                                 href={`/vehicles/${vehicle.id}`}
                                                                  className="text-center"
                                                             >
                                                                  View Profile
                                                             </Link>
                                                             <Link
-                                                                 href={`/vehicles/${vehicle._id}/edit`}
+                                                                 href={`/vehicles/${vehicle.id}/edit`}
                                                                  className="text-center"
                                                             >
                                                                  View Activity

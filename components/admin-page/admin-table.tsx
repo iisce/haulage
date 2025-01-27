@@ -9,14 +9,6 @@ import {
      TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
-import { Badge } from "../ui/badge";
-import {
-     DropdownMenu,
-     DropdownMenuContent,
-     DropdownMenuGroup,
-     DropdownMenuItem,
-     DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
 import {
      Pagination,
      PaginationContent,
@@ -27,9 +19,10 @@ import {
      PaginationPrevious,
 } from "@/components/ui/pagination";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { EyeIcon, Menu } from "lucide-react";
+import { EyeIcon } from "lucide-react";
+import { User } from "@prisma/client";
 
-export function AdminTable({ admins }: { admins: IAdmin[] }) {
+export function AdminTable({ admins }: { admins: User[] }) {
      return (
           <>
                <ScrollArea className="">
@@ -57,9 +50,10 @@ export function AdminTable({ admins }: { admins: IAdmin[] }) {
                                         <TableCell className="text-left font-medium">
                                              <Link
                                                   className="w-full"
-                                                  href={`/admins/${admin._id}`}
+                                                  href={`/admins/${admin.id}`}
                                              >
-                                                  {admin.fullname}
+                                                  {admin?.firstName}{" "}
+                                                  {admin?.lastName}
                                              </Link>
                                         </TableCell>
                                         <TableCell className="text-left">
@@ -74,7 +68,7 @@ export function AdminTable({ admins }: { admins: IAdmin[] }) {
                                         <TableCell className="w-14">
                                              <Link
                                                   className="flex items-center justify-center gap-2"
-                                                  href={`/admins/${admin._id}`}
+                                                  href={`/admins/${admin.id}`}
                                              >
                                                   <EyeIcon />
                                              </Link>

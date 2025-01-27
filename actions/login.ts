@@ -25,11 +25,14 @@ export const login = async (
           });
      } catch (error) {
           if (error instanceof AuthError) {
+               console.log({ error: error.type });
                switch (error.type) {
                     case "CredentialsSignin":
                          return { error: "Invalid credentials!!!" };
                     case "AccessDenied":
                          return { error: "You are not authorized!!!" };
+                    case "CallbackRouteError":
+                         return { error: error.cause?.err?.message };
                     default:
                          return { error: "Something went wrong!!!" };
                }

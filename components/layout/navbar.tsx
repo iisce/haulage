@@ -11,7 +11,6 @@ import UserMenu from "./user-menu";
 
 export default async function NavBar() {
      const user = await getCurrentUser();
-     console.log({ user });
      return (
           <header className="fixed top-0 z-50 flex h-16 w-full items-center justify-between gap-4 border-b bg-transparent px-4 backdrop-blur md:px-6">
                <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
@@ -85,7 +84,7 @@ export default async function NavBar() {
                               >
                                    Dashboard
                               </Link>
-                              <UserMenu />
+                              <UserMenu user={user} />
                          </>
                     ) : (
                          <Link className={cn(buttonVariants())} href="/sign-in">

@@ -1,8 +1,8 @@
-import axios from "axios";
-import type { NextAuthConfig } from "next-auth";
+import axios, { AxiosError } from "axios";
 import Credentials from "next-auth/providers/credentials";
-import { URLS } from "./constants";
+import { BASE_URL, URLS } from "./constants";
 import { LoginSchema } from "./schemas";
+import { jwtDecode } from "jwt-decode";
 
 export default {
      providers: [
@@ -12,11 +12,9 @@ export default {
 
                     if (validatedFields.success) {
                          const { email, password } = validatedFields.data;
-                         // TODO: make API request to get user
-
                          try {
                               const loginRequest = await axios.post(
-                                   `https://haulage-api-latest.onrender.com${URLS.auth.login}`,
+                                   `${BASE_URL}${URLS.auth.login}`,
                                    {
                                         email,
                                         password,
@@ -25,17 +23,32 @@ export default {
                               if (!loginRequest.data.success) {
                                    return null;
                               }
-                              const user = loginRequest.data.data;
-                              if (!user) return null;
-                              return user;
+                              const token = loginRequest.data.jwtToken;
+                              if (!token) return null;
+
+                              const decodedUser: any = jwtDecode(token); // Decode the token to get the user info
+
+                              // Return the decoded user info instead of the token
+
+                              return {
+                                   access_token: token,
+                                   email: decodedUser.email,
+                                   name: decodedUser.fullname,
+                                   id: decodedUser.id,
+                                   role: decodedUser.role,
+                              };
                          } catch (error) {
-                              console.log({ error });
-                              return null;
+                              if (error instanceof AxiosError) {
+                                   const details =
+                                        error.response?.data.details[0];
+                                   throw new Error(details);
+                              }
+                              throw new Error("Cannot login");
                          }
                     }
 
-                    return null;
+                    throw new Error("Invalid credentials");
                },
           }),
      ],
-} satisfies NextAuthConfig;
+};

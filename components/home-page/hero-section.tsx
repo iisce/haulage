@@ -5,8 +5,9 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { AuroraBackground } from "../ui/aurora-background";
 import { buttonVariants } from "../ui/button";
+import { User } from "@prisma/client";
 
-export default function HeroSection({ user }: { user: IUser | null }) {
+export default function HeroSection({ user }: { user?: User | null }) {
      return (
           <AuroraBackground>
                <motion.div

@@ -1,7 +1,6 @@
 "use client";
 
 import { createVehicle } from "@/actions/vehicles";
-import { TYRE_TYPE } from "@/constants";
 import { createVehicleFormSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
@@ -9,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 import { Button } from "../../components/ui/button";
 import {
      Form,
@@ -20,17 +19,23 @@ import {
      FormMessage,
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
+import { Switch } from "../../components/ui/switch";
+import FormError from "../shared/FormError";
+import FormSuccess from "../shared/FormSuccess";
+import { tyreSettings } from "@prisma/client";
 import {
      Select,
      SelectContent,
      SelectItem,
      SelectTrigger,
      SelectValue,
-} from "../../components/ui/select";
-import FormError from "../shared/FormError";
-import FormSuccess from "../shared/FormSuccess";
+} from "../ui/select";
 
-export default function CreateVehicleForm() {
+export default function CreateVehicleForm({
+     tyreSettings,
+}: {
+     tyreSettings: tyreSettings[];
+}) {
      const router = useRouter();
      const [error, setError] = useState<string | undefined>("");
      const [success, setSuccess] = useState<string | undefined>("");
@@ -39,7 +44,8 @@ export default function CreateVehicleForm() {
           resolver: zodResolver(createVehicleFormSchema),
           mode: "onChange",
           defaultValues: {
-               category: "Non Detachable",
+               isDetachable: false,
+               number_of_tyres: "4",
           },
      });
 
@@ -47,7 +53,6 @@ export default function CreateVehicleForm() {
           setError(undefined);
           setSuccess(undefined);
           startTransition(() => {
-               console.log({ values });
                createVehicle(values).then((data) => {
                     if (data?.error) {
                          setError(data.error);
@@ -70,15 +75,15 @@ export default function CreateVehicleForm() {
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                          <FormField
                               control={form.control}
-                              name="name"
+                              name="make"
                               render={({ field }) => (
                                    <FormItem>
-                                        <FormLabel>Vehicle Name</FormLabel>
+                                        <FormLabel>Vehicle Make</FormLabel>
                                         <FormControl>
                                              <Input
                                                   disabled={isPending}
                                                   {...field}
-                                                  placeholder="Camry"
+                                                  placeholder="SUV"
                                              />
                                         </FormControl>
                                         <FormMessage />
@@ -87,15 +92,15 @@ export default function CreateVehicleForm() {
                          />
                          <FormField
                               control={form.control}
-                              name="platenumber"
+                              name="modelName"
                               render={({ field }) => (
                                    <FormItem>
-                                        <FormLabel>Plate Number</FormLabel>
+                                        <FormLabel>Model Name</FormLabel>
                                         <FormControl>
                                              <Input
                                                   disabled={isPending}
                                                   {...field}
-                                                  placeholder="123-ABC-4D"
+                                                  placeholder="Toyota"
                                              />
                                         </FormControl>
                                         <FormMessage />
@@ -104,64 +109,38 @@ export default function CreateVehicleForm() {
                          />
                          <FormField
                               control={form.control}
-                              name="fee"
+                              name="isDetachable"
                               render={({ field }) => (
-                                   <FormItem>
-                                        <FormLabel>Tyre Type</FormLabel>
-                                        <Select
-                                             onValueChange={field.onChange}
-                                             defaultValue={field.value}
-                                        >
-                                             <FormControl>
-                                                  <SelectTrigger>
-                                                       <SelectValue placeholder="Choose a tyre type" />
-                                                  </SelectTrigger>
-                                             </FormControl>
-                                             <SelectContent>
-                                                  {TYRE_TYPE.map((type, k) => (
-                                                       <SelectItem
-                                                            key={k}
-                                                            value={type.fee}
-                                                       >
-                                                            {type.name}
-                                                       </SelectItem>
-                                                  ))}
-                                             </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                   </FormItem>
-                              )}
-                         />
-                         <FormField
-                              control={form.control}
-                              name="nin"
-                              render={({ field }) => (
-                                   <FormItem>
-                                        <FormLabel>NIN</FormLabel>
+                                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                        <div className="space-y-0.5">
+                                             <FormLabel className="text-base">
+                                                  Detachable
+                                             </FormLabel>
+                                        </div>
                                         <FormControl>
-                                             <Input
-                                                  disabled={isPending}
-                                                  {...field}
-                                                  placeholder="00123456789"
+                                             <Switch
+                                                  checked={field.value}
+                                                  onCheckedChange={
+                                                       field.onChange
+                                                  }
                                              />
                                         </FormControl>
-                                        <FormMessage />
                                    </FormItem>
                               )}
                          />
                          <FormField
                               control={form.control}
-                              name="driversname"
+                              name="firstName"
                               render={({ field }) => (
                                    <FormItem>
                                         <FormLabel>
-                                             Driver&apos;s Name
+                                             Driver&apos;s First Name
                                         </FormLabel>
                                         <FormControl>
                                              <Input
                                                   disabled={isPending}
                                                   {...field}
-                                                  placeholder="Enter name of driver"
+                                                  placeholder="John"
                                              />
                                         </FormControl>
                                         <FormMessage />
@@ -170,7 +149,26 @@ export default function CreateVehicleForm() {
                          />
                          <FormField
                               control={form.control}
-                              name="phonenumber"
+                              name="lastName"
+                              render={({ field }) => (
+                                   <FormItem>
+                                        <FormLabel>
+                                             Driver&apos;s Last Name
+                                        </FormLabel>
+                                        <FormControl>
+                                             <Input
+                                                  disabled={isPending}
+                                                  {...field}
+                                                  placeholder="Doe"
+                                             />
+                                        </FormControl>
+                                        <FormMessage />
+                                   </FormItem>
+                              )}
+                         />
+                         <FormField
+                              control={form.control}
+                              name="customerMobile"
                               render={({ field }) => (
                                    <FormItem>
                                         <FormLabel>
@@ -180,32 +178,75 @@ export default function CreateVehicleForm() {
                                              <Input
                                                   disabled={isPending}
                                                   {...field}
-                                                  placeholder="08012345678"
+                                                  placeholder="09088978776"
                                              />
                                         </FormControl>
                                         <FormMessage />
                                    </FormItem>
                               )}
                          />
-                         {/* <FormField
+                         <FormField
                               control={form.control}
-                              name="category"
+                              name="number_of_tyres"
                               render={({ field }) => (
                                    <FormItem>
-                                        <FormLabel>
-                                             Category
-                                        </FormLabel>
+                                        <FormLabel>Number of Tyres</FormLabel>
+                                        <Select
+                                             onValueChange={(value) =>
+                                                  form.setValue(
+                                                       "number_of_tyres",
+                                                       value,
+                                                  )
+                                             }
+                                             defaultValue={String(
+                                                  tyreSettings[0]
+                                                       .number_of_tyres,
+                                             )}
+                                        >
+                                             <SelectTrigger>
+                                                  <SelectValue placeholder="Select Tyre Number" />
+                                             </SelectTrigger>
+                                             <SelectContent>
+                                                  {tyreSettings.map(
+                                                       (
+                                                            { number_of_tyres },
+                                                            i,
+                                                       ) => (
+                                                            <SelectItem
+                                                                 key={i}
+                                                                 value={String(
+                                                                      number_of_tyres,
+                                                                 )}
+                                                            >
+                                                                 {String(
+                                                                      number_of_tyres,
+                                                                 )}
+                                                            </SelectItem>
+                                                       ),
+                                                  )}
+                                             </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                   </FormItem>
+                              )}
+                         />
+                         <FormField
+                              control={form.control}
+                              name="plateNumber"
+                              render={({ field }) => (
+                                   <FormItem>
+                                        <FormLabel>Plate Number</FormLabel>
                                         <FormControl>
                                              <Input
                                                   disabled={isPending}
                                                   {...field}
-                                                  placeholder=""
+                                                  placeholder="ABC-123DE"
                                              />
                                         </FormControl>
                                         <FormMessage />
                                    </FormItem>
                               )}
-                         /> */}
+                         />
                     </div>
                     {error && (
                          <FormError

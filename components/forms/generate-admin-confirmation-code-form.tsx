@@ -1,11 +1,8 @@
 "use client";
-import React from "react";
 import { generate } from "@/actions/confirmation-code";
-import { AdminCodeTable } from "@/components/admin-page/admin-confirmation-code-table";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { GENERATED_CODES } from "@/constants";
 import { LoaderCircle } from "lucide-react";
 import { useState, useTransition } from "react";
 
@@ -28,7 +25,7 @@ export default function GenerateAdminConfirmationCodeForm() {
                               setSuccess(data?.success);
                          }
                     })
-                    .catch(() => setError("Something went wrong!!!"));
+                    .catch(() => setError("Something went wrong!"));
           });
      };
      return (

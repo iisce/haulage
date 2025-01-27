@@ -4,6 +4,7 @@ import { Ubuntu } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 import { Toaster } from "sonner";
+import Provider from "@/components/session-provider";
 
 const ubuntu = Ubuntu({
      subsets: ["latin"],
@@ -24,16 +25,18 @@ export default function RootLayout({
 }>) {
      return (
           <html lang="en">
-               <body
-                    className={cn(
-                         "h-screen overflow-clip bg-background font-sans antialiased",
-                         ubuntu.variable,
-                    )}
-               >
-                    <NextTopLoader color="#000000" />
-                    {children}
-                    <Toaster richColors />
-               </body>
+               <Provider>
+                    <body
+                         className={cn(
+                              "h-screen overflow-clip bg-background font-sans antialiased",
+                              ubuntu.variable,
+                         )}
+                    >
+                         <NextTopLoader color="#000000" />
+                         {children}
+                         <Toaster richColors />
+                    </body>
+               </Provider>
           </html>
      );
 }

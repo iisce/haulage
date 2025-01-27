@@ -15,9 +15,9 @@ import Link from "next/link";
 export default async function AgentDashboard() {
      const vehicles = await getVehicles();
      const totalVehicles = vehicles.length;
-     const totalDrivers = new Set(vehicles.map((v) => v.driversname)).size;
-     const totalRevenue = vehicles.reduce((sum, v) => sum + v.fee, 0);
-     const blacklistedVehicles = vehicles.filter((v) => v.blacklist).length;
+     // const totalDrivers = new Set(vehicles.map((v) => v.driversname)).size;
+     // const totalRevenue = vehicles.reduce((sum, v) => sum + v.fee, 0);
+     // const blacklistedVehicles = vehicles.filter((v) => v.blacklist).length;
      return (
           // <div className="flex h-full flex-col gap-5 p-5 md:flex-row">
           //      <div className="flex w-full flex-col gap-5 md:w-3/4">
@@ -108,9 +108,7 @@ export default async function AgentDashboard() {
                               <Users className="h-4 w-4 text-muted-foreground" />
                          </CardHeader>
                          <CardContent>
-                              <div className="text-2xl font-bold">
-                                   {totalDrivers}
-                              </div>
+                              <div className="text-2xl font-bold">{20}</div>
                          </CardContent>
                     </Card>
                     <Card>
@@ -121,9 +119,7 @@ export default async function AgentDashboard() {
                               <DollarSign className="h-4 w-4 text-muted-foreground" />
                          </CardHeader>
                          <CardContent>
-                              <div className="text-2xl font-bold">
-                                   ₦{totalRevenue.toLocaleString()}
-                              </div>
+                              <div className="text-2xl font-bold">₦{20000}</div>
                          </CardContent>
                     </Card>
                     <Card>
@@ -134,9 +130,7 @@ export default async function AgentDashboard() {
                               <AlertTriangle className="h-4 w-4 text-muted-foreground" />
                          </CardHeader>
                          <CardContent>
-                              <div className="text-2xl font-bold">
-                                   {blacklistedVehicles}
-                              </div>
+                              <div className="text-2xl font-bold">{20}</div>
                          </CardContent>
                     </Card>
                </div>
@@ -160,39 +154,36 @@ export default async function AgentDashboard() {
                                    </TableRow>
                               </TableHeader>
                               <TableBody>
-                                   {vehicles.map((vehicle) => (
-                                        <TableRow key={vehicle._id}>
+                                   {vehicles.map((vehicle, k) => (
+                                        <TableRow key={k}>
                                              <TableCell>
                                                   <Link
-                                                       href={`/vehicles/${vehicle._id}`}
+                                                       href={`/vehicles/${vehicle.id}`}
                                                   >
-                                                       {vehicle.name}
+                                                       {vehicle.id}
                                                   </Link>
                                              </TableCell>
                                              <TableCell>
-                                                  {vehicle.platenumber}
+                                                  {vehicle.plateNumber}
                                              </TableCell>
                                              <TableCell>
-                                                  {vehicle.driversname}
+                                                  {vehicle.customerName}
                                              </TableCell>
                                              <TableCell>
-                                                  {vehicle.category}
+                                                  {vehicle.make}
                                              </TableCell>
-                                             <TableCell>
-                                                  ₦
-                                                  {vehicle.fee.toLocaleString()}
-                                             </TableCell>
+                                             <TableCell>₦{2000}</TableCell>
                                              <TableCell>
                                                   <Badge
                                                        variant={
-                                                            vehicle.blacklist
+                                                            vehicle.isDetachable
                                                                  ? "destructive"
                                                                  : "secondary"
                                                        }
                                                   >
-                                                       {vehicle.blacklist
-                                                            ? "Blacklisted"
-                                                            : "Active"}
+                                                       {vehicle.isDetachable
+                                                            ? "Detachable"
+                                                            : "Not Detachable"}
                                                   </Badge>
                                              </TableCell>
                                         </TableRow>

@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import React from "react";
 import FormError from "./shared/FormError";
 import { getCurrentUser } from "@/data/users";

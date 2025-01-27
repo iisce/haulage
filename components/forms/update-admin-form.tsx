@@ -3,7 +3,7 @@ import { axiosWithAuth } from "@/lib/axios.config";
 import { updateAdminFormSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PencilLine, Save } from "lucide-react";
-import React, { useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../../components/ui/button";
@@ -17,28 +17,29 @@ import {
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
 import { useToast } from "../../components/ui/use-toast";
+import { User } from "@prisma/client";
 
-type vehicleFormValues = z.infer<typeof updateAdminFormSchema>;
+type adminFormValues = z.infer<typeof updateAdminFormSchema>;
 
-export default function UpdateAdminForm({ admin }: { admin: IAdmin }) {
-     const defaultValues: Partial<vehicleFormValues> = {
+export default function UpdateAdminForm({ admin }: { admin: User }) {
+     const defaultValues: Partial<adminFormValues> = {
           email: admin.email,
-          nin: admin.nin,
+          nin: admin?.nin ?? "",
           phonenumber: admin.phonenumber,
-          fullname: admin.fullname,
-          lga: admin.lga,
+          fullname: `${admin?.firstName} ${admin?.lastName}`,
+          lga: admin.lga ?? "",
      };
 
      const [isDisabled, setIsDisabled] = useState(false);
      const { toast } = useToast();
      const [isPending, startTransition] = useTransition();
-     const form = useForm<vehicleFormValues>({
+     const form = useForm<adminFormValues>({
           resolver: zodResolver(updateAdminFormSchema),
           defaultValues,
           mode: "onChange",
      });
 
-     const onSubmit = async (data: vehicleFormValues) => {
+     const onSubmit = async (data: adminFormValues) => {
           startTransition(async () => {
                try {
                     const updateAdminResponse = await axiosWithAuth.put(

@@ -1,8 +1,10 @@
+import { getBarcodeByVehicle } from "@/actions/barcode";
+import { getAllTyreSettings } from "@/actions/settings/tyre";
+import ScanToAddSticker from "@/components/scan-to-add-sticker";
 import QrCode from "@/components/shared/qr-code";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { TYRE_TYPE } from "@/constants";
 import { getVehicleById } from "@/data/vehicles";
 import { formatToNaira } from "@/lib/utils";
 import { format } from "date-fns";
@@ -16,6 +18,8 @@ export default async function SingleVehiclePage({
      params: { id: string };
 }) {
      const vehicle = await getVehicleById({ id: params.id });
+     const barcode = (await getBarcodeByVehicle(params.id)).data;
+     const tyreSettings = (await getAllTyreSettings()).data ?? [];
 
      if (!vehicle) return notFound();
 
@@ -25,28 +29,30 @@ export default async function SingleVehiclePage({
                     <div className="flex flex-col items-center justify-between gap-3 py-4 lg:flex-row">
                          <div className="flex items-center justify-between gap-2">
                               <h1 className="text-2xl font-bold text-black dark:text-white">
-                                   {vehicle?.name}
+                                   {vehicle?.modelName}
                               </h1>
                               <Badge
                                    variant="secondary"
                                    className="bg-gray-500 text-white"
                               >
-                                   {vehicle?.category}
+                                   {vehicle?.isDetachable
+                                        ? "Detachable"
+                                        : "Not Detachable"}
                               </Badge>
                          </div>
                          <div className="grid grid-cols-3 gap-3">
                               <Button asChild>
-                                   <Link href={`/vehicles/${vehicle._id}/edit`}>
+                                   <Link href={`/vehicles/${vehicle.id}/edit`}>
                                         Edit
                                    </Link>
                               </Button>
                               <Button asChild>
-                                   <Link href={`/vehicles/${vehicle._id}/edit`}>
+                                   <Link href={`/vehicles/${vehicle.id}/edit`}>
                                         Delete
                                    </Link>
                               </Button>
                               <Button asChild>
-                                   <Link href={`/vehicles/${vehicle._id}/edit`}>
+                                   <Link href={`/vehicles/${vehicle.id}/edit`}>
                                         Add Levy
                                    </Link>
                               </Button>
@@ -59,7 +65,7 @@ export default async function SingleVehiclePage({
                                    Plate Number
                               </div>
                               <div className="font-medium text-black dark:text-white">
-                                   {vehicle.platenumber}
+                                   {vehicle.plateNumber}
                               </div>
                          </div>
                          <div className="grid gap-1">
@@ -67,10 +73,7 @@ export default async function SingleVehiclePage({
                                    Tyre Type
                               </div>
                               <div className="font-medium text-black dark:text-white">
-                                   {TYRE_TYPE.find(
-                                        ({ fee }) =>
-                                             Number(fee) === vehicle.fee,
-                                   )?.name ?? "UNIDENTIFIED"}
+                                   {vehicle.number_of_tyres} Tyres
                               </div>
                          </div>
                          <div className="grid gap-1">
@@ -78,7 +81,7 @@ export default async function SingleVehiclePage({
                                    NIN
                               </div>
                               <div className="font-medium text-black dark:text-white">
-                                   {vehicle.nin}
+                                   {vehicle.hauleFeeId}
                               </div>
                          </div>
                          <div className="grid gap-1">
@@ -86,7 +89,7 @@ export default async function SingleVehiclePage({
                                    Driver
                               </div>
                               <div className="font-medium text-black dark:text-white">
-                                   {vehicle.driversname}
+                                   {vehicle.customerName}
                               </div>
                          </div>
                          <div className="grid gap-1">
@@ -94,7 +97,7 @@ export default async function SingleVehiclePage({
                                    Phone
                               </div>
                               <div className="font-medium text-black dark:text-white">
-                                   {vehicle.phonenumber}
+                                   {vehicle.customerMobile}
                               </div>
                          </div>
                          <div className="grid gap-1">
@@ -102,7 +105,13 @@ export default async function SingleVehiclePage({
                                    Fee
                               </div>
                               <div className="font-medium text-black dark:text-white">
-                                   {formatToNaira(vehicle.fee)}
+                                   {formatToNaira(
+                                        tyreSettings.find(
+                                             (tyre) =>
+                                                  tyre.number_of_tyres ===
+                                                  vehicle.number_of_tyres,
+                                        )!.fee,
+                                   )}
                               </div>
                          </div>
                          <div className="grid gap-1">
@@ -110,7 +119,7 @@ export default async function SingleVehiclePage({
                                    Detachable
                               </div>
                               <div className="font-medium text-black dark:text-white">
-                                   {vehicle.detachable ? "YES" : "NO"}
+                                   {vehicle.isDetachable ? "YES" : "NO"}
                               </div>
                          </div>
                     </div>
@@ -167,15 +176,21 @@ export default async function SingleVehiclePage({
                     <Separator />
                </div>
                <div className="grid gap-8 sm:grid-cols-2">
-                    <div className="grid gap-4">
-                         <div className="flex items-center gap-2">
-                              <QrCodeIcon className="h-8 w-8 text-gray-500 dark:text-gray-400" />
-                              <div className="font-medium text-black dark:text-white">
-                                   Vehicle QR Code
+                    {barcode ? (
+                         <div className="grid gap-4">
+                              <div className="flex items-center gap-2">
+                                   <QrCodeIcon className="h-8 w-8 text-gray-500 dark:text-gray-400" />
+                                   <div className="font-medium text-black dark:text-white">
+                                        Vehicle QR Code
+                                   </div>
                               </div>
+                              <QrCode
+                                   text={`https://haulefee.com/s/${barcode.code}`}
+                              />
                          </div>
-                         <QrCode text={vehicle._id} />
-                    </div>
+                    ) : (
+                         <ScanToAddSticker id={vehicle.id} />
+                    )}
                </div>
                <div className="grid gap-4">
                     <div className="flex items-center gap-2">

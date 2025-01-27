@@ -1,5 +1,7 @@
 import * as z from "zod";
 
+const plateNumberRegex = /^[A-Z]{2,3}[0-9]{2,3}[A-Z]{2,3}$/i;
+
 // export const SettingsSchema = z
 // 	.object({
 // 		name: z.optional(z.string().min(3, { message: 'Enter valid name!' })),
@@ -160,70 +162,18 @@ export const updateAdminFormSchema = z.object({
      }),
 });
 export const createVehicleFormSchema = z.object({
-     name: z.string({ required_error: "Name is required" }).min(1),
-     platenumber: z
-          .string({
-               required_error: "Enter your plate number.",
-          })
-          .min(5, {
-               message: "Plate numbers have at least five(5) characters.",
-          }),
-     nin: z.string({ required_error: "NIN is required" }).length(11),
-     driversname: z.string({ required_error: "Name is required" }).min(1),
-     phonenumber: z
-          .string({
-               required_error: "Enter owner phone number.",
-          })
+     vendorId: z.string().optional(),
+     make: z.string().min(1, "Make is required"),
+     modelName: z.string().min(1, "Model name is required"),
+     isDetachable: z.boolean(),
+     firstName: z.string().min(1, "First name is required"),
+     lastName: z.string().min(1, "Last name is required"),
+     customerMobile: z.string().min(1, "Phone number is required"),
+     number_of_tyres: z.string().min(1, "Number of tyres is required"),
+     plateNumber: z
+          .string()
           .regex(
-               /^(0|\+?234)?[789][01]\d{8}$/,
-               "Phone format (+2348012345678/08012345678)",
+               /[A-Z]{2,3}[0-9]{2,3}[A-Z]{2,3}/,
+               "Invalid plate number format",
           ),
-     category: z.string({
-          required_error: "Please enter a valid Category.",
-     }),
-     fee: z.string(),
-     detachable: z.optional(z.boolean()),
-
-     // vehicle_type: z
-     //      .string({
-     //           required_error: "Please enter a valid vehicle type.",
-     //      })
-     //      .refine(
-     //           (value) => ["8", "12", "14", "16", "18", "24"].includes(value),
-     //           {
-     //                message: "Invalid means of identification.",
-     //           },
-     //      ),
-     // price_by_tyre: z
-     //      .string({
-     //           required_error: "Please enter a valid vehicle type.",
-     //      })
-     //      .refine(
-     //           (value) =>
-     //                [
-     //                     "8000",
-     //                     "12,000",
-     //                     "14,000",
-     //                     "16,000",
-     //                     "18,000",
-     //                     "24,000",
-     //                ].includes(value),
-     //           {
-     //                message: "Invalid means of identification.",
-     //           },
-     //      ),
-
-     // image: z
-     //      .string({
-     //           required_error: "Please add image.",
-     //      })
-     //      .min(5, { message: "Must be a valid Image link" }),
-     // owners_name: z
-     //      .string({
-     //           required_error: "Enter owner phone number.",
-     //      })
-     //      .min(5, {
-     //           message: "Enter full name",
-     //      }),
-     // nin: z.string(),
 });
