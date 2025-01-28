@@ -17,12 +17,10 @@ export const generate = async (values: { emails: string }) => {
 
      try {
           const emailArray = values.emails.split(",");
-          console.log({ values, emailArray });
           await Promise.all(
                emailArray.map(async (a: string, k: number) => {
                     if (a.trim() === "") {
                          failed += 1;
-                         console.log(`email number ${k + 1} is not valid`);
                     } else {
                          const generateCodeRequest = await axios.post(
                               apiUrl,
@@ -31,7 +29,6 @@ export const generate = async (values: { emails: string }) => {
                          );
                          if (generateCodeRequest.data) {
                               successful += 1;
-                              console.log(a.trim(), generateCodeRequest.data);
                          } else {
                               failed += 1;
                          }

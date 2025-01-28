@@ -1,8 +1,9 @@
 "use server";
 
 import { auth } from "@/auth";
-import { BASE_URL } from "@/constants";
+import { BASE_URL, URLS } from "@/constants";
 import { db } from "@/lib/db";
+import { BarCodes } from "@prisma/client";
 import { z } from "zod";
 
 // Define the schema for the request body
@@ -10,6 +11,51 @@ const attachBarcodeSchema = z.object({
      code: z.string(),
      vehicleId: z.string(),
 });
+
+async function checkSuperAdminAuth() {
+     const session = await auth();
+     if (session?.user?.role !== "SUPER_ADMIN") {
+          throw new Error(
+               "Unauthorized: Only SUPER_ADMIN can perform this action",
+          );
+     }
+}
+
+export async function getAllBarcodes() {
+     // await checkSuperAdminAuth();
+     const request = await fetch(`${BASE_URL}${URLS.barcodes.all}`);
+     const response = await request.json();
+
+     if (!request.ok) {
+          return {
+               success: false,
+               error: response.message ?? "Failed to fetch all bar codes",
+          };
+     }
+     const barcodes: BarCodes[] = response.data.barcodes;
+     return {
+          success: true,
+          data: barcodes,
+     };
+}
+
+export async function getBarcodeByCode(code: string) {
+     // await checkSuperAdminAuth();
+     const request = await fetch(`${BASE_URL}${URLS.barcodes.code}/${code}`);
+     const response = await request.json();
+
+     if (!request.ok) {
+          return {
+               success: false,
+               error: response.message ?? "Failed to fetch tyre settings",
+          };
+     }
+     const barcode: BarCodes = response.data;
+     return {
+          success: true,
+          data: barcode,
+     };
+}
 
 type AttachBarcodeInput = z.infer<typeof attachBarcodeSchema>;
 

@@ -16,7 +16,6 @@ export const getCodes = async () => {
                },
           );
           const codes: ICode[] = codesRequest.data.data;
-          console.log({ codes });
           return codes;
      } catch (error: any) {
           if (error instanceof AxiosError) {
@@ -39,7 +38,6 @@ export const getVehicleByQRCodes = async (qr: string) => {
                },
           );
           const vehicleScan: ITransaction[] = vehicleScanRequest.data.data;
-          console.log({ vehicleScan });
           return vehicleScan;
      } catch (error: any) {
           if (error instanceof AxiosError) {

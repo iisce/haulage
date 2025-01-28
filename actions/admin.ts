@@ -24,7 +24,6 @@ export const updateAdmin = async (
 
      const payload = validatedFields.data;
      try {
-          console.log({ payload });
           const registerAdminRequest = await axios.post(
                apiUrl,
                payload,

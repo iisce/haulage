@@ -103,8 +103,6 @@ export default function TensorFlowPage() {
                     }
                }
 
-               console.log(obj);
-
                const ctx = canvasRef.current.getContext("2d");
                drawRect(obj, ctx);
           }
@@ -200,7 +198,6 @@ export default function TensorFlowPage() {
                </div>
           );
      };
-     console.log({ cameraDevices });
 
      return (
           <div className="flex flex-col gap-4 p-5">

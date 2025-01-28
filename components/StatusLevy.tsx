@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import {
      Dialog,
      DialogContent,
@@ -9,61 +10,204 @@ import {
      DialogTitle,
 } from "./ui/dialog";
 import { Label } from "./ui/label";
-import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import type { Vehicle, tyreSettings } from "@prisma/client";
+import { getAllTyreSettings } from "@/actions/settings/tyre";
+import { chargeLevy } from "@/actions/levy";
+import { toast } from "sonner";
+import {
+     Select,
+     SelectContent,
+     SelectItem,
+     SelectTrigger,
+     SelectValue,
+} from "./ui/select";
+import {
+     AlertDialog,
+     AlertDialogContent,
+     AlertDialogFooter,
+     AlertDialogHeader,
+     AlertDialogTitle,
+} from "./ui/alert-dialog";
+import { useRouter } from "next/navigation";
 
-export default function StatusLevy() {
+interface PaymentDetails {
+     accountName: string;
+     accountNumber: string;
+     bankName: string;
+     paymentReference: string;
+     amount: number;
+     paymentStatus: string;
+}
+
+export default function StatusLevy({ vehicle }: { vehicle: Vehicle }) {
      const [showNewLevy, setShowNewLevy] = useState(false);
      const [showConfirmation, setShowConfirmation] = useState(false);
+     const [tyreSettings, setTyreSettings] = useState<tyreSettings[]>([]);
+     const [selectedTyreSetting, setSelectedTyreSetting] =
+          useState<tyreSettings | null>(null);
+     const [amount, setAmount] = useState<number>(0);
+     const [isLoading, setIsLoading] = useState(false);
+     const [paymentDetails, setPaymentDetails] =
+          useState<PaymentDetails | null>(null);
+     const router = useRouter();
+
+     useEffect(() => {
+          const fetchTyreSettings = async () => {
+               try {
+                    const settings = (await getAllTyreSettings()).data ?? [];
+                    setTyreSettings(settings);
+                    const matchingSetting = settings.find(
+                         (setting) =>
+                              setting.number_of_tyres ===
+                              vehicle.number_of_tyres,
+                    );
+                    if (matchingSetting) {
+                         setSelectedTyreSetting(matchingSetting);
+                         setAmount(matchingSetting.fee);
+                    }
+               } catch (error) {
+                    console.error("Failed to fetch tyre settings:", error);
+                    toast.error("Error", {
+                         description:
+                              "Failed to load tyre settings. Please try again.",
+                    });
+               }
+          };
+
+          fetchTyreSettings();
+     }, [vehicle.number_of_tyres]);
+
+     const handleTyreSettingChange = (value: string) => {
+          const setting = tyreSettings.find(
+               (s) => s.number_of_tyres === Number.parseInt(value),
+          );
+          if (setting) {
+               setSelectedTyreSetting(setting);
+               setAmount(setting.fee);
+          }
+     };
+
+     const handleCharge = async () => {
+          setIsLoading(true);
+          try {
+               const charge = await chargeLevy(
+                    vehicle.id,
+                    selectedTyreSetting?.number_of_tyres,
+               );
+               setShowConfirmation(false);
+               setShowNewLevy(false);
+               toast.success("Success", {
+                    description: `Levy of ${amount} has been charged to the vehicle.`,
+               });
+               router.refresh();
+               if (charge.data) {
+                    setPaymentDetails({
+                         accountName: charge.data.accountName,
+                         accountNumber: charge.data.accountNumber,
+                         bankName: charge.data.bankName,
+                         paymentReference: charge.data.paymentReference,
+                         amount: charge.data.amount,
+                         paymentStatus: charge.data.paymentStatus,
+                    });
+               }
+          } catch (error) {
+               toast.error("Error", {
+                    description: "Failed to charge levy. Please try again.",
+               });
+          } finally {
+               setIsLoading(false);
+          }
+     };
 
      return (
           <>
                <Button onClick={() => setShowNewLevy(true)}>New Levy</Button>
                <Dialog open={showNewLevy} onOpenChange={setShowNewLevy}>
-                    <DialogContent className="max-w-3xl">
+                    <DialogContent className="sm:max-w-[425px]">
                          <DialogHeader>
                               <DialogTitle>New Levy</DialogTitle>
                               <DialogDescription>
-                                   Create new levy
+                                   Charge a new levy to this vehicle based on
+                                   its tyre count.
                               </DialogDescription>
                          </DialogHeader>
-                         <div className="max-h-[60vh] overflow-y-auto">
-                              <div className="space-y-4">
-                                   <div className="flex items-center justify-between">
-                                        <Label htmlFor="tyreNumber">
+                         <form
+                              onSubmit={(e) => {
+                                   e.preventDefault();
+                                   setShowConfirmation(true);
+                              }}
+                         >
+                              <div className="grid gap-4 py-4">
+                                   <div className="grid items-center gap-4">
+                                        <Label
+                                             htmlFor="tyreNumber"
+                                             className=""
+                                        >
                                              Tyre Number
                                         </Label>
-                                        <Badge variant="secondary">
-                                             10 Tyres
-                                        </Badge>
+                                        {vehicle.isDetachable ? (
+                                             <Select
+                                                  onValueChange={
+                                                       handleTyreSettingChange
+                                                  }
+                                                  defaultValue={vehicle.number_of_tyres.toString()}
+                                             >
+                                                  <SelectTrigger className="w-full">
+                                                       <SelectValue placeholder="Select tyre number" />
+                                                  </SelectTrigger>
+                                                  <SelectContent>
+                                                       {tyreSettings.map(
+                                                            (setting) => (
+                                                                 <SelectItem
+                                                                      key={
+                                                                           setting.number_of_tyres
+                                                                      }
+                                                                      value={setting.number_of_tyres.toString()}
+                                                                 >
+                                                                      {
+                                                                           setting.number_of_tyres
+                                                                      }
+                                                                 </SelectItem>
+                                                            ),
+                                                       )}
+                                                  </SelectContent>
+                                             </Select>
+                                        ) : (
+                                             <Input
+                                                  id="tyreNumber"
+                                                  value={
+                                                       vehicle.number_of_tyres
+                                                  }
+                                                  className=""
+                                                  disabled
+                                             />
+                                        )}
                                    </div>
-                                   <Input
-                                        id="tyreNumber"
-                                        placeholder="Enter tyre number"
-                                   />
-                                   <div className="flex items-center justify-between">
-                                        <Label htmlFor="amount">Amount</Label>
-                                        <div className="text-2xl font-bold">
-                                             $30
-                                        </div>
+                                   <div className="grid items-center gap-4">
+                                        <Label htmlFor="amount" className="">
+                                             Amount
+                                        </Label>
+                                        <Input
+                                             id="amount"
+                                             value={amount}
+                                             className=""
+                                             disabled
+                                        />
                                    </div>
-                                   <Input
-                                        id="amount"
-                                        placeholder="Enter amount"
-                                   />
                               </div>
-                              <div className="mt-5 grid grid-cols-2 gap-2">
-                                   <Button variant="destructive">Cancel</Button>
+                              <DialogFooter>
                                    <Button
-                                        onClick={() =>
-                                             setShowConfirmation(true)
-                                        }
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => setShowNewLevy(false)}
                                    >
-                                        Charge
+                                        Cancel
                                    </Button>
-                              </div>
-                         </div>
+                                   <Button type="submit">Charge</Button>
+                              </DialogFooter>
+                         </form>
                     </DialogContent>
                </Dialog>
                <Dialog
@@ -72,11 +216,11 @@ export default function StatusLevy() {
                >
                     <DialogContent>
                          <DialogHeader>
-                              <DialogTitle>Are you sure?</DialogTitle>
+                              <DialogTitle>Confirm Levy Charge</DialogTitle>
                               <DialogDescription>
-                                   This action cannot be undone. This will
-                                   permanently charge the new levy to the
-                                   vehicle.
+                                   Are you sure you want to charge a levy of{" "}
+                                   {amount} to this vehicle? This action cannot
+                                   be undone.
                               </DialogDescription>
                          </DialogHeader>
                          <DialogFooter>
@@ -84,16 +228,74 @@ export default function StatusLevy() {
                                    variant="outline"
                                    onClick={() => setShowConfirmation(false)}
                               >
-                                   No
+                                   Cancel
                               </Button>
                               <Button
-                                   onClick={() => setShowConfirmation(false)}
+                                   onClick={handleCharge}
+                                   disabled={isLoading}
                               >
-                                   Yes
+                                   {isLoading
+                                        ? "Charging..."
+                                        : "Confirm Charge"}
                               </Button>
                          </DialogFooter>
                     </DialogContent>
                </Dialog>
+               {paymentDetails && (
+                    <AlertDialog
+                         open={!!paymentDetails}
+                         onOpenChange={() => setPaymentDetails(null)}
+                    >
+                         <AlertDialogContent>
+                              <AlertDialogHeader>
+                                   <AlertDialogTitle>
+                                        Payment Details
+                                   </AlertDialogTitle>
+                              </AlertDialogHeader>
+                              <div className="grid gap-4 py-4">
+                                   <div className="grid grid-cols-2 items-center gap-4">
+                                        <Label>Account Name:</Label>
+                                        <span>
+                                             {paymentDetails.accountName}
+                                        </span>
+                                   </div>
+                                   <div className="grid grid-cols-2 items-center gap-4">
+                                        <Label>Account Number:</Label>
+                                        <span>
+                                             {paymentDetails.accountNumber}
+                                        </span>
+                                   </div>
+                                   <div className="grid grid-cols-2 items-center gap-4">
+                                        <Label>Bank Name:</Label>
+                                        <span>{paymentDetails.bankName}</span>
+                                   </div>
+                                   <div className="grid grid-cols-2 items-center gap-4">
+                                        <Label>Payment Reference:</Label>
+                                        <span>
+                                             {paymentDetails.paymentReference}
+                                        </span>
+                                   </div>
+                                   <div className="grid grid-cols-2 items-center gap-4">
+                                        <Label>Amount:</Label>
+                                        <span>{paymentDetails.amount}</span>
+                                   </div>
+                                   <div className="grid grid-cols-2 items-center gap-4">
+                                        <Label>Payment Status:</Label>
+                                        <span>
+                                             {paymentDetails.paymentStatus}
+                                        </span>
+                                   </div>
+                              </div>
+                              <AlertDialogFooter>
+                                   <Button
+                                        onClick={() => setPaymentDetails(null)}
+                                   >
+                                        Close
+                                   </Button>
+                              </AlertDialogFooter>
+                         </AlertDialogContent>
+                    </AlertDialog>
+               )}
           </>
      );
 }

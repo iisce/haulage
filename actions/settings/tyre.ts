@@ -44,7 +44,7 @@ export async function createTyreSetting(formData: FormData) {
 }
 
 export async function getAllTyreSettings() {
-     await checkSuperAdminAuth();
+     // await checkSuperAdminAuth();
      const request = await fetch(`${BASE_URL}/api/tyresettings/all`);
      const response = await request.json();
 

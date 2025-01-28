@@ -5,7 +5,6 @@ import TyreSettingsSection from "@/components/TyreSettingsSection";
 export default async function SettingsPage() {
      const session = await auth();
      const tyreSettings = await getAllTyreSettings();
-     console.log({ tyreSettings });
 
      return (
           <div className="container mx-auto py-8">

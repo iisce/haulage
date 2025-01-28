@@ -46,7 +46,6 @@ export const createVehicle = async (
           number_of_tyres: Number(number_of_tyres),
           plateNumber,
      };
-     console.log({ payload, apiUrl, config });
 
      try {
           const createVehicleRequest = await axios.post(
@@ -54,7 +53,6 @@ export const createVehicle = async (
                payload,
                config,
           );
-          console.log({ createVehicleRequest });
           if (createVehicleRequest.data.success) {
                return {
                     success: createVehicleRequest.statusText,
@@ -117,7 +115,6 @@ export const updateVehicle = async (
      };
 
      try {
-          console.log({ payload });
           const updateVehicleRequest = await axios.put(apiUrl, payload, config);
           if (updateVehicleRequest.data.success) {
                return {

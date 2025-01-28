@@ -1,72 +1,51 @@
-"use client";
-
-import { useState } from "react";
 import {
      Dialog,
      DialogContent,
-     DialogDescription,
      DialogHeader,
      DialogTitle,
+     DialogTrigger,
 } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
-import { statusColor } from "@/constants";
+import { fetchTransactions } from "@/actions/transactions";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import SingleTransaction from "./SingleTransaction";
+import { Suspense } from "react";
 
-export default function StatusTransactions({
-     transactions,
+export default async function StatusTransactions({
+     vehicleId,
 }: {
-     transactions: any[];
+     vehicleId: string;
 }) {
-     const [showAllTransactions, setShowAllTransactions] = useState(false);
+     const pendingTransactions =
+          (await fetchTransactions({ vehicleId, limit: "30" })).data ?? [];
      return (
           <>
-               <Button
-                    variant="link"
-                    onClick={() => setShowAllTransactions(true)}
-               >
-                    View all <ArrowRight className="ml-2 h-4 w-4" />
-               </Button>
-               <Dialog
-                    open={showAllTransactions}
-                    onOpenChange={setShowAllTransactions}
-               >
+               <Dialog>
+                    <DialogTrigger asChild>
+                         <Button>
+                              View all <ArrowRight className="ml-2 h-4 w-4" />
+                         </Button>
+                    </DialogTrigger>
                     <DialogContent className="max-w-3xl">
                          <DialogHeader>
                               <DialogTitle>All Transactions</DialogTitle>
-                              <DialogDescription>
-                                   Jul 15, 2024 - Jul 22, 2024
-                              </DialogDescription>
                          </DialogHeader>
-                         <div className="max-h-[60vh] overflow-y-auto">
-                              <ul className="space-y-2">
-                                   {transactions.map((transaction) => (
-                                        <li
+                         <ScrollArea className="max-h-[70vh]">
+                              <div className="space-y-2">
+                                   {pendingTransactions.map((transaction) => (
+                                        <Suspense
+                                             fallback={<div>Loading...</div>}
                                              key={transaction.id}
-                                             className="flex items-center justify-between"
                                         >
-                                             <div className="flex items-center">
-                                                  <span
-                                                       //@ts-expect-error
-                                                       className={`mr-2 h-3 w-3 rounded-full ${statusColor[transaction.status]}`}
-                                                  ></span>
-                                                  <span>
-                                                       {transaction.from} -{" "}
-                                                       {transaction.to}
-                                                  </span>
-                                             </div>
-                                             <div className="text-right">
-                                                  <div>
-                                                       ₦
-                                                       {transaction.amount.toLocaleString()}
-                                                  </div>
-                                                  <div className="text-sm text-gray-500">
-                                                       {transaction.date}
-                                                  </div>
-                                             </div>
-                                        </li>
+                                             <SingleTransaction
+                                                  transaction={transaction}
+                                             />
+                                        </Suspense>
                                    ))}
-                              </ul>
-                         </div>
+                              </div>
+                              <ScrollBar />
+                         </ScrollArea>
                     </DialogContent>
                </Dialog>
           </>

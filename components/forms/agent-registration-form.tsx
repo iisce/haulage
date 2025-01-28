@@ -45,7 +45,6 @@ export default function AgentRegistrationForm() {
           startTransition(() => {
                createAgent(values).then((data) => {
                     if (data?.error) {
-                         console.log({ data });
                          setError(data.error);
                     }
                     if (data?.success) {

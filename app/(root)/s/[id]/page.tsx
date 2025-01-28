@@ -1,4 +1,4 @@
-import { getVehicleByBarcode } from "@/actions/barcode";
+import { getBarcodeByCode } from "@/actions/barcode";
 import StatusLevy from "@/components/StatusLevy";
 import StatusTransactions from "@/components/StatusTransactions";
 import TransactionList from "@/components/TransactionList";
@@ -10,77 +10,10 @@ import {
      CardHeader,
      CardTitle,
 } from "@/components/ui/card";
+import { getVehicleById } from "@/data/vehicles";
 import { QrCode } from "lucide-react";
 import { notFound } from "next/navigation";
-
-// Mock data
-const vehicleInfo = {
-     owner: "John Doe",
-     detachable: "Yes",
-     plateNumber: "ABC-123-XYZ",
-     qrCode: "QR12345",
-     status: "Active",
-     daysOverdue: 5,
-};
-
-const transactions = [
-     {
-          id: 1,
-          from: "Park A",
-          to: "Park B",
-          date: "Jul 22, 08:51",
-          amount: 20000,
-          status: "Pending",
-     },
-     {
-          id: 2,
-          from: "Park A",
-          to: "Park B",
-          date: "Jul 22, 08:51",
-          amount: 20000,
-          status: "Successful",
-     },
-     {
-          id: 3,
-          from: "Park A",
-          to: "Park B",
-          date: "Jul 22, 08:51",
-          amount: 20000,
-          status: "Overdue",
-     },
-     {
-          id: 4,
-          from: "Park A",
-          to: "Park B",
-          date: "Jul 22, 08:51",
-          amount: 20000,
-          status: "Pending",
-     },
-     {
-          id: 5,
-          from: "Park A",
-          to: "Park B",
-          date: "Jul 22, 08:51",
-          amount: 20000,
-          status: "Successful",
-     },
-     {
-          id: 6,
-          from: "Park A",
-          to: "Park B",
-          date: "Jul 22, 08:51",
-          amount: 20000,
-          status: "Overdue",
-     },
-     {
-          id: 7,
-          from: "Park A",
-          to: "Park B",
-          date: "Jul 22, 08:51",
-          amount: 20000,
-          status: "Pending",
-     },
-];
+import { Suspense } from "react";
 
 export default async function HaulageStatusPage({
      params,
@@ -88,11 +21,27 @@ export default async function HaulageStatusPage({
      params: Promise<{ id: string }>;
 }) {
      const id = (await params).id;
-     const vehicleRequest = await getVehicleByBarcode(id);
-     const vehicle = vehicleRequest.data;
+     const barcode = (await getBarcodeByCode(id)).data;
+     if (!barcode) {
+          return (
+               <div className="grid min-h-screen place-items-center">
+                    Invalid Barcode
+               </div>
+          );
+     }
+     const vehicleId = barcode.vehicleId;
+     if (!vehicleId || vehicleId === "" || vehicleId === null) {
+          return (
+               <div className="grid min-h-screen place-items-center">
+                    Barcode not attached to a vehicle
+               </div>
+          );
+     }
+     const vehicle = await getVehicleById({ id: vehicleId });
      if (!vehicle) {
           return notFound();
      }
+
      return (
           <div className="container mx-auto p-4">
                <Card className="mb-4 mt-16">
@@ -114,7 +63,7 @@ export default async function HaulageStatusPage({
                                         <strong>Plate Number:</strong>{" "}
                                         {vehicle.plateNumber}
                                    </p>
-                                   <Badge
+                                   {/* <Badge
                                         variant={
                                              vehicleInfo.status === "Active"
                                                   ? "secondary"
@@ -122,7 +71,7 @@ export default async function HaulageStatusPage({
                                         }
                                    >
                                         {vehicleInfo.status}
-                                   </Badge>
+                                   </Badge> */}
                               </div>
                               <div className="flex justify-end">
                                    <QrCode size={100} />
@@ -130,9 +79,9 @@ export default async function HaulageStatusPage({
                          </div>
                     </CardContent>
                     <CardFooter className="justify-between">
-                         <StatusLevy />
+                         <StatusLevy vehicle={vehicle} />
                          <Badge variant="destructive" className="text-sm">
-                              {vehicleInfo.daysOverdue} Days Overdue
+                              {6} Days Overdue
                          </Badge>
                     </CardFooter>
                </Card>
@@ -141,11 +90,15 @@ export default async function HaulageStatusPage({
                     <CardHeader>
                          <CardTitle className="flex items-center justify-between">
                               Transaction History
-                              <StatusTransactions transactions={transactions} />
+                              <Suspense fallback={<div>Loading...</div>}>
+                                   <StatusTransactions vehicleId={vehicleId} />
+                              </Suspense>
                          </CardTitle>
                     </CardHeader>
                     <CardContent>
-                         <TransactionList transactions={transactions} />
+                         <Suspense fallback={<div>Loading...</div>}>
+                              <TransactionList vehicleId={vehicleId} />
+                         </Suspense>
                     </CardContent>
                </Card>
           </div>

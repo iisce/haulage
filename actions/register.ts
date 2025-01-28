@@ -27,7 +27,6 @@ export const register = async (values: z.infer<typeof AdminRegisterSchema>) => {
                payload,
                config,
           );
-          console.log({ registerAdminRequest });
           if (registerAdminRequest.data.success) {
                return {
                     success: registerAdminRequest.statusText,

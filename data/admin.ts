@@ -19,7 +19,6 @@ export const getAdmins = async () => {
                },
           );
           const admins: User[] = adminsRequest.data.data;
-          console.log({ admins });
           return admins;
      } catch (error: any) {
           if (error instanceof AxiosError) {

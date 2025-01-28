@@ -106,6 +106,10 @@ export const URLS = {
           login: "/api/auth/signin",
           register: "/api/auth/register/admin",
      },
+     barcodes: {
+          all: "/api/barcode/all",
+          code: "/api/barcode/fetch-by-code",
+     },
      activities: "/api/activities/all",
      user: {
           self: "/api/user/one",
@@ -129,6 +133,13 @@ export const URLS = {
           delete: "/api/vehicles/all",
           one: "/api/vehicles/one",
           scan: "/api/vehicles/scan",
+     },
+     payment: {
+          main: "/api/payment/",
+     },
+     transactions: {
+          all: "/api/transactions/all",
+          one: "/api/transactions/one",
      },
 };
 
@@ -295,7 +306,7 @@ export const TYRE_TYPE = [
 ] as const;
 
 export const statusColor = {
-     Pending: "bg-orange-500",
-     Successful: "bg-green-500",
-     Overdue: "bg-red-500",
+     PENDING: "bg-orange-600 text-orange-100",
+     SUCCESS: "bg-green-600 text-green-100",
+     FAILED: "bg-red-600 text-red-100",
 } as const;

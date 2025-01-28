@@ -24,7 +24,6 @@ export const createAgent = async (
 
      const payload = validatedFields.data;
      try {
-          console.log({ payload });
           const createAgentRequest = await axios.post(apiUrl, payload, config);
           if (createAgentRequest.data.success) {
                return {

@@ -1,34 +1,24 @@
-import { statusColor } from "@/constants";
+import { fetchTransactions } from "@/actions/transactions";
+import SingleTransaction from "./SingleTransaction";
+import { Suspense } from "react";
 
-export default function TransactionList({
-     transactions,
+export default async function TransactionList({
+     vehicleId,
 }: {
-     transactions: any;
+     vehicleId: string;
 }) {
+     const pendingTransactions =
+          (await fetchTransactions({ vehicleId })).data ?? [];
      return (
-          <ul className="space-y-2">
-               {transactions.slice(0, 5).map((transaction: any) => (
-                    <li
+          <div className="space-y-2">
+               {pendingTransactions.slice(0, 5).map((transaction) => (
+                    <Suspense
+                         fallback={<div>Loading...</div>}
                          key={transaction.id}
-                         className="flex items-center justify-between"
                     >
-                         <div className="flex items-center">
-                              <span
-                                   //@ts-expect-error
-                                   className={`mr-2 h-3 w-3 rounded-full ${statusColor[transaction.status]}`}
-                              ></span>
-                              <span>
-                                   {transaction.from} - {transaction.to}
-                              </span>
-                         </div>
-                         <div className="text-right">
-                              <div>₦{transaction.amount.toLocaleString()}</div>
-                              <div className="text-sm text-gray-500">
-                                   {transaction.date}
-                              </div>
-                         </div>
-                    </li>
+                         <SingleTransaction transaction={transaction} />
+                    </Suspense>
                ))}
-          </ul>
+          </div>
      );
 }

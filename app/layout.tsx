@@ -28,7 +28,7 @@ export default function RootLayout({
                <Provider>
                     <body
                          className={cn(
-                              "h-screen overflow-clip bg-background font-sans antialiased",
+                              "min-h-screen overflow-x-clip bg-background font-sans antialiased",
                               ubuntu.variable,
                          )}
                     >

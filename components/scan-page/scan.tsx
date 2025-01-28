@@ -39,7 +39,7 @@ export default function QRScan({ role }: { role?: string }) {
      };
 
      const handleScanResult = (result: string) => {
-          router.push(`/status/${result.toLowerCase()}`);
+          router.push(`${result.toLowerCase()}`);
           setResult(result);
           setOpen(true);
           setScanning(false);
