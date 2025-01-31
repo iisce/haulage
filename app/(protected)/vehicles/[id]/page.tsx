@@ -1,5 +1,6 @@
 import { getBarcodeByVehicle } from "@/actions/barcode";
 import { getAllTyreSettings } from "@/actions/settings/tyre";
+import VehicleLevyTransactions from "@/components/VehicleLevyTransactions";
 import ScanToAddSticker from "@/components/scan-to-add-sticker";
 import QrCode from "@/components/shared/qr-code";
 import { Badge } from "@/components/ui/badge";
@@ -11,14 +12,16 @@ import { format } from "date-fns";
 import { CalendarIcon, QrCodeIcon, TruckIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 export default async function SingleVehiclePage({
      params,
 }: {
-     params: { id: string };
+     params: Promise<{ id: string }>;
 }) {
-     const vehicle = await getVehicleById({ id: params.id });
-     const barcode = (await getBarcodeByVehicle(params.id)).data;
+     const id = (await params).id;
+     const vehicle = await getVehicleById({ id });
+     const barcode = (await getBarcodeByVehicle(id)).data;
      const tyreSettings = (await getAllTyreSettings()).data ?? [];
 
      if (!vehicle) return notFound();
@@ -123,7 +126,6 @@ export default async function SingleVehiclePage({
                               </div>
                          </div>
                     </div>
-
                     <Separator />
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                          <div className="flex items-center gap-2">
@@ -192,87 +194,22 @@ export default async function SingleVehiclePage({
                          <ScanToAddSticker id={vehicle.id} />
                     )}
                </div>
-               <div className="grid gap-4">
-                    <div className="flex items-center gap-2">
-                         <TruckIcon className="h-8 w-8 text-gray-500 dark:text-gray-400" />
-                         <div className="font-medium text-black dark:text-white">
-                              Truck Haulage Levy History
+               <Separator />
+               <div className="mb-10 grid gap-4">
+                    <div className="flex justify-between gap-3">
+                         <div className="flex items-center gap-2">
+                              <TruckIcon className="h-8 w-8 text-gray-500 dark:text-gray-400" />
+                              <div className="font-medium text-black dark:text-white">
+                                   Truck Haulage Levy History
+                              </div>
                          </div>
+                         <Link href={`/vehicles/${id}/transactions`}>
+                              view all
+                         </Link>
                     </div>
-                    <div className="grid gap-4 sm:grid-cols-3">
-                         <div className="grid gap-1">
-                              <div className="text-sm text-gray-500 dark:text-gray-400">
-                                   Levy Date
-                              </div>
-                              <div className="font-medium text-black dark:text-white">
-                                   2023-04-15
-                              </div>
-                         </div>
-                         <div className="grid gap-1">
-                              <div className="text-sm text-gray-500 dark:text-gray-400">
-                                   Levy Amount
-                              </div>
-                              <div className="font-medium text-black dark:text-white">
-                                   {formatToNaira(2500)}
-                              </div>
-                         </div>
-                         <div className="grid gap-1">
-                              <div className="text-sm text-gray-500 dark:text-gray-400">
-                                   Levy Status
-                              </div>
-                              <div className="font-medium text-green-500 dark:text-green-500">
-                                   Paid
-                              </div>
-                         </div>
-                         <div className="grid gap-1">
-                              <div className="text-sm text-gray-500 dark:text-gray-400">
-                                   Levy Date
-                              </div>
-                              <div className="font-medium text-black dark:text-white">
-                                   2023-03-01
-                              </div>
-                         </div>
-                         <div className="grid gap-1">
-                              <div className="text-sm text-gray-500 dark:text-gray-400">
-                                   Levy Amount
-                              </div>
-                              <div className="font-medium text-black dark:text-white">
-                                   {formatToNaira(2000)}
-                              </div>
-                         </div>
-                         <div className="grid gap-1">
-                              <div className="text-sm text-gray-500 dark:text-gray-400">
-                                   Levy Status
-                              </div>
-                              <div className="font-medium text-yellow-500 dark:text-yellow-500">
-                                   Pending
-                              </div>
-                         </div>
-                         <div className="grid gap-1">
-                              <div className="text-sm text-gray-500 dark:text-gray-400">
-                                   Levy Date
-                              </div>
-                              <div className="font-medium text-black dark:text-white">
-                                   2023-02-15
-                              </div>
-                         </div>
-                         <div className="grid gap-1">
-                              <div className="text-sm text-gray-500 dark:text-gray-400">
-                                   Levy Amount
-                              </div>
-                              <div className="font-medium text-black dark:text-white">
-                                   {formatToNaira(1800)}
-                              </div>
-                         </div>
-                         <div className="grid gap-1">
-                              <div className="text-sm text-gray-500 dark:text-gray-400">
-                                   Levy Status
-                              </div>
-                              <div className="font-medium text-red-500 dark:text-red-500">
-                                   Overdue
-                              </div>
-                         </div>
-                    </div>
+                    <Suspense fallback={<div>...loading</div>}>
+                         <VehicleLevyTransactions id={id} />
+                    </Suspense>
                </div>
           </div>
      );

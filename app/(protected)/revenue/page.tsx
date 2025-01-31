@@ -1,7 +1,4 @@
 import RevenueTable, { ILevyData } from "@/components/revenue-page/revenue";
-import Revenue from "@/components/revenue-page/revenue";
-import RevenueSummary from "@/components/revenue-page/revenue-summary";
-import React from "react";
 
 const REVENUE_DATA: ILevyData[] = [
      {

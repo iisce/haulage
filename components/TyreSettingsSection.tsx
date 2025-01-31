@@ -211,7 +211,7 @@ export default function TyreSettingsSection() {
                                                   {setting.number_of_tyres}
                                              </TableCell>
                                              <TableCell>
-                                                  ${setting.fee.toFixed(2)}
+                                                  ₦ {setting.fee.toFixed(2)}
                                              </TableCell>
                                              <TableCell>
                                                   <Button

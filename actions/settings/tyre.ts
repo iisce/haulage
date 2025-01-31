@@ -79,6 +79,7 @@ export async function updateTyreSetting(id: string, formData: FormData) {
           number_of_tyres: parseInt(formData.get("number_of_tyres") as string),
           fee: parseFloat(formData.get("fee") as string),
      };
+     console.log({ data, id });
      const response = await fetch(`${BASE_URL}/api/tyresettings/update/${id}`, {
           method: "PATCH",
           headers: {

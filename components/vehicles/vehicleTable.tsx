@@ -64,20 +64,16 @@ export default async function VehicleTable() {
                     <TableBody>
                          {vehicles.map((vehicle, i) => (
                               <TableRow key={i}>
-                                   <TableCell className="text-left font-medium">
-                                        {vehicle.plateNumber}
+                                   <TableCell className="grid text-left font-medium">
+                                        <Link href={`/vehicles/${vehicle.id}`}>
+                                             {vehicle.plateNumber}
+                                        </Link>
                                    </TableCell>
                                    <TableCell className="text-left">
                                         {vehicle.customerName}
                                    </TableCell>
                                    <TableCell className="text-left">
-                                        {/* {
-                                             TYRE_TYPE.find(
-                                                  ({ fee }) =>
-                                                       Number(fee) ===
-                                                       vehicle.number_of_tyres,
-                                             )?.name
-                                        } */}
+                                        {vehicle.number_of_tyres}
                                    </TableCell>
                                    <TableCell className="text-left">
                                         {vehicle.modelName}
