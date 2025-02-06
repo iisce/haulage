@@ -1,19 +1,20 @@
 import { fetchTransactions } from "@/actions/transactions";
 import SingleTransaction from "./SingleTransaction";
 import { Suspense } from "react";
+import { Skeleton } from "./ui/skeleton";
 
 export default async function TransactionList({
      vehicleId,
 }: {
      vehicleId: string;
 }) {
-     const pendingTransactions =
-          (await fetchTransactions({ vehicleId })).data ?? [];
+     const transactions = (await fetchTransactions({ vehicleId })).data ?? [];
+
      return (
           <div className="space-y-2">
-               {pendingTransactions.slice(0, 5).map((transaction) => (
+               {transactions.slice(0, 5).map((transaction) => (
                     <Suspense
-                         fallback={<div>Loading...</div>}
+                         fallback={<Skeleton className="h-10 w-full" />}
                          key={transaction.id}
                     >
                          <SingleTransaction transaction={transaction} />

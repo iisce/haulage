@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
+import { format } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -64,4 +65,16 @@ export function slugify(text: string): string {
           .replace(/[^a-z0-9-]/g, "") // Remove non-alphanumeric characters
           .replace(/--+/g, "-") // Replace multiple hyphens with a single hyphen
           .replace(/^-|-$/g, ""); // Remove leading and trailing hyphens
+}
+
+export function formatDateForAPI(date: Date): string {
+     return format(date, "yyyy-MM-dd");
+}
+
+export function formatMonthForAPI(date: Date): string {
+     return format(date, "yyyy-MM");
+}
+
+export function formatWeekForAPI(date: Date): string {
+     return `w${format(date, "w")}`;
 }

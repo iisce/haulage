@@ -54,3 +54,10 @@ interface IActivity {
      updatedAt: string;
      __v: 0;
 }
+
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
+interface ChartData {
+     name: string;
+     total: number;
+}

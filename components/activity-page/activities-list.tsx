@@ -16,8 +16,8 @@ const formatDateForGrouping = (date: string) =>
 const formatDateForDisplay = (date: string) =>
      format(parseISO(date), "MMMM d, yyyy");
 
-export default async function ActivityList() {
-     const activities = await getActivities();
+export default async function ActivityList({ id }: { id?: string }) {
+     const activities = id ? await getActivities() : await getActivities();
 
      // Sort activities by date (newest first)
      const sortedActivities = activities.sort(
