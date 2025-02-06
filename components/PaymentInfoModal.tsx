@@ -7,6 +7,9 @@ import {
      DialogTitle,
      DialogTrigger,
 } from "@/components/ui/dialog";
+import { PaymentVerificationButton } from "./PaymentVerificationButton";
+import { formatToNaira } from "@/lib/utils";
+import { Separator } from "./ui/separator";
 
 export default function PaymentInfoModal({
      paymentOrder,
@@ -22,7 +25,10 @@ export default function PaymentInfoModal({
                     <DialogHeader>
                          <DialogTitle>Payment Details</DialogTitle>
                     </DialogHeader>
-                    <div className="mt-2">
+                    <div className="mt-2 grid">
+                         <div className="text-center text-4xl">
+                              {formatToNaira(paymentOrder.amount)}
+                         </div>
                          <p>
                               <strong>Account Name:</strong>{" "}
                               {paymentOrder.accountName}
@@ -38,6 +44,12 @@ export default function PaymentInfoModal({
                               Please make the payment within 48 hours to
                               complete the transaction.
                          </p>
+                         <Separator className="my-2" />
+                         <PaymentVerificationButton
+                              paymentReference={
+                                   paymentOrder.transactionReference
+                              }
+                         />
                     </div>
                </DialogContent>
           </Dialog>

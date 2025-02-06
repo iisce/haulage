@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { BASE_URL } from "@/constants";
+import { regeneratePaymentReference } from "@/actions/payment";
 
 export default function RegeneratePaymentOrder({
      transactionReference,
@@ -18,18 +18,10 @@ export default function RegeneratePaymentOrder({
           setIsLoading(true);
           try {
                // TODO: Implement the API call to regenerate the payment order
-               const response = await fetch(
-                    `${BASE_URL}/api/payment/regenerate-payment-order`,
-                    {
-                         method: "POST",
-                         headers: {
-                              "Content-Type": "application/json",
-                         },
-                         body: JSON.stringify({ transactionReference }),
-                    },
-               );
+               const response =
+                    await regeneratePaymentReference(transactionReference);
 
-               if (!response.ok) {
+               if (response.error) {
                     throw new Error("Failed to regenerate payment order");
                }
                toast.success("Successful", {

@@ -31,6 +31,7 @@ import {
      AlertDialogTitle,
 } from "./ui/alert-dialog";
 import { useRouter } from "next/navigation";
+import { PaymentVerificationButton } from "./PaymentVerificationButton";
 
 interface PaymentDetails {
      accountName: string;
@@ -67,6 +68,7 @@ export default function StatusLevy({ vehicle }: { vehicle: Vehicle }) {
                          setSelectedTyreSetting(matchingSetting);
                          setAmount(matchingSetting.fee);
                     }
+                    console.log({ settings });
                } catch (error) {
                     console.error("Failed to fetch tyre settings:", error);
                     toast.error("Error", {
@@ -77,6 +79,7 @@ export default function StatusLevy({ vehicle }: { vehicle: Vehicle }) {
           };
 
           fetchTyreSettings();
+          console.log({ tyreSettings });
      }, [vehicle.number_of_tyres]);
 
      const handleTyreSettingChange = (value: string) => {
@@ -292,6 +295,11 @@ export default function StatusLevy({ vehicle }: { vehicle: Vehicle }) {
                                    >
                                         Close
                                    </Button>
+                                   <PaymentVerificationButton
+                                        paymentReference={
+                                             paymentDetails.paymentReference
+                                        }
+                                   />
                               </AlertDialogFooter>
                          </AlertDialogContent>
                     </AlertDialog>
