@@ -11,7 +11,6 @@ import {
      CardTitle,
 } from "@/components/ui/card";
 import { getVehicleById } from "@/data/vehicles";
-import { QrCode } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -25,7 +24,7 @@ export default async function HaulageStatusPage({
      if (!barcode) {
           return (
                <div className="grid min-h-screen place-items-center">
-                    Invalid Barcode
+                    Counterfeit Barcode
                </div>
           );
      }
@@ -49,33 +48,34 @@ export default async function HaulageStatusPage({
                          <CardTitle>Vehicle Information</CardTitle>
                     </CardHeader>
                     <CardContent>
-                         <div className="grid grid-cols-2 gap-4">
+                         <div className="grid">
                               <div>
                                    <p>
                                         <strong>Vehicle Owner:</strong>{" "}
-                                        {vehicle?.modelName}
+                                        {vehicle?.customerName}
                                    </p>
                                    <p>
                                         <strong>Detachable:</strong>{" "}
-                                        {vehicle?.isDetachable}
+                                        <Badge
+                                             variant={
+                                                  vehicle.isDetachable
+                                                       ? "default"
+                                                       : "secondary"
+                                             }
+                                        >
+                                             {vehicle.isDetachable
+                                                  ? "Detachable"
+                                                  : "Not Detachable"}
+                                        </Badge>
                                    </p>
                                    <p>
                                         <strong>Plate Number:</strong>{" "}
                                         {vehicle.plateNumber}
                                    </p>
-                                   {/* <Badge
-                                        variant={
-                                             vehicleInfo.status === "Active"
-                                                  ? "secondary"
-                                                  : "destructive"
-                                        }
-                                   >
-                                        {vehicleInfo.status}
-                                   </Badge> */}
                               </div>
-                              <div className="flex justify-end">
-                                   <QrCode size={100} />
-                              </div>
+                              {/* <div className="flex justify-end">
+                                   <QrCode size={50} />
+                              </div> */}
                          </div>
                     </CardContent>
                     <CardFooter className="justify-between">
@@ -88,7 +88,7 @@ export default async function HaulageStatusPage({
 
                <Card className="mb-4">
                     <CardHeader>
-                         <CardTitle className="flex items-center justify-between">
+                         <CardTitle className="flex items-end justify-between border-b pb-1 text-xl">
                               Transaction History
                               <Suspense fallback={<div>Loading...</div>}>
                                    <StatusTransactions vehicleId={vehicleId} />

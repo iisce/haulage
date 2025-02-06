@@ -23,19 +23,17 @@ import {
      TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
-
-interface TyreSetting {
-     id: string;
-     name: string;
-     number_of_tyres: number;
-     fee: number;
-}
+import { tyreSettings } from "@prisma/client";
+import { Loader } from "lucide-react";
 
 export default function TyreSettingsSection() {
      const { data: session } = useSession();
-     const [tyreSettings, setTyreSettings] = useState<TyreSetting[]>([]);
+     const [tyreSettings, setTyreSettings] = useState<tyreSettings[]>([]);
+     const [isDeleting, setIsDeleting] = useState<boolean>(false);
+     const [isRestoring, setIsRestoring] = useState<boolean>(false);
      const [editingId, setEditingId] = useState<string | null>(null);
-     const { register, handleSubmit, reset, setValue } = useForm<TyreSetting>();
+     const { register, handleSubmit, reset, setValue } =
+          useForm<tyreSettings>();
 
      const isSuperAdmin = session?.user?.role === "SUPER_ADMIN";
 
@@ -60,7 +58,7 @@ export default function TyreSettingsSection() {
           }
      }
 
-     async function onSubmit(data: TyreSetting) {
+     async function onSubmit(data: tyreSettings) {
           try {
                const formData = new FormData();
                formData.append("name", data.name);
@@ -93,33 +91,41 @@ export default function TyreSettingsSection() {
 
      async function handleDelete(id: string) {
           try {
+               setIsDeleting(true);
                await deleteTyreSetting(id);
                toast.success("Success", {
                     description: "Tyre setting deleted successfully",
                });
                fetchTyreSettings();
+
+               setIsDeleting(false);
           } catch (error) {
                toast.error("Error", {
                     description: "Failed to delete tyre setting",
                });
+
+               setIsDeleting(false);
           }
      }
 
      async function handleRestore(id: string) {
           try {
+               setIsRestoring(true);
                await restoreTyreSetting(id);
                toast.success("Success", {
                     description: "Tyre setting restored successfully",
                });
                fetchTyreSettings();
+               setIsRestoring(false);
           } catch (error) {
                toast.error("Error", {
                     description: "Failed to restore tyre setting",
                });
+               setIsRestoring(false);
           }
      }
 
-     function handleEdit(setting: TyreSetting) {
+     function handleEdit(setting: tyreSettings) {
           setEditingId(setting.id);
           setValue("name", setting.name);
           setValue("number_of_tyres", setting.number_of_tyres);
@@ -223,27 +229,45 @@ export default function TyreSettingsSection() {
                                                   >
                                                        Edit
                                                   </Button>
-                                                  <Button
-                                                       variant="destructive"
-                                                       onClick={() =>
-                                                            handleDelete(
-                                                                 setting.id,
-                                                            )
-                                                       }
-                                                       className="mr-2"
-                                                  >
-                                                       Delete
-                                                  </Button>
-                                                  <Button
-                                                       variant="secondary"
-                                                       onClick={() =>
-                                                            handleRestore(
-                                                                 setting.id,
-                                                            )
-                                                       }
-                                                  >
-                                                       Restore
-                                                  </Button>
+                                                  {!setting.deletedAt && (
+                                                       <Button
+                                                            variant="destructive"
+                                                            onClick={() =>
+                                                                 handleDelete(
+                                                                      setting.id,
+                                                                 )
+                                                            }
+                                                            disabled={
+                                                                 isDeleting
+                                                            }
+                                                            className="mr-2"
+                                                       >
+                                                            {isDeleting ? (
+                                                                 <Loader className="h-4 w-4 animate-spin" />
+                                                            ) : (
+                                                                 "Delete"
+                                                            )}
+                                                       </Button>
+                                                  )}
+                                                  {setting.deletedAt && (
+                                                       <Button
+                                                            variant="secondary"
+                                                            onClick={() =>
+                                                                 handleRestore(
+                                                                      setting.id,
+                                                                 )
+                                                            }
+                                                            disabled={
+                                                                 isRestoring
+                                                            }
+                                                       >
+                                                            {isRestoring ? (
+                                                                 <Loader className="h-4 w-4 animate-spin" />
+                                                            ) : (
+                                                                 "Restore"
+                                                            )}
+                                                       </Button>
+                                                  )}
                                              </TableCell>
                                         </TableRow>
                                    ))

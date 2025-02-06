@@ -286,4 +286,6 @@ enum TransactionType {
 
 enum ActivityType {
   TRANSACTION_COMPLETED
+  VEHICLE_CHARGED
+  VEHICLE_CREATED
 }

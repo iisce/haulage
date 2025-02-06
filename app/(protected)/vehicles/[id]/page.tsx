@@ -23,6 +23,10 @@ export default async function SingleVehiclePage({
      const vehicle = await getVehicleById({ id });
      const barcode = (await getBarcodeByVehicle(id)).data;
      const tyreSettings = (await getAllTyreSettings()).data ?? [];
+     const tyreSetting = tyreSettings.find(
+          (tyre) => tyre.number_of_tyres === vehicle?.number_of_tyres,
+     );
+     console.log({ vehicleTyerNumber: vehicle?.number_of_tyres, tyreSetting });
 
      if (!vehicle) return notFound();
 
@@ -43,17 +47,17 @@ export default async function SingleVehiclePage({
                                         : "Not Detachable"}
                               </Badge>
                          </div>
-                         <div className="grid grid-cols-3 gap-3">
+                         <div className="grid grid-cols-2 gap-3">
                               <Button asChild>
                                    <Link href={`/vehicles/${vehicle.id}/edit`}>
                                         Edit
                                    </Link>
                               </Button>
-                              <Button asChild>
+                              {/* <Button asChild>
                                    <Link href={`/vehicles/${vehicle.id}/edit`}>
                                         Delete
                                    </Link>
-                              </Button>
+                              </Button> */}
                               <Button asChild>
                                    <Link href={`/vehicles/${vehicle.id}/edit`}>
                                         Add Levy
@@ -103,20 +107,16 @@ export default async function SingleVehiclePage({
                                    {vehicle.customerMobile}
                               </div>
                          </div>
-                         <div className="grid gap-1">
-                              <div className="text-sm text-gray-500 dark:text-gray-400">
-                                   Fee
+                         {tyreSetting && (
+                              <div className="grid gap-1">
+                                   <div className="text-sm text-gray-500 dark:text-gray-400">
+                                        Fee
+                                   </div>
+                                   <div className="font-medium text-black dark:text-white">
+                                        {formatToNaira(tyreSetting.fee)}
+                                   </div>
                               </div>
-                              <div className="font-medium text-black dark:text-white">
-                                   {formatToNaira(
-                                        tyreSettings.find(
-                                             (tyre) =>
-                                                  tyre.number_of_tyres ===
-                                                  vehicle.number_of_tyres,
-                                        )!.fee,
-                                   )}
-                              </div>
-                         </div>
+                         )}
                          <div className="grid gap-1">
                               <div className="text-sm text-gray-500 dark:text-gray-400">
                                    Detachable

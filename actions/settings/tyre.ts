@@ -22,6 +22,12 @@ async function checkSuperAdminAuth() {
 
 export async function createTyreSetting(formData: FormData) {
      await checkSuperAdminAuth();
+     const session = await auth();
+     const token = session?.user.access_token;
+     const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+     };
      const data: TyreSettingData = {
           name: formData.get("name") as string,
           number_of_tyres: parseInt(formData.get("number_of_tyres") as string),
@@ -29,9 +35,7 @@ export async function createTyreSetting(formData: FormData) {
      };
      const response = await fetch(`${BASE_URL}/api/tyresettings/create`, {
           method: "POST",
-          headers: {
-               "Content-Type": "application/json",
-          },
+          headers,
           body: JSON.stringify(data),
      });
 
@@ -44,8 +48,16 @@ export async function createTyreSetting(formData: FormData) {
 }
 
 export async function getAllTyreSettings() {
-     // await checkSuperAdminAuth();
-     const request = await fetch(`${BASE_URL}/api/tyresettings/all`);
+     await checkSuperAdminAuth();
+     const session = await auth();
+     const token = session?.user.access_token;
+     const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+     };
+     const request = await fetch(`${BASE_URL}/api/tyresettings/all`, {
+          headers,
+     });
      const response = await request.json();
 
      if (!request.ok) {
@@ -63,7 +75,16 @@ export async function getAllTyreSettings() {
 
 export async function getTyreSetting(id: string) {
      await checkSuperAdminAuth();
-     const response = await fetch(`${BASE_URL}/api/tyresettings/one/${id}`);
+     const session = await auth();
+     const token = session?.user.access_token;
+     const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+     };
+     const response = await fetch(`${BASE_URL}/api/tyresettings/one/${id}`, {
+          headers,
+     });
+     console.log(response);
 
      if (!response.ok) {
           throw new Error("Failed to fetch tyre setting");
@@ -74,17 +95,21 @@ export async function getTyreSetting(id: string) {
 
 export async function updateTyreSetting(id: string, formData: FormData) {
      await checkSuperAdminAuth();
-     const data: TyreSettingData = {
+     const session = await auth();
+     const token = session?.user.access_token;
+     const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+     };
+
+     const data = {
           name: formData.get("name") as string,
-          number_of_tyres: parseInt(formData.get("number_of_tyres") as string),
           fee: parseFloat(formData.get("fee") as string),
      };
      console.log({ data, id });
      const response = await fetch(`${BASE_URL}/api/tyresettings/update/${id}`, {
           method: "PATCH",
-          headers: {
-               "Content-Type": "application/json",
-          },
+          headers,
           body: JSON.stringify(data),
      });
 
@@ -98,8 +123,15 @@ export async function updateTyreSetting(id: string, formData: FormData) {
 
 export async function deleteTyreSetting(id: string) {
      await checkSuperAdminAuth();
+     const session = await auth();
+     const token = session?.user.access_token;
+     const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+     };
      const response = await fetch(`${BASE_URL}/api/tyresettings/delete/${id}`, {
           method: "PATCH",
+          headers,
      });
 
      if (!response.ok) {
@@ -112,10 +144,17 @@ export async function deleteTyreSetting(id: string) {
 
 export async function restoreTyreSetting(id: string) {
      await checkSuperAdminAuth();
+     const session = await auth();
+     const token = session?.user.access_token;
+     const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+     };
      const response = await fetch(
           `${BASE_URL}/api/tyresettings/restore/${id}`,
           {
                method: "PATCH",
+               headers,
           },
      );
 

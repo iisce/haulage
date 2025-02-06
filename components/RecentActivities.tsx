@@ -2,12 +2,13 @@ import Link from "next/link";
 import ActivitiesCard from "./dashboard/activities-card";
 import { Button } from "./ui/button";
 import { getActivities } from "@/data/activities";
+import { ScrollArea } from "./ui/scroll-area";
 
 export default async function RecentActivities() {
      const recentActivities = await getActivities();
      return (
-          <div className="col-span-4 hidden w-full md:flex xl:col-span-1 xl:h-[calc(100svh-100px)]">
-               <div className="flex w-full flex-col justify-between gap-3 rounded-lg bg-secondary p-3">
+          <ScrollArea className="col-span-4 hidden w-full rounded-lg bg-secondary md:flex xl:col-span-1 xl:h-[calc(100svh-100px)]">
+               <div className="flex h-full w-full flex-col justify-between gap-3 p-3">
                     <div>
                          <p className="mb-2 text-xl">Recent Activities</p>
                          <div className="no-scrollbar grid gap-3 overflow-y-scroll">
@@ -28,6 +29,6 @@ export default async function RecentActivities() {
                          <Link href={"/activities"}>View All</Link>
                     </Button>
                </div>
-          </div>
+          </ScrollArea>
      );
 }

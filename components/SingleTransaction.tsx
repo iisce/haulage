@@ -10,16 +10,17 @@ export default async function SingleTransaction({
 }: {
      transaction: Transaction;
 }) {
-     const paymentOrder = await db.paymentOrder.findUnique({
+     const paymentOrder = await db.paymentOrder.findFirst({
           where: {
-               transactionReference: transaction.reference,
+               paymentReference: transaction.reference,
           },
      });
 
-     const isExpired =
-          paymentOrder &&
-          differenceInHours(new Date(), paymentOrder.createdAt) > 48;
-
+     let isExpired = false;
+     if (paymentOrder) {
+          isExpired =
+               differenceInHours(new Date(), paymentOrder.updatedAt) > 48;
+     }
      return (
           <div
                key={transaction.id}
@@ -42,12 +43,10 @@ export default async function SingleTransaction({
                     </div>
                </div>
 
-               {transaction.status === "PENDING" &&
-                    paymentOrder &&
-                    !isExpired && (
-                         <PaymentInfoModal paymentOrder={paymentOrder} />
-                    )}
-               {transaction.status === "PENDING" && isExpired && (
+               {!!paymentOrder && transaction.status === "PENDING" && (
+                    <PaymentInfoModal paymentOrder={paymentOrder} />
+               )}
+               {isExpired && (
                     <RegeneratePaymentOrder
                          transactionReference={transaction.reference}
                     />
