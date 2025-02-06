@@ -54,7 +54,7 @@ export default async function HaulageStatusPage({
                                         <strong>Vehicle Owner:</strong>{" "}
                                         {vehicle?.customerName}
                                    </p>
-                                   <p>
+                                   <div>
                                         <strong>Detachable:</strong>{" "}
                                         <Badge
                                              variant={
@@ -67,7 +67,7 @@ export default async function HaulageStatusPage({
                                                   ? "Detachable"
                                                   : "Not Detachable"}
                                         </Badge>
-                                   </p>
+                                   </div>
                                    <p>
                                         <strong>Plate Number:</strong>{" "}
                                         {vehicle.plateNumber}

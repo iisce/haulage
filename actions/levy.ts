@@ -17,21 +17,31 @@ async function hasPermission() {
 }
 
 export async function chargeLevy(vehicleId: string, num_of_tyres?: number) {
-     //  await hasPermission();
+     const session = await auth();
+     const token = session?.user.access_token;
+     const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+     };
 
      try {
-          const response = await axios.post(
+          const request = await fetch(
                `${BASE_URL}/api/payment/${vehicleId}/initiate`,
                {
-                    num_of_tyres,
+                    method: "POST",
+                    headers,
+                    body: JSON.stringify({ num_of_tyres }),
                },
           );
+          const response = await request.json();
 
-          if (response.status === 201) {
+          console.log({ response });
+
+          if (response.data) {
                return {
                     success: true,
                     message: "Payment Order initialized successfully",
-                    data: response.data.data,
+                    data: response.data,
                };
           } else {
                throw new Error("Unexpected response from the server");
@@ -50,5 +60,28 @@ export async function chargeLevy(vehicleId: string, num_of_tyres?: number) {
                console.error("Error:", error);
                throw new Error("Failed to initialize payment order");
           }
+     }
+}
+
+export async function verifyTransactions(transactionReference: string) {
+     try {
+          const request = await fetch(
+               `${BASE_URL}/api/payment/verify/${transactionReference}`,
+          );
+          const response = await request.json();
+
+          console.log({ response });
+
+          if (response.data) {
+               return {
+                    success: true,
+                    message: "Payment verified successfully",
+               };
+          } else {
+               throw new Error("Unexpected response from the server");
+          }
+     } catch (error) {
+          console.error("Error:", error);
+          throw new Error("Failed to initialize payment order");
      }
 }

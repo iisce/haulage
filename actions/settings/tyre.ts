@@ -48,13 +48,16 @@ export async function createTyreSetting(formData: FormData) {
 }
 
 export async function getAllTyreSettings() {
-     await checkSuperAdminAuth();
+     // await checkSuperAdminAuth();
      const session = await auth();
      const token = session?.user.access_token;
-     const headers = {
-          Authorization: `Bearer ${token}`,
+     const headers: Record<string, string> = {
           "Content-Type": "application/json",
      };
+
+     if (token) {
+          headers["Authorization"] = `Bearer ${token}`;
+     }
      const request = await fetch(`${BASE_URL}/api/tyresettings/all`, {
           headers,
      });
