@@ -78,3 +78,12 @@ export function formatMonthForAPI(date: Date): string {
 export function formatWeekForAPI(date: Date): string {
      return `w${format(date, "w")}`;
 }
+
+export const formatCurrency = (amount: number) => {
+     return new Intl.NumberFormat("en-NG", {
+          style: "currency",
+          currency: "NGN",
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+     }).format(amount);
+};

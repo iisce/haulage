@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
-import { BASE_URL } from "@/constants";
+import { BASE_URL, ITEMS_PER_PAGE } from "@/constants";
 import { tyreSettings } from "@prisma/client";
 
 interface TyreSettingData {
@@ -47,7 +47,7 @@ export async function createTyreSetting(formData: FormData) {
      return await response.json();
 }
 
-export async function getAllTyreSettings() {
+export async function getAllTyreSettings(offset?: number) {
      // await checkSuperAdminAuth();
      const session = await auth();
      const token = session?.user.access_token;
@@ -58,9 +58,12 @@ export async function getAllTyreSettings() {
      if (token) {
           headers["Authorization"] = `Bearer ${token}`;
      }
-     const request = await fetch(`${BASE_URL}/api/tyresettings/all`, {
-          headers,
-     });
+     const request = await fetch(
+          `${BASE_URL}/api/tyresettings/all?limit=${ITEMS_PER_PAGE}&offset=${offset}`,
+          {
+               headers,
+          },
+     );
      const response = await request.json();
 
      if (!request.ok) {
@@ -106,10 +109,8 @@ export async function updateTyreSetting(id: string, formData: FormData) {
      };
 
      const data = {
-          name: formData.get("name") as string,
           fee: parseFloat(formData.get("fee") as string),
      };
-     console.log({ data, id });
      const response = await fetch(`${BASE_URL}/api/tyresettings/update/${id}`, {
           method: "PATCH",
           headers,

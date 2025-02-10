@@ -61,3 +61,22 @@ interface ChartData {
      name: string;
      total: number;
 }
+
+interface Detection {
+     bbox: [number, number, number, number];
+     class: string;
+     score: number;
+}
+
+interface DetectionResult {
+     detections: Detection[];
+}
+
+interface Camera {
+     deviceId: string;
+     label: string;
+}
+
+interface ObjectTableProps {
+     objects: Detection[];
+}

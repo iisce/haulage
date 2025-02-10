@@ -26,7 +26,6 @@ export default async function SingleVehiclePage({
      const tyreSetting = tyreSettings.find(
           (tyre) => tyre.number_of_tyres === vehicle?.number_of_tyres,
      );
-     console.log({ vehicleTyerNumber: vehicle?.number_of_tyres, tyreSetting });
 
      if (!vehicle) return notFound();
 

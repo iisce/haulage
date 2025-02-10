@@ -32,7 +32,7 @@ export const login = async (
                     case "AccessDenied":
                          return { error: "You are not authorized!!!" };
                     case "CallbackRouteError":
-                         return { error: error.cause?.err?.message };
+                         return { error: "Email or Password is Wrong" };
                     default:
                          return { error: "Something went wrong!!!" };
                }

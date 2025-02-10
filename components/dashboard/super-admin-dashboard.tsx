@@ -7,7 +7,7 @@ import DashboardTotalRevenueList from "./DashboardTotalRevenueList";
 import DashboardRevenueListSkeleton from "./DashboardRevenueListSkeleton";
 import { RevenueChart } from "./RevenueChart";
 
-export default function SuperAdminDashboard() {
+export default async function SuperAdminDashboard() {
      return (
           <div className="grid h-full w-full grid-cols-4 gap-4 p-5">
                <div className="col-span-4 flex w-full flex-col gap-5 pb-5 xl:col-span-3">

@@ -1,13 +1,4 @@
 import {
-     Pagination,
-     PaginationContent,
-     PaginationEllipsis,
-     PaginationItem,
-     PaginationLink,
-     PaginationNext,
-     PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
      Table,
      TableBody,
      TableCell,
@@ -16,16 +7,11 @@ import {
      TableRow,
 } from "@/components/ui/table";
 import { getVehicles } from "@/data/vehicles";
-import { Menu } from "lucide-react";
+import { Eye } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
-import {
-     DropdownMenu,
-     DropdownMenuContent,
-     DropdownMenuGroup,
-     DropdownMenuItem,
-     DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+import { PaginationControls } from "./pagination";
+import { ITEMS_PER_PAGE } from "@/constants";
 
 export interface IVEHICLEDETAILS {
      id: string;
@@ -36,8 +22,10 @@ export interface IVEHICLEDETAILS {
      registration_park: string;
 }
 
-export default async function VehicleTable() {
-     const vehicles = await getVehicles();
+export default async function VehicleTable({ page }: { page: number }) {
+     const offset = (page - 1) * ITEMS_PER_PAGE;
+     const vehiclesData = await getVehicles(offset);
+     const vehicles = vehiclesData.vehicles;
      return (
           <>
                <Table className="mt-[20px] w-[900px] overflow-x-scroll md:w-full">
@@ -86,60 +74,21 @@ export default async function VehicleTable() {
                                         </Badge>
                                    </TableCell>
                                    <TableCell className="">
-                                        <DropdownMenu>
-                                             <DropdownMenuTrigger className="cursor-pointer">
-                                                  <Menu className="h-4 w-4" />
-                                             </DropdownMenuTrigger>
-                                             <DropdownMenuContent>
-                                                  <DropdownMenuGroup>
-                                                       <DropdownMenuItem className="flex w-full flex-col items-center justify-center gap-2">
-                                                            <Link
-                                                                 href={`/vehicles/${vehicle.id}`}
-                                                                 className="text-center"
-                                                            >
-                                                                 View Profile
-                                                            </Link>
-                                                            <Link
-                                                                 href={`/vehicles/${vehicle.id}/edit`}
-                                                                 className="text-center"
-                                                            >
-                                                                 View Activity
-                                                            </Link>
-                                                       </DropdownMenuItem>
-                                                  </DropdownMenuGroup>
-                                             </DropdownMenuContent>
-                                        </DropdownMenu>
+                                        <Link
+                                             href={`/vehicles/${vehicle.id}`}
+                                             className="text-center"
+                                        >
+                                             <Eye className="h-3.5 w-3.5" />
+                                        </Link>
                                    </TableCell>
                               </TableRow>
                          ))}
                     </TableBody>
                </Table>
-               <div className="">
-                    <Pagination>
-                         <PaginationContent>
-                              <PaginationItem className="list-none">
-                                   <PaginationPrevious href="/" />
-                              </PaginationItem>
-                              <PaginationItem className="list-none">
-                                   <PaginationLink href="#" isActive>
-                                        1
-                                   </PaginationLink>
-                              </PaginationItem>
-                              <PaginationItem className="list-none">
-                                   <PaginationLink href="#">2</PaginationLink>
-                              </PaginationItem>
-                              <PaginationItem className="list-none">
-                                   <PaginationLink href="#">3</PaginationLink>
-                              </PaginationItem>
-                              <PaginationItem className="list-none">
-                                   <PaginationEllipsis />
-                              </PaginationItem>
-                              <PaginationItem className="list-none">
-                                   <PaginationNext href="#" />
-                              </PaginationItem>
-                         </PaginationContent>
-                    </Pagination>
-               </div>
+               <PaginationControls
+                    itemsPerPage={vehiclesData.limit}
+                    totalItems={vehiclesData.count}
+               />
           </>
      );
 }

@@ -1,16 +1,16 @@
 import { auth } from "@/auth";
-import { BASE_URL, URLS } from "@/constants";
+import { BASE_URL, ITEMS_PER_PAGE, URLS } from "@/constants";
 import { db } from "@/lib/db";
 import { Vehicle } from "@prisma/client";
 import axios, { AxiosError } from "axios";
 
 export const revalidate = 0;
 
-export const getVehicles = async () => {
+export const getVehicles = async (offset: number) => {
      const session = await auth();
      try {
           const vehiclesRequest = await axios.get(
-               `${BASE_URL}${URLS.vehicles.all}`,
+               `${BASE_URL}${URLS.vehicles.all}?offset=${offset}&limit=${ITEMS_PER_PAGE}`,
                {
                     headers: {
                          Authorization: `Bearer ${session?.user.access_token}`,
@@ -18,13 +18,16 @@ export const getVehicles = async () => {
                },
           );
           const vehicles: Vehicle[] = vehiclesRequest.data.data;
-          return vehicles;
+          const count: number = vehiclesRequest.data.count;
+          const newLimit: number = vehiclesRequest.data.meta.limit;
+          const newOffset: number = vehiclesRequest.data.meta.offset;
+          return { vehicles, count, offset: newOffset, limit: newLimit };
      } catch (error: any) {
           if (error instanceof AxiosError) {
                console.log({ error: error.response?.data.details[0] });
-               return [];
+               return { vehicles: [], count: 0, offset: 0, limit: 10 };
           }
-          return [];
+          return { vehicles: [], count: 0, offset: 0, limit: 10 };
      }
 };
 export const getVehicleById = async (options: { id: string }) => {
@@ -50,7 +53,6 @@ export const getVehicleById = async (options: { id: string }) => {
           return null;
      }
 };
-
 export const getVehicleCount = async () => {
      const session = await auth();
      if (!session) return 0;
@@ -63,5 +65,26 @@ export const getVehicleCount = async () => {
                return 0;
           }
           return 0;
+     }
+};
+export const getVehicleFinancialStatus = async (vehicleId: string) => {
+     // const session = await auth();
+     try {
+          const financialStatus = await axios.get(
+               `${BASE_URL}/api/transactions/vehicle/${vehicleId}/amount-owed`,
+               // {
+               //      headers: {
+               //           Authorization: `Bearer ${session?.user.access_token}`,
+               //      },
+               // },
+          );
+          const status = financialStatus.data.data;
+          return status;
+     } catch (error: any) {
+          if (error instanceof AxiosError) {
+               console.log({ error: error.response?.data.details[0] });
+               return [];
+          }
+          return [];
      }
 };

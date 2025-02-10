@@ -1,11 +1,19 @@
-import { DASHBOARD_NAV_ITEMS } from "@/constants";
+import {
+     DASHBOARD_NAV_ITEMS,
+     DASHBOARD_NAV_ITEMS_ADMIN,
+     DASHBOARD_NAV_ITEMS_AGENT,
+} from "@/constants";
 import { Bell } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import ProtectedNavLink from "./nav-link-protected";
+import { auth } from "@/auth";
+import { Role } from "@prisma/client";
 
-export default function ProtectedSideBar() {
+export default async function ProtectedSideBar() {
+     const session = await auth();
+     const user = session?.user;
      return (
           <div className="hidden border-r bg-muted md:block">
                <div className="flex h-full max-h-screen flex-col gap-2">
@@ -37,17 +45,22 @@ export default function ProtectedSideBar() {
                     </div>
                     <div className="flex-1">
                          <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-                              {DASHBOARD_NAV_ITEMS.map(
-                                   ({ href, title, icon }, key) => (
-                                        <ProtectedNavLink
-                                             key={key}
-                                             href={href}
-                                             title={title}
-                                             icon={icon}
-                                             className="transition-colors"
-                                        />
-                                   ),
-                              )}
+                              {(user?.role === Role.SUPER_ADMIN
+                                   ? DASHBOARD_NAV_ITEMS
+                                   : user?.role === Role.ADMIN
+                                     ? DASHBOARD_NAV_ITEMS_ADMIN
+                                     : user?.role === Role.AGENT
+                                       ? DASHBOARD_NAV_ITEMS_AGENT
+                                       : DASHBOARD_NAV_ITEMS_AGENT
+                              ).map(({ href, title, icon }, key) => (
+                                   <ProtectedNavLink
+                                        key={key}
+                                        href={href}
+                                        title={title}
+                                        icon={icon}
+                                        className="transition-colors"
+                                   />
+                              ))}
                          </nav>
                     </div>
                </div>
