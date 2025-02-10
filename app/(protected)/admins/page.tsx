@@ -8,7 +8,7 @@ import Link from "next/link";
 export default async function AdminPage() {
      const adminsData = await getAdmins();
      return (
-          <RoleGate options={{ allowedRole: "SUPERADMIN" }}>
+          <RoleGate options={{ allowedRole: "SUPER_ADMIN" }}>
                <div className="px-[20px]">
                     <div className="flex w-full gap-12 pt-[20px]">
                          <Search />
