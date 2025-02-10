@@ -4,7 +4,6 @@ import { getCodes } from "@/data/codes";
 
 export default async function GenerateCode() {
      const codes = await getCodes();
-     // const codes = GENERATED_CODES;
 
      return (
           <>

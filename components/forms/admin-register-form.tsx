@@ -40,9 +40,10 @@ export default function AdminRegistrationForm() {
           defaultValues: {
                email: "",
                password: "",
-               code: "",
+               adminCode: "",
                confirmpassword: "",
-               fullname: "",
+               firstName: "",
+               lastName: "",
                lga: "",
                nin: "",
                phonenumber: "",
@@ -79,16 +80,16 @@ export default function AdminRegistrationForm() {
                          className="grid gap-4 sm:grid-cols-2"
                     >
                          <FormField
+                              name="firstName"
                               control={form.control}
-                              name="fullname"
                               render={({ field }) => (
                                    <FormItem>
-                                        <FormLabel>Full Name</FormLabel>
+                                        <FormLabel>First Name</FormLabel>
                                         <FormControl>
                                              <Input
                                                   disabled={isPending}
                                                   {...field}
-                                                  placeholder="John Doe"
+                                                  placeholder="John"
                                              />
                                         </FormControl>
                                         <FormMessage />
@@ -96,8 +97,25 @@ export default function AdminRegistrationForm() {
                               )}
                          />
                          <FormField
+                              name="lastName"
                               control={form.control}
+                              render={({ field }) => (
+                                   <FormItem>
+                                        <FormLabel>Last Name</FormLabel>
+                                        <FormControl>
+                                             <Input
+                                                  disabled={isPending}
+                                                  {...field}
+                                                  placeholder="Doe"
+                                             />
+                                        </FormControl>
+                                        <FormMessage />
+                                   </FormItem>
+                              )}
+                         />
+                         <FormField
                               name="email"
+                              control={form.control}
                               render={({ field }) => (
                                    <FormItem>
                                         <FormLabel>Email</FormLabel>
@@ -114,8 +132,8 @@ export default function AdminRegistrationForm() {
                               )}
                          />
                          <FormField
-                              control={form.control}
                               name="phonenumber"
+                              control={form.control}
                               render={({ field }) => (
                                    <FormItem>
                                         <FormLabel>Phone Number</FormLabel>
@@ -131,8 +149,8 @@ export default function AdminRegistrationForm() {
                               )}
                          />
                          <FormField
-                              control={form.control}
                               name="nin"
+                              control={form.control}
                               render={({ field }) => (
                                    <FormItem>
                                         <FormLabel>NIN</FormLabel>
@@ -148,8 +166,8 @@ export default function AdminRegistrationForm() {
                               )}
                          />
                          <FormField
-                              control={form.control}
                               name="lga"
+                              control={form.control}
                               render={({ field }) => (
                                    <FormItem>
                                         <FormLabel>LGA</FormLabel>
@@ -182,8 +200,8 @@ export default function AdminRegistrationForm() {
                               )}
                          />
                          <FormField
-                              control={form.control}
                               name="password"
+                              control={form.control}
                               render={({ field }) => (
                                    <FormItem>
                                         <FormLabel>Password</FormLabel>
@@ -200,8 +218,8 @@ export default function AdminRegistrationForm() {
                               )}
                          />
                          <FormField
-                              control={form.control}
                               name="confirmpassword"
+                              control={form.control}
                               render={({ field }) => (
                                    <FormItem>
                                         <FormLabel>Confirm Password</FormLabel>
@@ -218,8 +236,8 @@ export default function AdminRegistrationForm() {
                               )}
                          />
                          <FormField
+                              name="adminCode"
                               control={form.control}
-                              name="code"
                               render={({ field }) => (
                                    <FormItem>
                                         <FormLabel>Confirmation Code</FormLabel>

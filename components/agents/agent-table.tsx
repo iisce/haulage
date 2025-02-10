@@ -28,7 +28,7 @@ export type AGENTTYPE = {
 };
 
 export async function AgentTable() {
-     const agents = await getAgents();
+     const agentsData = await getAgents();
      return (
           <>
                <Table className="mt-[20px] w-[900px] overflow-x-scroll md:w-full">
@@ -49,7 +49,7 @@ export async function AgentTable() {
                          </TableRow>
                     </TableHeader>
                     <TableBody>
-                         {agents.map((value, k) => (
+                         {agentsData.agents.map((value, k) => (
                               <TableRow key={k}>
                                    <TableCell className="text-left font-medium">
                                         {value.firstName} {value.lastName}

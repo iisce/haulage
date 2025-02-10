@@ -1,15 +1,6 @@
 "use client";
 
 import {
-     Pagination,
-     PaginationContent,
-     PaginationEllipsis,
-     PaginationItem,
-     PaginationLink,
-     PaginationNext,
-     PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
      Table,
      TableBody,
      TableCell,
@@ -18,9 +9,10 @@ import {
      TableRow,
 } from "@/components/ui/table";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { format } from "date-fns";
+import { format, isBefore } from "date-fns";
+import { AdminEmailCode } from "@prisma/client";
 
-export function AdminCodeTable({ codes }: { codes: ICode[] }) {
+export function AdminCodeTable({ codes }: { codes: AdminEmailCode[] }) {
      return (
           <>
                <ScrollArea className="px-5">
@@ -35,6 +27,12 @@ export function AdminCodeTable({ codes }: { codes: ICode[] }) {
                                    </TableHead>
                                    <TableHead className="text-white">
                                         DATE CREATED
+                                   </TableHead>
+                                   <TableHead className="text-white">
+                                        USED
+                                   </TableHead>
+                                   <TableHead className="text-white">
+                                        EXPIRED
                                    </TableHead>
                               </TableRow>
                          </TableHeader>
@@ -52,6 +50,25 @@ export function AdminCodeTable({ codes }: { codes: ICode[] }) {
                                                   new Date(code.createdAt),
                                                   "dd/LL/yyyy",
                                              )}
+                                        </TableCell>
+                                        <TableCell>
+                                             {code.isUsed
+                                                  ? format(
+                                                         new Date(
+                                                              code.createdAt,
+                                                         ),
+                                                         "dd/LL/yyyy",
+                                                    )
+                                                  : "Not Used"}
+                                        </TableCell>
+                                        <TableCell>
+                                             {code.expiresAt &&
+                                             isBefore(
+                                                  new Date(code.expiresAt),
+                                                  new Date(),
+                                             )
+                                                  ? "EXPIRED"
+                                                  : "ACTIVE"}
                                         </TableCell>
                                    </TableRow>
                               ))}

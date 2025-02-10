@@ -23,6 +23,7 @@ import { EyeIcon } from "lucide-react";
 import { User } from "@prisma/client";
 
 export function AdminTable({ admins }: { admins: User[] }) {
+     console.log(admins[0]);
      return (
           <>
                <ScrollArea className="">
@@ -52,8 +53,8 @@ export function AdminTable({ admins }: { admins: User[] }) {
                                                   className="w-full"
                                                   href={`/admins/${admin.id}`}
                                              >
-                                                  {admin?.firstName}{" "}
-                                                  {admin?.lastName}
+                                                  {admin.firstName}{" "}
+                                                  {admin.lastName}
                                              </Link>
                                         </TableCell>
                                         <TableCell className="text-left">

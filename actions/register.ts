@@ -37,7 +37,7 @@ export const register = async (values: z.infer<typeof AdminRegisterSchema>) => {
           }
      } catch (error) {
           if (error instanceof AxiosError) {
-               console.log({ error });
+               console.log({ error: error.response?.data });
                return { error: error.message };
           }
           return { error: `Something went wrong` };

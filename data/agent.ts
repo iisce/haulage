@@ -18,13 +18,16 @@ export const getAgents = async () => {
                },
           );
           const agents: User[] = agentsRequest.data.data;
-          return agents;
+          const count: number = agentsRequest.data.count;
+          const limit: number = agentsRequest.data.meta.limit;
+          const offset: number = agentsRequest.data.meta.offset;
+          return {agents, count, limit, offset};
      } catch (error: any) {
           if (error instanceof AxiosError) {
                console.log(error.message);
-               return [];
+               return {agents: [], count:0, limit:10, offset:0};
           }
-          return [];
+          return { agents: [], count: 0, limit: 10, offset: 0 };
      }
 };
 

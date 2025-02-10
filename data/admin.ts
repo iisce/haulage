@@ -18,14 +18,18 @@ export const getAdmins = async () => {
                     },
                },
           );
-          const admins: User[] = adminsRequest.data.data;
-          return admins;
+          const admins: User[] = adminsRequest.data.data.admins;
+          const count = adminsRequest.data.data.count;
+          const limit = adminsRequest.data.data.pagination.limit;
+          const offset = adminsRequest.data.data.pagination.offset;
+
+          return { admins, count, limit, offset };
      } catch (error: any) {
           if (error instanceof AxiosError) {
                console.log({ error });
-               return [];
+               return {admins: [], count: 0, limit: 10, offset: 0};
           }
-          return [];
+          return { admins: [], count: 0, limit: 10, offset: 0 };
      }
 };
 
