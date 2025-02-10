@@ -79,9 +79,22 @@ export const RegisterSchema = z.object({
           message: "Role is required",
      }),
 });
+
+//   "firstName": "Ted",
+//   "lastName": "Osiobe",
+//   "email": "teddy@gmail.com",
+//   "phonenumber": "09067584674",
+//   "password": "password123",
+//   "confirmpassword": "password123",
+//   "adminCode": "12345A",
+//   "lga": "Ikeja",
+//   "nin": "12345678923"
 export const AdminRegisterSchema = z.object({
-     fullname: z.string().min(1, {
-          message: "Name is required",
+     firstName: z.string().min(1, {
+          message: "First name is required",
+     }),
+     lastName: z.string().min(1, {
+          message: "Last name is required",
      }),
      email: z.string().email({
           message: "Email is required",
@@ -106,20 +119,23 @@ export const AdminRegisterSchema = z.object({
      nin: z.string().length(11, {
           message: "NIN must be 11 (eleven) characters",
      }),
-     code: z.string().length(6, {
+     adminCode: z.string().length(6, {
           message: "Code must be 6 (six) characters",
      }),
 });
 export const AgentRegisterSchema = z.object({
-     fullname: z.string().min(1, {
-          message: "Name is required",
+     firstName: z.string().min(1, {
+          message: "First name is required",
+     }),
+     lastName: z.string().min(1, {
+          message: "Last name is required",
      }),
      email: z.string().email({
           message: "Email is required",
      }),
      phonenumber: z
           .string({
-               required_error: "Enter admin phone number.",
+               required_error: "Enter agent phone number.",
           })
           .regex(
                /^(0|\+?234)?[789][01]\d{8}$/,

@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { BASE_URL, URLS } from "@/constants";
+import { AdminEmailCode } from "@prisma/client";
 import axios, { AxiosError } from "axios";
 
 export const revalidate = 0;
@@ -15,7 +16,7 @@ export const getCodes = async () => {
                     },
                },
           );
-          const codes: ICode[] = codesRequest.data.data;
+          const codes: AdminEmailCode[] = codesRequest.data.data;
           return codes;
      } catch (error: any) {
           if (error instanceof AxiosError) {

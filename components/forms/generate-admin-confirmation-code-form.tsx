@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { LoaderCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
 export default function GenerateAdminConfirmationCodeForm() {
+     const router = useRouter();
      const [form, setForm] = useState({
           emails: "",
      });
@@ -23,6 +25,7 @@ export default function GenerateAdminConfirmationCodeForm() {
                          }
                          if (data?.success) {
                               setSuccess(data?.success);
+                              router.refresh();
                          }
                     })
                     .catch(() => setError("Something went wrong!"));

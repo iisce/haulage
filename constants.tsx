@@ -161,7 +161,7 @@ export const BASE_URL = process.env.BACKEND_URL ?? "http://localhost:6550";
 export const URLS = {
      auth: {
           login: "/api/auth/signin",
-          register: "/api/auth/register/admin",
+          register: "/api/auth/create-admin",
      },
      barcodes: {
           all: "/api/barcode/all",
@@ -171,14 +171,14 @@ export const URLS = {
      user: {
           self: "/api/user/one",
           agents: {
-               all: "/api/user/agent",
+               all: "/api/user/agents",
                create: "/api/user/create/agent",
           },
           admins: {
                all: "/api/user/admins",
-               generate: "/api/user/create-validation-code",
+               generate: "/api/user/generate-admin-code",
                codes: {
-                    all: "/api/user/codes",
+                    all: "/api/user/all/codes",
                     email: "/api/user/code/email",
                },
           },
