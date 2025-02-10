@@ -1,16 +1,13 @@
 import { getBarcodeByCode } from "@/actions/barcode";
+import { auth } from "@/auth";
 import StatusLevy from "@/components/StatusLevy";
 import StatusTransactions from "@/components/StatusTransactions";
 import TransactionList from "@/components/TransactionList";
 import { Badge } from "@/components/ui/badge";
-import {
-     Card,
-     CardContent,
-     CardFooter,
-     CardHeader,
-     CardTitle,
-} from "@/components/ui/card";
-import { getVehicleById } from "@/data/vehicles";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { NO_USER_ROLE } from "@/constants";
+import { getVehicleById, getVehicleFinancialStatus } from "@/data/vehicles";
+import { formatCurrency } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -19,6 +16,8 @@ export default async function HaulageStatusPage({
 }: {
      params: Promise<{ id: string }>;
 }) {
+     const session = await auth();
+     const role = session?.user.role;
      const id = (await params).id;
      const barcode = (await getBarcodeByCode(id)).data;
      if (!barcode) {
@@ -37,54 +36,63 @@ export default async function HaulageStatusPage({
           );
      }
      const vehicle = await getVehicleById({ id: vehicleId });
+     const status = await getVehicleFinancialStatus(vehicleId);
      if (!vehicle) {
           return notFound();
      }
-
      return (
           <div className="container mx-auto p-4">
-               <Card className="mb-4 mt-16">
-                    <CardHeader>
-                         <CardTitle>Vehicle Information</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                         <div className="grid">
+               <Card className="mb-4 mt-16 space-y-4 p-6">
+                    <div className="space-y-2">
+                         <div className="flex items-start justify-between">
                               <div>
-                                   <p>
-                                        <strong>Vehicle Owner:</strong>{" "}
-                                        {vehicle?.customerName}
+                                   <p className="text-sm text-muted-foreground">
+                                        Vehicle Owner:
                                    </p>
-                                   <div>
-                                        <strong>Detachable:</strong>{" "}
-                                        <Badge
-                                             variant={
-                                                  vehicle.isDetachable
-                                                       ? "default"
-                                                       : "secondary"
-                                             }
-                                        >
-                                             {vehicle.isDetachable
-                                                  ? "Detachable"
-                                                  : "Not Detachable"}
-                                        </Badge>
-                                   </div>
-                                   <p>
-                                        <strong>Plate Number:</strong>{" "}
-                                        {vehicle.plateNumber}
-                                   </p>
+                                   <h2 className="text-xl font-semibold">
+                                        {vehicle.customerName}
+                                   </h2>
                               </div>
-                              {/* <div className="flex justify-end">
-                                   <QrCode size={50} />
-                              </div> */}
                          </div>
-                    </CardContent>
-                    <CardFooter className="justify-between">
-                         <StatusLevy vehicle={vehicle} />
-                         <Badge variant="destructive" className="text-sm">
-                              {6} Days Overdue
+                         <div className="space-y-1">
+                              <p className="text-sm text-muted-foreground">
+                                   Detachable:
+                              </p>
+                              <Badge variant="outline" className="rounded-md">
+                                   {vehicle.isDetachable
+                                        ? "Detachable"
+                                        : "Non-Detachable"}
+                              </Badge>
+                         </div>
+                         <div className="space-y-1">
+                              <p className="text-sm text-muted-foreground">
+                                   Plate Number:
+                              </p>
+                              <p className="font-medium">
+                                   {vehicle.plateNumber}
+                              </p>
+                         </div>
+                    </div>
+                    <div className="flex gap-3">
+                         {role && NO_USER_ROLE.includes(role as any) && (
+                              <StatusLevy vehicle={vehicle} />
+                         )}
+                         <Badge variant="destructive" className="rounded-md">
+                              6 Days Overdue
                          </Badge>
-                    </CardFooter>
+                    </div>
                </Card>
+
+               {status.amountOwed > 0 && (
+                    <div className="mb-4 rounded-lg border border-red-100 bg-red-50 p-4">
+                         <p className="mb-1 text-sm text-red-600">
+                              Amount Owed:
+                         </p>
+                         <p className="text-2xl font-bold text-red-700">
+                              {formatCurrency(status.amountOwed)}
+                         </p>
+                    </div>
+               )}
 
                <Card className="mb-4">
                     <CardHeader>

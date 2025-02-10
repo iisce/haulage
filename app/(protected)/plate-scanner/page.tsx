@@ -11,25 +11,6 @@ const cocossd = require("@tensorflow-models/coco-ssd");
 
 import Webcam from "react-webcam";
 
-export interface Detection {
-     bbox: [number, number, number, number];
-     class: string;
-     score: number;
-}
-
-interface DetectionResult {
-     detections: Detection[];
-}
-
-interface Camera {
-     deviceId: string;
-     label: string;
-}
-
-interface ObjectTableProps {
-     objects: Detection[];
-}
-
 export default function TensorFlowPage() {
      const webCamRef = useRef<any>(null);
      const canvasRef = useRef<any>(null);

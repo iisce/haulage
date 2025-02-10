@@ -23,14 +23,22 @@ import {
      TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
-import { tyreSettings } from "@prisma/client";
+import type { tyreSettings } from "@prisma/client";
 import { Loader } from "lucide-react";
+import { PaginationControls } from "./vehicles/pagination";
+import { ITEMS_PER_PAGE } from "@/constants";
+import { useSearchParams } from "next/navigation";
 
 export default function TyreSettingsSection() {
+     const [data, setData] = useState([]);
+     const [totalItems, setTotalItems] = useState(0);
+     const searchParams = useSearchParams();
+     const page = Number(searchParams.get("page")) || 1;
+     const offset = (page - 1) * ITEMS_PER_PAGE;
      const { data: session } = useSession();
      const [tyreSettings, setTyreSettings] = useState<tyreSettings[]>([]);
-     const [isDeleting, setIsDeleting] = useState<boolean>(false);
-     const [isRestoring, setIsRestoring] = useState<boolean>(false);
+     const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
+     const [restoringIds, setRestoringIds] = useState<Set<string>>(new Set());
      const [editingId, setEditingId] = useState<string | null>(null);
      const { register, handleSubmit, reset, setValue } =
           useForm<tyreSettings>();
@@ -45,7 +53,7 @@ export default function TyreSettingsSection() {
 
      async function fetchTyreSettings() {
           try {
-               const settings = await getAllTyreSettings();
+               const settings = await getAllTyreSettings(offset);
                if (!settings.success) {
                     setTyreSettings([]);
                } else {
@@ -91,37 +99,43 @@ export default function TyreSettingsSection() {
 
      async function handleDelete(id: string) {
           try {
-               setIsDeleting(true);
+               setDeletingIds((prev) => new Set(prev).add(id));
                await deleteTyreSetting(id);
                toast.success("Success", {
                     description: "Tyre setting deleted successfully",
                });
                fetchTyreSettings();
-
-               setIsDeleting(false);
           } catch (error) {
                toast.error("Error", {
                     description: "Failed to delete tyre setting",
                });
-
-               setIsDeleting(false);
+          } finally {
+               setDeletingIds((prev) => {
+                    const newSet = new Set(prev);
+                    newSet.delete(id);
+                    return newSet;
+               });
           }
      }
 
      async function handleRestore(id: string) {
           try {
-               setIsRestoring(true);
+               setRestoringIds((prev) => new Set(prev).add(id));
                await restoreTyreSetting(id);
                toast.success("Success", {
                     description: "Tyre setting restored successfully",
                });
                fetchTyreSettings();
-               setIsRestoring(false);
           } catch (error) {
                toast.error("Error", {
                     description: "Failed to restore tyre setting",
                });
-               setIsRestoring(false);
+          } finally {
+               setRestoringIds((prev) => {
+                    const newSet = new Set(prev);
+                    newSet.delete(id);
+                    return newSet;
+               });
           }
      }
 
@@ -161,6 +175,7 @@ export default function TyreSettingsSection() {
                          <div>
                               <Label htmlFor="name">Name</Label>
                               <Input
+                                   disabled={!!editingId}
                                    id="name"
                                    {...register("name", { required: true })}
                               />
@@ -170,6 +185,7 @@ export default function TyreSettingsSection() {
                                    Number of Tyres
                               </Label>
                               <Input
+                                   disabled={!!editingId}
                                    id="number_of_tyres"
                                    type="number"
                                    {...register("number_of_tyres", {
@@ -237,12 +253,14 @@ export default function TyreSettingsSection() {
                                                                       setting.id,
                                                                  )
                                                             }
-                                                            disabled={
-                                                                 isDeleting
-                                                            }
+                                                            disabled={deletingIds.has(
+                                                                 setting.id,
+                                                            )}
                                                             className="mr-2"
                                                        >
-                                                            {isDeleting ? (
+                                                            {deletingIds.has(
+                                                                 setting.id,
+                                                            ) ? (
                                                                  <Loader className="h-4 w-4 animate-spin" />
                                                             ) : (
                                                                  "Delete"
@@ -257,11 +275,13 @@ export default function TyreSettingsSection() {
                                                                       setting.id,
                                                                  )
                                                             }
-                                                            disabled={
-                                                                 isRestoring
-                                                            }
+                                                            disabled={restoringIds.has(
+                                                                 setting.id,
+                                                            )}
                                                        >
-                                                            {isRestoring ? (
+                                                            {restoringIds.has(
+                                                                 setting.id,
+                                                            ) ? (
                                                                  <Loader className="h-4 w-4 animate-spin" />
                                                             ) : (
                                                                  "Restore"
@@ -280,6 +300,10 @@ export default function TyreSettingsSection() {
                               )}
                          </TableBody>
                     </Table>
+                    <PaginationControls
+                         itemsPerPage={ITEMS_PER_PAGE}
+                         totalItems={12}
+                    />
                </CardContent>
           </Card>
      );

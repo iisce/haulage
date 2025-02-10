@@ -9,7 +9,6 @@ export default async function SettingsPage() {
                {session?.user?.role === "SUPER_ADMIN" && (
                     <TyreSettingsSection />
                )}
-               {/* Add other settings sections here */}
           </div>
      );
 }
