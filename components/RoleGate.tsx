@@ -1,6 +1,7 @@
 import React from "react";
 import FormError from "./shared/FormError";
 import { getCurrentUser } from "@/data/users";
+import { Role } from "@prisma/client";
 
 export const revalidate = 0;
 
@@ -10,8 +11,8 @@ export default async function RoleGate({
 }: {
      children: React.ReactNode;
      options: {
-          allowedRole?: "SUPERADMIN" | "ADMIN" | "AGENT" | "USER";
-          rejectedRole?: "SUPERADMIN" | "ADMIN" | "AGENT" | "USER";
+          allowedRole?: Role;
+          rejectedRole?: Role;
      };
 }) {
      const { allowedRole, rejectedRole } = options;
