@@ -25,7 +25,6 @@ export interface IVEHICLEDETAILS {
 export default async function VehicleTable({ page }: { page: number }) {
      const offset = (page - 1) * ITEMS_PER_PAGE;
      const vehiclesData = await getVehicles(offset);
-     console.log({ vehiclesData });
      const vehicles = vehiclesData.vehicles;
      return (
           <>
