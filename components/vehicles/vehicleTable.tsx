@@ -6,12 +6,12 @@ import {
      TableHeader,
      TableRow,
 } from "@/components/ui/table";
+import { ITEMS_PER_PAGE } from "@/constants";
 import { getVehicles } from "@/data/vehicles";
-import { Eye } from "lucide-react";
+import { PaginationControls } from "./pagination";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
-import { PaginationControls } from "./pagination";
-import { ITEMS_PER_PAGE } from "@/constants";
+import { Eye } from "lucide-react";
 
 export interface IVEHICLEDETAILS {
      id: string;
@@ -25,6 +25,7 @@ export interface IVEHICLEDETAILS {
 export default async function VehicleTable({ page }: { page: number }) {
      const offset = (page - 1) * ITEMS_PER_PAGE;
      const vehiclesData = await getVehicles(offset);
+     console.log({ vehiclesData });
      const vehicles = vehiclesData.vehicles;
      return (
           <>
@@ -50,39 +51,52 @@ export default async function VehicleTable({ page }: { page: number }) {
                          </TableRow>
                     </TableHeader>
                     <TableBody>
-                         {vehicles.map((vehicle, i) => (
-                              <TableRow key={i}>
-                                   <TableCell className="grid text-left font-medium">
-                                        <Link href={`/vehicles/${vehicle.id}`}>
-                                             {vehicle.plateNumber}
-                                        </Link>
-                                   </TableCell>
-                                   <TableCell className="text-left">
-                                        {vehicle.customerName}
-                                   </TableCell>
-                                   <TableCell className="text-left">
-                                        {vehicle.number_of_tyres}
-                                   </TableCell>
-                                   <TableCell className="text-left">
-                                        {vehicle.modelName}
-                                   </TableCell>
-                                   <TableCell className="text-left">
-                                        <Badge className="mx-auto rounded-full uppercase">
-                                             {vehicle.isDetachable
-                                                  ? "yes"
-                                                  : "No"}
-                                        </Badge>
-                                   </TableCell>
-                                   <TableCell className="">
-                                        <Link
-                                             href={`/vehicles/${vehicle.id}`}
-                                             className="text-center"
-                                        >
-                                             <Eye className="h-3.5 w-3.5" />
-                                        </Link>
+                         {vehicles.length > 0 ? (
+                              vehicles.map((vehicle, i) => (
+                                   <TableRow key={i}>
+                                        <TableCell className="grid text-left font-medium">
+                                             <Link
+                                                  href={`/vehicles/${vehicle.id}`}
+                                             >
+                                                  {vehicle.plateNumber}
+                                             </Link>
+                                        </TableCell>
+                                        <TableCell className="text-left">
+                                             {vehicle.customerName}
+                                        </TableCell>
+                                        <TableCell className="text-left">
+                                             {vehicle.number_of_tyres}
+                                        </TableCell>
+                                        <TableCell className="text-left">
+                                             {vehicle.modelName}
+                                        </TableCell>
+                                        <TableCell className="text-left">
+                                             <Badge className="mx-auto rounded-full uppercase">
+                                                  {vehicle.isDetachable
+                                                       ? "yes"
+                                                       : "No"}
+                                             </Badge>
+                                        </TableCell>
+                                        <TableCell className="">
+                                             <Link
+                                                  href={`/vehicles/${vehicle.id}`}
+                                                  className="text-center"
+                                             >
+                                                  <Eye className="h-3.5 w-3.5" />
+                                             </Link>
+                                        </TableCell>
+                                   </TableRow>
+                              ))
+                         ) : (
+                              <TableRow>
+                                   <TableCell
+                                        colSpan={6}
+                                        className="text-center"
+                                   >
+                                        No vehicles yet
                                    </TableCell>
                               </TableRow>
-                         ))}
+                         )}
                     </TableBody>
                </Table>
                <PaginationControls

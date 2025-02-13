@@ -17,14 +17,14 @@ export const getVehicles = async (offset: number) => {
                     },
                },
           );
-          const vehicles: Vehicle[] = vehiclesRequest.data.data;
-          const count: number = vehiclesRequest.data.count;
-          const newLimit: number = vehiclesRequest.data.meta.limit;
-          const newOffset: number = vehiclesRequest.data.meta.offset;
+          const vehicles: Vehicle[] = vehiclesRequest?.data?.data ?? [];
+          const count: number = vehiclesRequest.data.count ?? 0;
+          const newLimit: number = vehiclesRequest.data.meta.limit ?? 10;
+          const newOffset: number = vehiclesRequest.data.meta.offset ?? 0;
           return { vehicles, count, offset: newOffset, limit: newLimit };
      } catch (error: any) {
           if (error instanceof AxiosError) {
-               console.log({ error: error.response?.data.details[0] });
+               // console.log({ error: error?.response?.data.message });
                return { vehicles: [], count: 0, offset: 0, limit: 10 };
           }
           return { vehicles: [], count: 0, offset: 0, limit: 10 };
