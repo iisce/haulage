@@ -197,6 +197,7 @@ export const URLS = {
      transactions: {
           all: "/api/transactions/all",
           one: "/api/transactions/one",
+          status: "/api/transactions/vehicle/{vehicleId}/amount-owed",
      },
 };
 

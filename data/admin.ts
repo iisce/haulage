@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import { BASE_URL, URLS } from "@/constants";
-import { axiosWithAuth } from "@/lib/axios.config";
 import { db } from "@/lib/db";
 import { User } from "@prisma/client";
 import axios, { AxiosError } from "axios";
@@ -27,7 +26,7 @@ export const getAdmins = async () => {
      } catch (error: any) {
           if (error instanceof AxiosError) {
                console.log({ error });
-               return {admins: [], count: 0, limit: 10, offset: 0};
+               return { admins: [], count: 0, limit: 10, offset: 0 };
           }
           return { admins: [], count: 0, limit: 10, offset: 0 };
      }
@@ -35,8 +34,9 @@ export const getAdmins = async () => {
 
 export const getAdminById = async (options: { id: string }) => {
      const { id } = options;
+     console.log({ id });
      try {
-          const adminRequest = await axiosWithAuth.get(`/admins/${id}`);
+          const adminRequest = await axios.get(`${BASE_URL}/user/one/${id}`);
 
           if (adminRequest.data) {
                const admins: User = adminRequest.data;

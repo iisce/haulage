@@ -1,5 +1,6 @@
 import { getBarcodeByVehicle } from "@/actions/barcode";
 import { getAllTyreSettings } from "@/actions/settings/tyre";
+import { fetchVehicleTransactionsStatus } from "@/actions/transactions";
 import VehicleLevyTransactions from "@/components/VehicleLevyTransactions";
 import ScanToAddSticker from "@/components/scan-to-add-sticker";
 import QrCode from "@/components/shared/qr-code";
@@ -26,8 +27,11 @@ export default async function SingleVehiclePage({
      const tyreSetting = tyreSettings.find(
           (tyre) => tyre.number_of_tyres === vehicle?.number_of_tyres,
      );
+     const vehicleTransactionStatus = (await fetchVehicleTransactionsStatus(id))
+          .data;
 
      if (!vehicle) return notFound();
+     const isOwing = vehicleTransactionStatus.amountOwed > 0;
 
      return (
           <div className="grid gap-8 px-5">
@@ -157,19 +161,38 @@ export default async function SingleVehiclePage({
                          </div>
                     </div>
                     <Separator />
-                    <div className="grid gap-4 text-red-500 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <div
+                         className={`grid gap-4 ${isOwing ? "text-red-500" : "text-emerald-500"} sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`}
+                    >
                          <div className="">
                               <div className="text-sm">Status</div>
                               <div className="flex items-center gap-2">
                                    <TruckIcon className="h-8 w-8" />
-                                   <div className="font-medium">Owing</div>
+                                   <div className="font-medium">
+                                        {isOwing ? "OWING" : "CLEAR"}
+                                   </div>
                               </div>
                          </div>
                          <div className="">
                               <div className="grid gap-1">
                                    <div className="text-sm">Amount Owed</div>
                                    <div className="font-medium">
-                                        {formatToNaira(3800)}
+                                        {formatToNaira(
+                                             isOwing
+                                                  ? vehicleTransactionStatus.amountOwed
+                                                  : 0,
+                                        )}
+                                   </div>
+                              </div>
+                         </div>
+                         <div className="">
+                              <div className="grid gap-1 text-primary">
+                                   <div className="text-sm">Total</div>
+                                   <div className="font-medium">
+                                        {formatToNaira(
+                                             vehicleTransactionStatus.pendingAmount +
+                                                  vehicleTransactionStatus.successAmount,
+                                        )}
                                    </div>
                               </div>
                          </div>

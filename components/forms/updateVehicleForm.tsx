@@ -31,7 +31,8 @@ import { Vehicle, tyreSettings } from "@prisma/client";
 import { Switch } from "../ui/switch";
 
 export default function UpdateVehicleForm({
-     vehicle,tyreSettings
+     vehicle,
+     tyreSettings,
 }: {
      vehicle: Vehicle;
      tyreSettings: tyreSettings[];
@@ -246,7 +247,7 @@ export default function UpdateVehicleForm({
                                              <Input
                                                   disabled={isPending}
                                                   {...field}
-                                                  placeholder="ABC-123DE"
+                                                  placeholder="ABC123DE"
                                              />
                                         </FormControl>
                                         <FormMessage />

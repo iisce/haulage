@@ -1,5 +1,4 @@
-import axios from 'axios';
-// import { accessToken } from './auth';
+import axios from "axios";
 
 export const axiosWithoutAuth = axios.create({
      baseURL: process.env.BACKEND_URL || "http://localhost:6550",

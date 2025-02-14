@@ -240,7 +240,7 @@ export default function CreateVehicleForm({
                                              <Input
                                                   disabled={isPending}
                                                   {...field}
-                                                  placeholder="ABC-123DE"
+                                                  placeholder="ABC123DE"
                                              />
                                         </FormControl>
                                         <FormMessage />

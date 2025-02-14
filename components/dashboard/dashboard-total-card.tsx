@@ -1,12 +1,10 @@
 import {
      Card,
-     CardContent,
      CardDescription,
      CardHeader,
      CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "../ui/skeleton";
-import { formatToNaira } from "@/lib/utils";
 
 export default function DashboardTotalCard({
      title,
@@ -18,7 +16,7 @@ export default function DashboardTotalCard({
      amount: number;
 }) {
      return (
-          <Card className="w-full">
+          <Card className="w-full max-w-96">
                <CardHeader className="p-2 lg:p-4">
                     <CardTitle className="text-lg lg:text-xl">
                          {title}
