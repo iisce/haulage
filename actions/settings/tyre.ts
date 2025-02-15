@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
-import { BASE_URL, ITEMS_PER_PAGE } from "@/constants";
+import { BASE_URL } from "@/constants";
 import { tyreSettings } from "@prisma/client";
 
 interface TyreSettingData {
@@ -59,7 +59,7 @@ export async function getAllTyreSettings(offset?: number) {
           headers["Authorization"] = `Bearer ${token}`;
      }
      const request = await fetch(
-          `${BASE_URL}/api/tyresettings/all?limit=${ITEMS_PER_PAGE}&offset=${offset}`,
+          `${BASE_URL}/api/tyresettings/all?limit=${20}&offset=${offset}`,
           {
                headers,
           },

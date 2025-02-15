@@ -84,7 +84,8 @@ export const updateVehicle = async (
                Authorization: `Bearer ${session?.user.access_token}`,
           },
      };
-     const apiUrl = `${BASE_URL}${URLS.vehicles.update}/${id}`;
+     const endpoint = URLS.vehicles.update.replace("{id}", id);
+     const apiUrl = new URL(`${BASE_URL}${endpoint}`);
      const validatedFields = createVehicleFormSchema.safeParse(values);
 
      if (!validatedFields.success) {
@@ -100,7 +101,6 @@ export const updateVehicle = async (
           lastName,
           customerMobile,
           number_of_tyres,
-          plateNumber,
      } = validatedFields.data;
 
      const payload: Partial<Vehicle> = {
@@ -111,14 +111,19 @@ export const updateVehicle = async (
           customerName: `${firstName} ${lastName}`,
           customerMobile,
           number_of_tyres: Number(number_of_tyres),
-          plateNumber,
      };
 
      try {
-          const updateVehicleRequest = await axios.put(apiUrl, payload, config);
+          const updateVehicleRequest = await axios.patch(
+               apiUrl.toString(),
+               payload,
+               config,
+          );
+
+          console.log(updateVehicleRequest.data.data);
           if (updateVehicleRequest.data.success) {
                return {
-                    success: updateVehicleRequest.statusText,
+                    success: updateVehicleRequest.data.message,
                     data: updateVehicleRequest.data.data,
                };
           } else {
@@ -126,9 +131,10 @@ export const updateVehicle = async (
           }
      } catch (error: any) {
           if (error instanceof AxiosError) {
-               console.log(error.response?.data.error);
+               const actualError = error.response?.data.message;
+               console.log(actualError);
                return {
-                    error: error.response?.data.error ?? "Something went wrong",
+                    error: actualError ?? "Something went wrong",
                };
           }
           return { error: "Something went wrong" };

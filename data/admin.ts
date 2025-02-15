@@ -32,15 +32,18 @@ export const getAdmins = async () => {
      }
 };
 
-export const getAdminById = async (options: { id: string }) => {
-     const { id } = options;
-     console.log({ id });
+export const getAdminById = async (id: string) => {
+     const session = await auth();
+     const endpoint = URLS.user.admins.one.replace("{id}", id);
+     const apiUrl = new URL(`${BASE_URL}${endpoint}`);
      try {
-          const adminRequest = await axios.get(`${BASE_URL}/user/one/${id}`);
-
+          const adminRequest = await axios.get(apiUrl.toString(), {
+               headers: {
+                    Authorization: `Bearer ${session?.user.access_token}`,
+               },
+          });
           if (adminRequest.data) {
-               const admins: User = adminRequest.data;
-
+               const admins: User = adminRequest.data.data;
                return admins;
           }
 

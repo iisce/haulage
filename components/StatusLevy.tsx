@@ -126,7 +126,7 @@ export default function StatusLevy({ vehicle }: { vehicle: Vehicle }) {
 
      return (
           <>
-               <Button onClick={() => setShowNewLevy(true)}>New Levy</Button>
+               <Button onClick={() => setShowNewLevy(true)}>Add Levy</Button>
                <Dialog open={showNewLevy} onOpenChange={setShowNewLevy}>
                     <DialogContent className="sm:max-w-[425px]">
                          <DialogHeader>

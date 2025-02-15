@@ -45,7 +45,6 @@ export default function CreateVehicleForm({
           mode: "onChange",
           defaultValues: {
                isDetachable: false,
-               number_of_tyres: "4",
           },
      });
 
@@ -192,16 +191,8 @@ export default function CreateVehicleForm({
                                    <FormItem>
                                         <FormLabel>Number of Tyres</FormLabel>
                                         <Select
-                                             onValueChange={(value) =>
-                                                  form.setValue(
-                                                       "number_of_tyres",
-                                                       value,
-                                                  )
-                                             }
-                                             defaultValue={String(
-                                                  tyreSettings[0]
-                                                       .number_of_tyres,
-                                             )}
+                                             onValueChange={field.onChange}
+                                             defaultValue={field.value}
                                         >
                                              <SelectTrigger>
                                                   <SelectValue placeholder="Select Tyre Number" />
@@ -220,7 +211,8 @@ export default function CreateVehicleForm({
                                                             >
                                                                  {String(
                                                                       number_of_tyres,
-                                                                 )}
+                                                                 )}{" "}
+                                                                 Tyres
                                                             </SelectItem>
                                                        ),
                                                   )}

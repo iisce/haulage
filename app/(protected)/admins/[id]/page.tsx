@@ -4,16 +4,11 @@ import { Card } from "@/components/ui/card";
 import { getAdminById } from "@/data/admin";
 import { PencilLine } from "lucide-react";
 import Link from "next/link";
-import { format, parseISO } from "date-fns";
 import { notFound } from "next/navigation";
-import {
-     Table,
-     TableHeader,
-     TableRow,
-     TableHead,
-     TableBody,
-     TableCell,
-} from "@/components/ui/table";
+import { Separator } from "@/components/ui/separator";
+import { format } from "date-fns";
+import { getActivitiesById } from "@/data/activities";
+import ActivitiesCard from "@/components/dashboard/activities-card";
 
 export default async function SingleVehiclePage({
      params,
@@ -21,8 +16,9 @@ export default async function SingleVehiclePage({
      params: Promise<{ id: string }>;
 }) {
      const id = (await params).id;
-     const admin = await getAdminById({ id });
-     // const admin = SAMPLE_ADMIN_DATA.find((admin) => admin.id === params.id);
+     const admin = await getAdminById(id);
+     const activities = await getActivitiesById(id);
+     console.log({ activities });
      if (!admin) return notFound();
      return (
           <div className="flex-1 p-8">
@@ -81,12 +77,6 @@ export default async function SingleVehiclePage({
                               </div>
                               <div>
                                    <p className="mb-1 text-gray-500 dark:text-gray-400">
-                                        Password
-                                   </p>
-                                   <p className="font-medium">********</p>
-                              </div>
-                              <div>
-                                   <p className="mb-1 text-gray-500 dark:text-gray-400">
                                         Blacklist
                                    </p>
                                    <Badge
@@ -122,9 +112,7 @@ export default async function SingleVehiclePage({
                                    </p>
                                    <p className="font-medium">
                                         {format(
-                                             parseISO(
-                                                  admin.createdAt.toISOString(),
-                                             ),
+                                             new Date(admin.createdAt),
                                              "MMMM d, yyyy",
                                         )}
                                    </p>
@@ -135,9 +123,7 @@ export default async function SingleVehiclePage({
                                    </p>
                                    <p className="font-medium">
                                         {format(
-                                             parseISO(
-                                                  admin.updatedAt.toISOString(),
-                                             ),
+                                             new Date(admin.updatedAt),
                                              "MMMM d, yyyy",
                                         )}
                                    </p>
@@ -145,44 +131,32 @@ export default async function SingleVehiclePage({
                          </div>
                     </div>
                </Card>
-               <div className="col-span-2">
-                    <p className="mb-4 text-xl font-bold">Recent Activity</p>
-                    <Table>
-                         <TableHeader>
-                              <TableRow>
-                                   <TableHead>Action</TableHead>
-                                   <TableHead>Date</TableHead>
-                                   <TableHead>IP Address</TableHead>
-                              </TableRow>
-                         </TableHeader>
-                         <TableBody>
-                              <TableRow>
-                                   <TableCell>Logged in</TableCell>
-                                   <TableCell>May 15, 2023</TableCell>
-                                   <TableCell>192.168.1.100</TableCell>
-                              </TableRow>
-                              <TableRow>
-                                   <TableCell>Updated profile</TableCell>
-                                   <TableCell>April 10, 2023</TableCell>
-                                   <TableCell>192.168.1.100</TableCell>
-                              </TableRow>
-                              <TableRow>
-                                   <TableCell>Logged in</TableCell>
-                                   <TableCell>April 5, 2023</TableCell>
-                                   <TableCell>192.168.1.100</TableCell>
-                              </TableRow>
-                              <TableRow>
-                                   <TableCell>Created new admin</TableCell>
-                                   <TableCell>March 25, 2023</TableCell>
-                                   <TableCell>192.168.1.100</TableCell>
-                              </TableRow>
-                              <TableRow>
-                                   <TableCell>Logged in</TableCell>
-                                   <TableCell>March 1, 2023</TableCell>
-                                   <TableCell>192.168.1.100</TableCell>
-                              </TableRow>
-                         </TableBody>
-                    </Table>
+               <Separator className="my-4" />
+               <div className="flex h-full w-full flex-col justify-between gap-3 p-3">
+                    <div>
+                         <p className="mb-2 text-xl">Recent Activities</p>
+                         <Separator className="my-5" />
+                         <div className="no-scrollbar grid gap-3 overflow-y-scroll">
+                              {activities && activities.length > 0 ? (
+                                   activities.map((activity, k) => (
+                                        <ActivitiesCard
+                                             key={k}
+                                             title={activity.title}
+                                             description={activity.message}
+                                             date={new Date(
+                                                  activity.createdAt,
+                                             ).toDateString()}
+                                             type={activity.type}
+                                        />
+                                   ))
+                              ) : (
+                                   <div>No Activities Yet </div>
+                              )}
+                         </div>
+                    </div>
+                    <Button asChild>
+                         <Link href={"/activities"}>View All</Link>
+                    </Button>
                </div>
           </div>
      );

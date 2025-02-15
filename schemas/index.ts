@@ -1,51 +1,5 @@
 import * as z from "zod";
 
-const plateNumberRegex = /^[A-Z]{2,3}[0-9]{2,3}[A-Z]{2,3}$/i;
-
-// export const SettingsSchema = z
-// 	.object({
-// 		name: z.optional(z.string().min(3, { message: 'Enter valid name!' })),
-// 		accountName: z.optional(
-// 			z.string().min(6, { message: 'Enter valid account name!' })
-// 		),
-// 		accountNumber: z.optional(
-// 			z.string().length(10, { message: 'Enter valid account number!' })
-// 		),
-// 		bankName: z.optional(
-// 			z.string().min(6, { message: 'Enter valid bank name!' })
-// 		),
-// 		isTwoFactorEnabled: z.optional(z.boolean()),
-// 		email: z.optional(z.string().email()),
-// 		phone: z.optional(z.string().min(10).max(15)),
-// 		password: z.optional(z.string().min(6)),
-// 		newPassword: z.optional(z.string().min(6)),
-// 	})
-// 	.refine(
-// 		(data) => {
-// 			if (data.password && !data.newPassword) {
-// 				return false;
-// 			}
-
-// 			return true;
-// 		},
-// 		{
-// 			message: 'New password required',
-// 			path: ['newPassword'],
-// 		}
-// 	)
-// 	.refine(
-// 		(data) => {
-// 			if (data.newPassword && !data.password) {
-// 				return false;
-// 			}
-
-// 			return true;
-// 		},
-// 		{
-// 			message: 'Password is required',
-// 			path: ['password'],
-// 		}
-// 	);
 export const NewPasswordSchema = z.object({
      password: z.string().min(6, {
           message: "Minimum six(6) characters required",
@@ -79,16 +33,6 @@ export const RegisterSchema = z.object({
           message: "Role is required",
      }),
 });
-
-//   "firstName": "Ted",
-//   "lastName": "Osiobe",
-//   "email": "teddy@gmail.com",
-//   "phonenumber": "09067584674",
-//   "password": "password123",
-//   "confirmpassword": "password123",
-//   "adminCode": "12345A",
-//   "lga": "Ikeja",
-//   "nin": "12345678923"
 export const AdminRegisterSchema = z.object({
      firstName: z.string().min(1, {
           message: "First name is required",

@@ -157,7 +157,6 @@ export const TRUCK_TYPES = [
 ] as const;
 
 export const BASE_URL = process.env.BACKEND_URL ?? "http://localhost:6550";
-// export const BASE_URL = "http://localhost:6550"; // JSON SERVER run json-server --watch db.json --port 6550
 export const URLS = {
      auth: {
           login: "/api/auth/signin",
@@ -167,7 +166,10 @@ export const URLS = {
           all: "/api/barcode/all",
           code: "/api/barcode/fetch-by-code",
      },
-     activities: "/api/activities/all",
+     activities: {
+          all: "/api/activities/all",
+          one: "/api/activities/user/{id}",
+     },
      user: {
           self: "/api/user/one",
           agents: {
@@ -176,6 +178,7 @@ export const URLS = {
           },
           admins: {
                all: "/api/user/admins",
+               one: "/api/user/admin/{id}",
                generate: "/api/user/generate-admin-code",
                codes: {
                     all: "/api/user/all/codes",
@@ -186,7 +189,7 @@ export const URLS = {
      vehicles: {
           create: "/api/vehicles/create",
           all: "/api/vehicles/all",
-          update: "/api/vehicles/all",
+          update: "/api/vehicles/update/{id}",
           delete: "/api/vehicles/all",
           one: "/api/vehicles/one",
           scan: "/api/vehicles/scan",

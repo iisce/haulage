@@ -35,8 +35,8 @@ export const createAgent = async (
           }
      } catch (error) {
           if (error instanceof AxiosError) {
-               console.log(error.message);
-               return { error: error.message };
+               const actualError = error.response?.data.message;
+               return { error: actualError };
           }
           return { error: `Something went wrong` };
      }

@@ -29,6 +29,7 @@ import FormError from "../shared/FormError";
 import FormSuccess from "../shared/FormSuccess";
 import { Vehicle, tyreSettings } from "@prisma/client";
 import { Switch } from "../ui/switch";
+import { updateVehicle } from "@/actions/vehicles";
 
 export default function UpdateVehicleForm({
      vehicle,
@@ -37,8 +38,16 @@ export default function UpdateVehicleForm({
      vehicle: Vehicle;
      tyreSettings: tyreSettings[];
 }) {
-     const { id, isDetachable, customerName, customerMobile, plateNumber } =
-          vehicle;
+     const {
+          id,
+          isDetachable,
+          customerName,
+          customerMobile,
+          plateNumber,
+          make,
+          modelName,
+          number_of_tyres,
+     } = vehicle;
      const router = useRouter();
      const [error, setError] = useState<string | undefined>("");
      const [success, setSuccess] = useState<string | undefined>("");
@@ -47,11 +56,14 @@ export default function UpdateVehicleForm({
           resolver: zodResolver(createVehicleFormSchema),
           mode: "onChange",
           defaultValues: {
+               make,
+               modelName,
                isDetachable,
                lastName: customerName.split(" ")[0],
                firstName: customerName.split(" ")[1],
                customerMobile,
                plateNumber,
+               number_of_tyres: String(number_of_tyres),
           },
      });
 
@@ -59,17 +71,16 @@ export default function UpdateVehicleForm({
           setError(undefined);
           setSuccess(undefined);
           startTransition(() => {
-               console.log({ values });
-               // createVehicle(values).then((data) => {
-               //      if (data?.error) {
-               //           setError(data.error);
-               //      }
-               //      if (data?.success) {
-               //           setSuccess(data.success);
-               //           form.reset();
-               //           router.push(`/vehicles/${id}`);
-               //      }
-               // });
+               updateVehicle(id, values).then((data) => {
+                    console.log(data);
+                    if (data?.error) {
+                         setError(data.error);
+                    }
+                    if (data?.success) {
+                         setSuccess(data.success);
+                         // router.push(`/vehicles/${id}`);
+                    }
+               });
           });
      };
 
@@ -199,16 +210,8 @@ export default function UpdateVehicleForm({
                                    <FormItem>
                                         <FormLabel>Number of Tyres</FormLabel>
                                         <Select
-                                             onValueChange={(value) =>
-                                                  form.setValue(
-                                                       "number_of_tyres",
-                                                       value,
-                                                  )
-                                             }
-                                             defaultValue={String(
-                                                  tyreSettings[0]
-                                                       .number_of_tyres,
-                                             )}
+                                             onValueChange={field.onChange}
+                                             defaultValue={field.value}
                                         >
                                              <SelectTrigger>
                                                   <SelectValue placeholder="Select Tyre Number" />
@@ -227,7 +230,8 @@ export default function UpdateVehicleForm({
                                                             >
                                                                  {String(
                                                                       number_of_tyres,
-                                                                 )}
+                                                                 )}{" "}
+                                                                 Tyres
                                                             </SelectItem>
                                                        ),
                                                   )}

@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/table";
 import { toast } from "sonner";
 import type { tyreSettings } from "@prisma/client";
-import { Loader } from "lucide-react";
+import { Loader, Loader2 } from "lucide-react";
 import { PaginationControls } from "./vehicles/pagination";
 import { ITEMS_PER_PAGE } from "@/constants";
 import { useSearchParams } from "next/navigation";
@@ -33,6 +33,7 @@ export default function TyreSettingsSection() {
      const [data, setData] = useState([]);
      const [totalItems, setTotalItems] = useState(0);
      const searchParams = useSearchParams();
+     const [isLoading, setIsLoading] = useState<boolean>(false);
      const page = Number(searchParams.get("page")) || 1;
      const offset = (page - 1) * ITEMS_PER_PAGE;
      const { data: session } = useSession();
@@ -68,6 +69,7 @@ export default function TyreSettingsSection() {
 
      async function onSubmit(data: tyreSettings) {
           try {
+               setIsLoading(true);
                const formData = new FormData();
                formData.append("name", data.name);
                formData.append(
@@ -82,11 +84,13 @@ export default function TyreSettingsSection() {
                          description: "Tyre setting updated successfully",
                     });
                     setEditingId(null);
+                    setIsLoading(false);
                } else {
                     await createTyreSetting(formData);
                     toast.success("Success", {
                          description: "Tyre setting created successfully",
                     });
+                    setIsLoading(false);
                }
                reset();
                fetchTyreSettings();
@@ -94,6 +98,7 @@ export default function TyreSettingsSection() {
                toast.error("Error", {
                     description: "Failed to save tyre setting",
                });
+               setIsLoading(false);
           }
      }
 
@@ -208,8 +213,14 @@ export default function TyreSettingsSection() {
                                    })}
                               />
                          </div>
-                         <Button type="submit">
-                              {editingId ? "Update" : "Create"} Tyre Setting
+                         <Button type="submit" disabled={isLoading}>
+                              {isLoading && (
+                                   <Loader2 className="h-4 w-4 animate-spin" />
+                              )}
+                              {!isLoading &&
+                                   (editingId
+                                        ? "Update Tyre Setting"
+                                        : "Create Tyre Setting")}
                          </Button>
                     </form>
 

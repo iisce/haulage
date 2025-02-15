@@ -1,6 +1,6 @@
-'use client';
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
+"use client";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { Badge } from "../ui/badge";
@@ -12,15 +12,25 @@ export default function ProtectedNavLink({
      title,
      icon,
      badge,
+     onClick,
 }: {
      href: string;
      className?: string;
      title: string;
      icon?: React.ReactNode;
      badge?: string;
+     onClick?: () => void;
 }) {
      const pathName = usePathname();
      const active = pathName.startsWith(href);
+
+     const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+          if (onClick) {
+               e.preventDefault();
+               onClick();
+          }
+     };
+
      return (
           <Button
                asChild
@@ -32,7 +42,7 @@ export default function ProtectedNavLink({
                     className,
                )}
           >
-               <Link href={href}>
+               <Link href={href} onClick={handleClick}>
                     {icon}
                     {title}
                     {badge && (
