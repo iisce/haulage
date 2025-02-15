@@ -8,7 +8,7 @@ export default async function SingleVehiclePage({
      params: Promise<{ id: string }>;
 }) {
      const id = (await params).id;
-     const admin = await getAdminById({ id });
+     const admin = await getAdminById(id);
      if (!admin) return notFound();
      return <UpdateAdminForm admin={admin} />;
 }
