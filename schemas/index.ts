@@ -137,3 +137,15 @@ export const createVehicleFormSchema = z.object({
                "Invalid plate number format",
           ),
 });
+
+export const updateVehicleFormSchema = z.object({
+     vendorId: z.string().optional(),
+     make: z.string().optional(),
+     modelName: z.string().optional(),
+     isDetachable: z.boolean().optional(),
+     firstName: z.string().optional(),
+     lastName: z.string().optional(),
+     customerMobile: z.string().optional(),
+     number_of_tyres: z.string().optional(),
+     plateNumber: z.string().optional(),
+});

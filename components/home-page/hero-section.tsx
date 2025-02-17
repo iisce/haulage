@@ -1,10 +1,7 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { AuroraBackground } from "../ui/aurora-background";
-import { buttonVariants } from "../ui/button";
 import { User } from "@prisma/client";
 
 export default function HeroSection({ user }: { user?: User | null }) {
@@ -27,7 +24,7 @@ export default function HeroSection({ user }: { user?: User | null }) {
                          Automated levy collection from heavy duty vehicles and
                          trucks.
                     </div>
-                    {user ? (
+                    {/* {user ? (
                          <Link
                               className={cn(buttonVariants())}
                               href="/dashboard"
@@ -38,7 +35,7 @@ export default function HeroSection({ user }: { user?: User | null }) {
                          <Link className={cn(buttonVariants())} href="/sign-in">
                               Log in
                          </Link>
-                    )}
+                    )} */}
                </motion.div>
           </AuroraBackground>
      );
