@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { verifyTransactions } from "@/actions/levy";
+import { useRouter } from "next/navigation";
 
 interface PaymentVerificationButtonProps {
      paymentReference: string;
@@ -13,6 +14,7 @@ interface PaymentVerificationButtonProps {
 export function PaymentVerificationButton({
      paymentReference,
 }: PaymentVerificationButtonProps) {
+     const router = useRouter();
      const [isVerifying, setIsVerifying] = useState(false);
      const [verificationResult, setVerificationResult] = useState<{
           success: boolean;
@@ -29,11 +31,15 @@ export function PaymentVerificationButton({
                     success: true,
                     message: "Payment verified successfully",
                });
+               console.log(result);
+               router.refresh();
           } catch (error) {
+               console.log(error);
                setVerificationResult({
                     success: false,
                     message: "Failed to verify payment. Please try again.",
                });
+               router.refresh();
           } finally {
                setIsVerifying(false);
           }

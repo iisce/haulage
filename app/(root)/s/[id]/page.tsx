@@ -77,9 +77,11 @@ export default async function HaulageStatusPage({
                          {role && NO_USER_ROLE.includes(role as any) && (
                               <StatusLevy vehicle={vehicle} />
                          )}
-                         <Badge variant="destructive" className="rounded-md">
+                         {status.amountOwed > 0 && (
+                              <Badge variant="destructive" className="rounded-md">
                               6 Days Overdue
                          </Badge>
+                         )}
                     </div>
                </Card>
 
