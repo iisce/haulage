@@ -93,10 +93,12 @@ export default function StatusLevy({ vehicle }: { vehicle: Vehicle }) {
      const handleCharge = async () => {
           setIsLoading(true);
           try {
-               const charge = await chargeLevy(
-                    vehicle.id,
-                    selectedTyreSetting?.number_of_tyres,
-               );
+               const charge = vehicle.isDetachable
+                    ? await chargeLevy(
+                           vehicle.id,
+                           selectedTyreSetting?.number_of_tyres,
+                      )
+                    : await chargeLevy(vehicle.id);
                setShowConfirmation(false);
                setShowNewLevy(false);
                toast.success("Success", {

@@ -1,7 +1,6 @@
 import { getBarcodeByVehicle } from "@/actions/barcode";
 import { getAllTyreSettings } from "@/actions/settings/tyre";
 import { fetchVehicleTransactionsStatus } from "@/actions/transactions";
-import StatusLevy from "@/components/StatusLevy";
 import VehicleLevyTransactions from "@/components/VehicleLevyTransactions";
 import ScanToAddSticker from "@/components/scan-to-add-sticker";
 import QrCode from "@/components/shared/qr-code";
@@ -62,7 +61,7 @@ export default async function SingleVehiclePage({
                                         Delete
                                    </Link>
                               </Button> */}
-                              <StatusLevy vehicle={vehicle} />
+                              {/* <StatusLevy vehicle={vehicle} /> */}
                          </div>
                     </div>
                     <Separator />

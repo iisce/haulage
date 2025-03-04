@@ -24,14 +24,19 @@ export async function chargeLevy(vehicleId: string, num_of_tyres?: number) {
           Authorization: `Bearer ${token}`,
      };
 
+     const requestOptions: RequestInit = {
+          method: "POST",
+          headers,
+     };
+
+     if (num_of_tyres !== undefined) {
+          requestOptions.body = JSON.stringify({ num_of_tyres });
+     }
+
      try {
           const request = await fetch(
                `${BASE_URL}/api/payment/${vehicleId}/initiate`,
-               {
-                    method: "POST",
-                    headers,
-                    body: JSON.stringify({ num_of_tyres }),
-               },
+               requestOptions,
           );
           const response = await request.json();
 
