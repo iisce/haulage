@@ -19,12 +19,10 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import FormError from "../shared/FormError";
-import FormSuccess from "../shared/FormSuccess";
 
 export default function LoginForm() {
      const searchParams = useSearchParams();
      const callbackUrl = searchParams.get("callbackUrl") ?? undefined;
-     const [showTwoFactor, setShowTwoFactor] = useState(false);
      const [error, setError] = useState<string | undefined>("");
      const [isPending, startTransition] = useTransition();
      // initialize the form with schema for types
